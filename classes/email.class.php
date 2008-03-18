@@ -32,7 +32,7 @@ class email {
 				
 
 		if($use_smtp){
-			$smtp = new SMTP($smtp_address, $smtp_login, $smtp_password, $smtp_port, $smtp_domain, 1);
+			$smtp = new SMTP($smtp_address, $smtp_login, $smtp_password, $smtp_port, $smtp_domain, 0);
 			$smtp->set_from($server_name, $email_from);
 			$smtp->Priority = 3;
 			$smtp->ContentType = 'txt';
