@@ -37,7 +37,7 @@ class SMTP {
     // Encodage
     var $ContentType = 'html';//Contenu du mail (texte, html...) (txt , html, txt/html)
     var $Encoding = '8bit'; // Ancienne valeur quoted-printable
-    var $ISO = 'iso-8859-1';
+    var $ISO = 'UTF-8';
     var $MIME = '1.0';// La version mime
 
     // Confirmation de reception

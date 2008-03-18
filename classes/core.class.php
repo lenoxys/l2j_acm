@@ -80,7 +80,7 @@ class core {
 		));
 		$template->assign_vars(array(
 		    'vm_account_text'		=> $vm['_chg_pwd_text'],
-		    'vm_chg_button'			=> $vm['_chg_pwd'],
+		    'vm_chg_pwd'			=> $vm['_chg_pwd'],
 		    'vm_logout_link'		=> $vm['_logout_link']
 		));
 		if($error != '') {
@@ -91,6 +91,11 @@ class core {
 		if($valid != '') {
 			$template->assign_block_vars('valid',array(
 				'VALID' => $valid
+			));
+		}
+		if(ACCOUNT::can_chg_email()) {
+			$template->assign_block_vars('email',array(
+				'vm_chg_email' => $vm['_chg_email']
 			));
 		}
 	}
@@ -206,13 +211,19 @@ class core {
 
 	function change_pwd() {
 		global $valid, $error, $vm;
-
+		
+		if(!ACCOUNT::verif()) {
+			$error = $vm['_WARN_NOT_LOGGED'];
+			CORE::index();
+			return;
+		}
+		
 		CORE::secure_post();
 
 		$account = unserialize($_SESSION['acm']);
 
 		if($account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
-			$valid = $vm['_account_created'];
+			$valid = $vm['_change_pwd_valid'];
 			CORE::show_account();
 		}
 		else
@@ -240,6 +251,68 @@ class core {
 		    'vm_passwordold'		=> $vm['_passwordold'],
 		    'vm_password'			=> $vm['_password'],
 		    'vm_password2'			=> $vm['_password2'],
+		    'vm_return'				=> $vm['_return'],
+		    'vm_chg_button'			=> $vm['_chg_button']
+		));
+		if($error != '') {
+			$template->assign_block_vars('error',array(
+				'ERROR' => $error
+			));
+		}
+	}
+
+	function change_email() {
+		global $valid, $error, $vm;
+		
+		if(!ACCOUNT::verif()) {
+			$error = $vm['_WARN_NOT_LOGGED'];
+			CORE::index();
+			return;
+		}
+		
+		if(!ACCOUNT::can_chg_email()) {
+			CORE::index();
+			return;
+		}
+		
+		CORE::secure_post();
+
+		$account = unserialize($_SESSION['acm']);
+
+		if($account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
+			$valid = $vm['_change_email_valid'];
+			CORE::show_account();
+		}
+		else
+		{
+			CORE::show_chg_email();
+		}
+	}
+
+	function show_chg_email() {
+		global $error, $vm, $can_chg_email;
+		if(!ACCOUNT::verif()) {
+			$error = $vm['_WARN_NOT_LOGGED'];
+			CORE::index();
+			return;
+		}
+		
+		if(!ACCOUNT::can_chg_email()) {
+			CORE::index();
+			return;
+		}
+
+		global $template, $vm, $error, $pwd_limit;
+		$template->set_filenames(array(
+			'content' => 'chg_email.tpl'
+		));
+		$template->assign_vars(array(
+		    'vm_chg_pwd'			=> $vm['_chg_pwd'],
+		    'vm_chg_pwd_text'		=> $vm['_chg_pwd_text'],
+		    'vm_password_length'	=> $pwd_limit,
+		    'vm_password'			=> $vm['_password'],
+		    'vm_email'				=> $vm['_email'],
+		    'vm_email2'				=> $vm['_email2'],
 		    'vm_return'				=> $vm['_return'],
 		    'vm_chg_button'			=> $vm['_chg_button']
 		));

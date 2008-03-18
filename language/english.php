@@ -17,12 +17,12 @@ $vm['_new_account_text2'] = 'You will need an account to play on Lineage II. If 
 
 			Your account is non-transferable, and both your account name and password are private and should never be given out to anyone!
 
-			<span style="color: red">Don\'t trust who say its GM/admin. WE  DON�T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>
+			<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>
 
 			All fields marked with a <img src="./images/required.gif" width="14" height="14" alt="" /> are required fields and need to be completed in order to fill out the signup form successfully.
 ';
 $vm['_chg_pwd'] = 'Change your password';
-$vm['_chg_pwd_text'] = '<span style="color: red">Don\'t trust who say its GM/admin. WE  DON�T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
+$vm['_chg_pwd_text'] = '<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
 $vm['_chg_button'] = 'Change';
 $vm['_password2'] = 'Confirm password';
 $vm['_passwordold'] = 'Old password';
@@ -71,6 +71,16 @@ $vm['_email_title_change_pwd']		= 'Password Reset Request';
 $vm['_email_message_change_pwd']	= "Someone at [IP] want reset your Lineage II Game Account password for account [ID].<br>Click <a href=\"[URL]\">here</a> for reset your passord.<br>If you did not make this change, please don't care this mail'.<br><br>The [SERVER] Team";
 $vm['_email_title_change_pwd_ok']	= 'Password Reset Success';
 $vm['_email_message_change_pwd_ok']	= "Someone at [IP] has reset your Lineage II Game Account password for account [ID].<br> New password : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
+
+
+$vm['_creating_acc_prob'] = 'Database problem : Account was not created. Please report this to the Staff.';
+
+$vm['_chg_email']			= 'Change your email';
+$vm['_email2']				= 'Confirm email';
+$vm['_change_pwd_valid']	= 'Your password has been changed.';
+$vm['_change_email_valid']	= 'Your email has been changed.';
+$vm['_REGWARN_VEMAIL1']		= 'Email and verification do not match, please try again.';
+
 
 
 $vm = array_map('nl2br', $vm);

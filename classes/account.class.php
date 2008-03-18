@@ -70,9 +70,14 @@ class account {
 		$this->login = $login;
 		$this->code = ACCOUNT::gen_img_cle(10);
 
-		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`access_level`,`lastIP`,`email`) VALUES " .
+		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`accessLevel`,`lastIP`,`email`) VALUES " .
 				"('".$login."', '".ACCOUNT::l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
 		MYSQL::query($sql);
+
+		if(!$this->is_login_exist($login)) {
+			$error = $vm['_creating_acc_prob'];
+			return false;
+		}
 
 		$sql = "INSERT INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
 		MYSQL::query($sql);
@@ -174,7 +179,7 @@ class account {
 		if (!($login = $this->valid_key($key)))
 			return false;
 
-		$sql = "UPDATE `accounts` SET `access_level` = '0' WHERE `login` = '".$login."' LIMIT 1;";
+		$sql = "UPDATE `accounts` SET `accessLevel` = '0' WHERE `login` = '".$login."' LIMIT 1;";
 		MYSQL::query($sql);
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
@@ -203,7 +208,7 @@ class account {
 				'FROM accounts ' .
 					'WHERE login = "'.$login.'" ' .
 						'AND password = "'.$password.'" ' .
-						'AND access_level >= 0 LIMIT 1;';
+						'AND accessLevel >= 0 LIMIT 1;';
 
 		if($MYSQL->result($sql) != 1)
 			return false;
@@ -294,11 +299,11 @@ class account {
 		return true;
 	}
 
-	function edit_password ($oldpass,$newpass,$renewpass)
+	function edit_password ($pass,$newpass,$renewpass)
 	{
 		global $vm, $error;
 
-		if($this->password != ACCOUNT::l2j_encrypt($oldpass)) {
+		if($this->password != ACCOUNT::l2j_encrypt($pass)) {
 			$error = $vm['_REGWARN_VPASS1'];
 			return false;
 		}
@@ -317,7 +322,75 @@ class account {
 
 		$_SESSION['acm'] = serialize(new account($this->login, ACCOUNT::l2j_encrypt($newpass)));
 
-		//$this->send_email($this->lg_email_title_change_pwd, $this->lg_email_message_change_pwd);
+		return true;
+	}
+	function can_chg_email() {
+		global $MYSQL, $can_chg_email;
+		
+		if(ACCOUNT::get_email() == '')
+			return true;
+		
+		if(!$can_chg_email)
+			return false;
+			
+		return true;
+	}
+
+	function change_email($email) {
+		global $MYSQL;
+
+		$MYSQL->connect();
+		$sql = "UPDATE `accounts` SET `email` = '" . $email . "',
+				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
+				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
+		$MYSQL->query($sql);
+		$MYSQL->close();
+
+		return true;
+	}
+	
+	function get_email ()
+	{
+		global $MYSQL;
+
+		if(!ACCOUNT::is_logged())			// Check if user is logged
+			return false;
+			
+		$account = unserialize($_SESSION['acm']);
+			
+		$MYSQL->connect();
+		$sql = "SELECT email FROM accounts WHERE login = '" . $account->login . "' LIMIT 1;";
+		$email = $MYSQL->result($sql);		
+		$MYSQL->close();
+		
+		return $email;
+	}
+
+	function edit_email ($pass,$email,$reemail)
+	{
+		global $vm, $error;
+
+		if($this->password != ACCOUNT::l2j_encrypt($pass)) {
+			$error = $vm['_REGWARN_VPASS1'];
+			return false;
+		}
+
+		if(!$this->verif_email($email)) {
+			$error = $vm['_REGWARN_MAIL'];
+			return false;
+		}
+
+		if($this->is_email_exist($email)) {
+			$error = $vm['_REGWARN_EMAIL_INUSE'];
+			return false;
+		}
+
+		if ($email != $reemail) {
+			$error = $vm['_REGWARN_VEMAIL1'];
+			return false;
+		}
+
+		$this->change_email($email);
 
 		return true;
 	}
@@ -327,7 +400,8 @@ class account {
 	}
 
 	function loggout () {
-		$_SESSION['acm'] = array();
+		$_SESSION = array();
+		session_destroy();
 		return true;
 	}
 
@@ -344,9 +418,9 @@ class account {
 				'FROM accounts ' .
 					'WHERE login = "'.$account->login.'" ' .
 						'AND password = "'.$account->password.'" ' .
-						'AND access_level >= 0 LIMIT 1;';
+						'AND accessLevel >= 0 LIMIT 1;';
 
-		if($MYSQL->result($sql) != 1)	// Check is user session data are right
+		if($MYSQL->result($sql) != 1)	// Check if user session data are right
 			return false;
 
 		$MYSQL->close();

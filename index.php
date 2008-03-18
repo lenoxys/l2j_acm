@@ -75,6 +75,12 @@ switch ($action) {
 	case 'activation':
 		CORE::activation();
 	break;
+	case 'chg_email':
+		CORE::show_chg_email();
+	break;
+	case 'chg_email_form':
+		CORE::change_email();
+	break;
 }
 
 $template->assign_var_from_handle('CONTENT', 'content');
