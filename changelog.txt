@@ -1,0 +1,102 @@
+Some Change 02/12/2006
+
+    * Added Image, Email switch on,off
+    * Added Text manager
+
+
+
+
+Some Change 03/12/2006
+
+    * Fixed email message
+    * Added html in email
+    * Added account info in message
+    * Added edited email source
+
+
+
+
+Some Change 04/12/2006
+
+    * Added send new password
+
+
+
+
+Some Change 08/12/2006
+
+    * Modify system forget password likes official
+    * Added limit id and pwd character
+    * Added limit register account
+    * Changed text email likes official
+
+
+
+
+Some Change 10/12/2006
+
+    * Fixed limit register account
+
+
+
+
+Some Change 23/07/2007
+
+    * New interface
+    * Rewrite all module
+
+
+
+
+
+Some Change 06/08/2007
+
+    * Adaptation for IE 6
+    * Adaptation for safari (need to test on mac)
+
+
+
+
+
+Some Change 06/01/2008
+
+    * Added smtp send for email
+
+
+
+
+
+Some Change 18/01/2008
+
+    * CHANGE `access_level` for `accessLevel`
+
+
+
+
+
+Some Change 22/01/2008
+
+    * Added Spanish and French language
+
+
+
+
+
+Some Change 13/02/2008
+
+    * Added Italian language
+
+
+
+
+Some Change 17/02/2008
+
+    * Added Czech language
+
+
+
+
+Some Change 23/02/2008
+
+    * Added Email change (check on config file for get more information)
+    * New template (.psd files for edit button and input)
