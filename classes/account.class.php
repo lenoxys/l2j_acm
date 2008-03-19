@@ -72,6 +72,9 @@ class account {
 
 		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`accessLevel`,`lastIP`,`email`) VALUES " .
 				"('".$login."', '".ACCOUNT::l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
+				
+		if(DEBUG) echo 'Create a new user on the accounts table with -1 on accessLevel<li>'.$sql.'</li>';
+
 		MYSQL::query($sql);
 
 		if(!$this->is_login_exist($login)) {
@@ -80,6 +83,9 @@ class account {
 		}
 
 		$sql = "INSERT INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
+		
+		if(DEBUG) echo 'Insert the activation key on account_data for checking email<li>'.$sql.'</li>';
+
 		MYSQL::query($sql);
 
 		if(!$act_email)
@@ -92,6 +98,9 @@ class account {
 
 	function get_number_acc() {
 		$sql = "SELECT COUNT(login) FROM `accounts`";
+		
+		if(DEBUG) echo 'Get the amounth of account on accounts table<li>'.$sql.'</li>';
+
 		return MYSQL::result($sql);
 	}
 
@@ -142,6 +151,9 @@ class account {
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE login = "'.$login.'" LIMIT 1;';
+					
+		if(DEBUG) echo 'Check if the login still exist<li>'.$sql.'</li>';
+
 
 		if(MYSQL::result($sql) == '0')
 			return false;
@@ -158,6 +170,9 @@ class account {
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE email = "'.$email.'" LIMIT 1;';
+					
+		if(DEBUG) echo 'Check if the email still exist<li>'.$sql.'</li>';
+
 
 		if(MYSQL::result($sql) === '0')
 			return false;
@@ -167,9 +182,11 @@ class account {
 
 	function valid_key($key) {
 		$sql = "SELECT COUNT(account_data) FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
+		if(DEBUG) echo 'Check if there are an activation key on account_data<li>'.$sql.'</li>';
 		if (MYSQL::result($sql) === '0')
 			return false;
 		$sql = "SELECT account_name FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
+		if(DEBUG) echo 'Get the account name linked with the activation key<li>'.$sql.'</li>';
 		return MYSQL::result($sql);
 	}
 
@@ -180,9 +197,11 @@ class account {
 			return false;
 
 		$sql = "UPDATE `accounts` SET `accessLevel` = '0' WHERE `login` = '".$login."' LIMIT 1;";
+		if(DEBUG) echo 'Update accessLevel to 0<li>'.$sql.'</li>';
 		MYSQL::query($sql);
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
+		if(DEBUG) echo 'Delete activation key from account_data table<li>'.$sql.'</li>';
 		MYSQL::query($sql);
 
 		if ($this->valid_key($key))
@@ -209,6 +228,7 @@ class account {
 					'WHERE login = "'.$login.'" ' .
 						'AND password = "'.$password.'" ' .
 						'AND accessLevel >= 0 LIMIT 1;';
+		if(DEBUG) echo 'Check if login and password match on account table<li>'.$sql.'</li>';
 
 		if($MYSQL->result($sql) != 1)
 			return false;
@@ -225,6 +245,7 @@ class account {
 		$sql = "UPDATE `accounts` SET `password` = '" . $this->l2j_encrypt($pwd) . "',
 				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
 				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
+		if(DEBUG) echo 'Update password of the account<li>'.$sql.'</li>';
 		$MYSQL->query($sql);
 		$MYSQL->close();
 
@@ -242,13 +263,16 @@ class account {
 		}
 
 		$sql = "SELECT COUNT(account_name) FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd'";
+		if(DEBUG) echo 'Check if user made a previous ask about lost password<li>'.$sql.'</li>';
 
 		if($MYSQL->result($sql) == 1) {
 			$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd' LIMIT 1;";
+			if(DEBUG) echo 'User have made a previous ask about lost password delete that<li>'.$sql.'</li>';
 			$MYSQL->query($sql);
 		}
 
 		$sql = "SELECT COUNT(login) FROM `accounts` WHERE `login` = '".$login."' AND `email` = '".$email."'";
+		if(DEBUG) echo 'Check if there are a login name match with an email<li>'.$sql.'</li>';
 
 		if($MYSQL->result($sql) != 1) {
 			$error = $vm['_wrong_auth'];
@@ -259,6 +283,7 @@ class account {
 		$this->code = $this->gen_img_cle(5);
 
 		$sql = "INSERT INTO account_data (account_name, var, value) VALUES('".$this->login."' , 'forget_pwd', '".$this->code."')";
+		if(DEBUG) echo 'Insert a random key and send it to the email for authenticate user<li>'.$sql.'</li>';
 		$MYSQL->query($sql);
 
 		$email_class->emailing($this, 'forget_password_validation');
@@ -277,6 +302,7 @@ class account {
 		}
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd' AND `value` = '".$key."' LIMIT 1;";
+		if(DEBUG) echo 'User has been authenticated. Delete the ask<li>'.$sql.'</li>';
 		$MYSQL->query($sql);
 
 		$this->setLogin($login);
@@ -292,6 +318,8 @@ class account {
 				"`account_name` = '".$login."' " .
 				"AND `var` = '".$tag."' " .
 				"AND `value` = '".$value."' LIMIT 1;";
+		if(DEBUG) echo 'Check the tag on account_data<li>'.$sql.'</li>';
+
 
 		if($MYSQL->result($sql) != 1)
 			return false;
@@ -343,6 +371,9 @@ class account {
 		$sql = "UPDATE `accounts` SET `email` = '" . $email . "',
 				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
 				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
+
+		if(DEBUG) echo 'Update the email on accounts table<li>'.$sql.'</li>';
+
 		$MYSQL->query($sql);
 		$MYSQL->close();
 
@@ -360,6 +391,9 @@ class account {
 			
 		$MYSQL->connect();
 		$sql = "SELECT email FROM accounts WHERE login = '" . $account->login . "' LIMIT 1;";
+		
+		if(DEBUG) echo 'Get the email of the user<li>'.$sql.'</li>';
+
 		$email = $MYSQL->result($sql);		
 		$MYSQL->close();
 		
@@ -419,6 +453,9 @@ class account {
 					'WHERE login = "'.$account->login.'" ' .
 						'AND password = "'.$account->password.'" ' .
 						'AND accessLevel >= 0 LIMIT 1;';
+		
+		if(DEBUG) echo 'Verify if the user is correctly logged<li>'.$sql.'</li>';
+
 
 		if($MYSQL->result($sql) != 1)	// Check if user session data are right
 			return false;

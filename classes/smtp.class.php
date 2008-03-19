@@ -92,7 +92,7 @@ class SMTP {
         if($NomDuDomaine){
             $this->NomDuDomaine = $NomDuDomaine;
         }
-        $this->debug = $debug;
+        $this->debug = DEBUG;
     }
 
 

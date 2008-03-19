@@ -2,11 +2,12 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
+define ('DEBUG', true);									// Enable debug mode ; for set on replace false by true
+
 $host	= 'localhost';									// host database DB
 $user	= 'root';										// user
 $pass	= '';											// password
-$db		= 'l2jdb';										// database name
-
+$db		= 'l2jdb_t1';										// database name
 
 
 $server_name	= 'Private Server';						// server name
@@ -32,6 +33,13 @@ $can_chg_email	= false;								// User can change email ; set false if you want 
 
 $use_smtp = false;										// Set to true if you want use an smtp server
 $smtp_address = 'smtp.server.com';						// Address of the smtp server
+$smtp_port = 25;										// Port of the smtp server
+$smtp_login = '';										// login of the smtp server if you need authentication
+$smtp_password = '';									// password of the smtp server if you need authentication
+$smtp_domain = '';										// domain of your host
+
+$use_smtp = true;										// Set to true if you want use an smtp server
+$smtp_address = 'localhost';							// Address of the smtp server
 $smtp_port = 25;										// Port of the smtp server
 $smtp_login = '';										// login of the smtp server if you need authentication
 $smtp_password = '';									// password of the smtp server if you need authentication

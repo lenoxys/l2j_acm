@@ -11,6 +11,8 @@ require './classes/core.class.php';
 require './classes/account.class.php';
 require './classes/template.class.php';
 
+if(DEBUG) echo '<div style="color: #000;background: #FFF;"><h1>DEBUG MODE ON</h1><br />';
+
 if(file_exists('./language/'.$language.'.php'))
 	require './language/'.$language.'.php';
 else
@@ -82,6 +84,7 @@ switch ($action) {
 		CORE::change_email();
 	break;
 }
+if(DEBUG) echo '</div>';
 
 $template->assign_var_from_handle('CONTENT', 'content');
 
