@@ -100,3 +100,9 @@ Some Change 23/02/2008
 
     * Added Email change (check on config file for get more information)
     * New template (.psd files for edit button and input)
+
+
+
+Some Change 19/03/2008
+
+    * Added debug mode system
