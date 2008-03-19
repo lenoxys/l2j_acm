@@ -2,18 +2,18 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-define ('DEBUG', true);									// Enable debug mode ; for set on replace false by true
+define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 
 $host	= 'localhost';									// host database DB
 $user	= 'root';										// user
 $pass	= '';											// password
-$db		= 'l2jdb_t1';										// database name
+$db		= 'l2jdb';										// database name
 
 
 $server_name	= 'Private Server';						// server name
 $email_from		= 'support@host.com';					// Specify an adress email source
 
-$act_img		= false;									// Activate image verification ; set false if you want desactivate
+$act_img		= false;								// Activate image verification ; set false if you want desactivate
 $act_email		= false;								// Activate email verification ; set false if you want desactivate
 
 $acc_limit		= false;								// How many account can be registered ; set false for unlimited
