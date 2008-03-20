@@ -38,13 +38,6 @@ $smtp_login = '';										// login of the smtp server if you need authenticatio
 $smtp_password = '';									// password of the smtp server if you need authentication
 $smtp_domain = '';										// domain of your host
 
-$use_smtp = true;										// Set to true if you want use an smtp server
-$smtp_address = 'localhost';							// Address of the smtp server
-$smtp_port = 25;										// Port of the smtp server
-$smtp_login = '';										// login of the smtp server if you need authentication
-$smtp_password = '';									// password of the smtp server if you need authentication
-$smtp_domain = '';										// domain of your host
-
 $id_regex	= '`^[[:alnum:]]{4,'.$id_limit.'}$`';		// allow alphanumeric character in login name and login character min needed is 4
 $pwd_regex	= '`^[[:alnum:]@\\\/]{4,'.$pwd_limit.'}$`';	//allow alphanumeric character and \ / @ in password and pwd character min needed is 4
 
