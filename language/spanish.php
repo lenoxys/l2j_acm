@@ -45,7 +45,7 @@ $vm['_pwd_incorrect'] = 'Por favor use otra contraseña';
 $vm['_image_control_desc'] = 'Prevenir los registros automaticos la cuenta de creación exige que usted ingrese una clave de confirmación.
 Si usted no puede leer el control de imagen, hacer clic en él para cargarse. ';
 $vm['_account_created'] = 'Su cuenta ha sido creada.';
-$vm['_account_actived'] = 'Your account has been actived.';
+$vm['_account_actived'] = 'Tu cuenta a sido activada.';
 $vm['_REGWARN_UNAME1'] = 'Por favor ingrese un nombre de usuario.';
 $vm['_REGWARN_UNAME2'] = 'Por favor ingrese un nombre de usuario legítimo.';
 $vm['_REGWARN_MAIL'] = 'Por favor, introduzca una dirección correo electrónico legítimo.';
@@ -64,21 +64,21 @@ $vm['_password_reseted'] = 'Reiniciada la contraseña';
 $vm['_control'] = 'La llave de activación no es correcta';
 
 $vm['_email_title_verif']			= 'Dirección la comprobación [SERVER]';
-$vm['_email_message_verif']			= "Su clave de verificación de correo electrónico es : [CODE].<br><br>Usted puede terminar el registro cliking <a href=\"[URL]\">Aquí</a>.<br><br>Si usted tiene cualquier preguntas sobre el proceso de registro, Por favor contactar [EMAIL_SUPPORT].";
+$vm['_email_message_verif']			= "Su clave de verificación de correo electrónico es : [CODE].<br><br>Usted puede terminar el registro clic <a href=\"[URL]\">Aquí</a>.<br><br>Si usted tiene cualquier preguntas sobre el proceso de registro, Por favor contactar [EMAIL_SUPPORT].";
 $vm['_email_title_ok']				= 'Bienvenido a [SERVER]!';
 $vm['_email_message_ok']			= "Gracias por registrarse en [SERVER]!<br><br>Su nombre de cuenta en [SERVER] es: [ID]<br><br>Para terminar, si usted tiene una pregunta y sólo puede encontrar la respuesta, nuestro equipo de ayuda al cliente, está siempre disponible tan cerca como su cuadro de correo electrónico.<br><br>Otra vez, Gracias a usted y Bienvenido a el mundo de [SERVER]. ¡Esperamos con ansia de ver a usted en el juego!<br><br>El Equipo de [SERVER]";
 $vm['_email_title_change_pwd']		= 'Reinicialización de la petición de contraseña';
-$vm['_email_message_change_pwd']	= "Someone at [IP] want reset your Lineage II Game Account password for account [ID].<br>Click <a href=\"[URL]\">here</a> for reset your passord.<br>If you did not make this change, please don't care this mail'.<br><br>The [SERVER] Team";
+$vm['_email_message_change_pwd']	= "Alguien en [IP] quieren restablecer la contraseña de su cuenta de cuenta de Lineage II a [ID].<br>haga Clic <a href=\"[URL]\">aqui</a> para restablecer su contraseña.<br>Si no ha realizado este cambio, por favor, no tienen que preocuparse de este correo electrónico.<br><br>El equipo de [SERVER]";
 $vm['_email_title_change_pwd_ok']	= 'Reinicialización de su contraseña se hecho con éxito';
-$vm['_email_message_change_pwd_ok']	= "Someone at [IP] has reset your Lineage II Game Account password for account [ID].<br> New password : [CODE]<br> Si usted no hiciera este cambio, por favor hacer contacto con el soporte inmediatamente en [EMAIL_SUPPORT].";
+$vm['_email_message_change_pwd_ok']	= "Alguien en [IP] ha restablecido su contraseña de su cuenta de el juego de Lineage II a [ID].<br> Nueva contraseña: [CODE]<br> Si usted no hiciera este cambio, por favor hacer contacto con el soporte inmediatamente en [EMAIL_SUPPORT].";
 
-$vm['_creating_acc_prob'] = 'Problema en la base de datos : Cuentas no ha sido creada. Por favor, informe de este equipo a la.';
+$vm['_creating_acc_prob'] = 'Problema en la base de datos : Cuentas no ha sido creada. Por favor, informe de esto al equipo [SERVER] al correo electrónico [EMAIL_SUPPORT].';
 
-$vm['_chg_email']			= 'Change your email';
-$vm['_email2']				= 'Confirm email';
-$vm['_change_pwd_valid']	= 'Your password has been changed.';
-$vm['_change_email_valid']	= 'Your email has been changed.';
-$vm['_REGWARN_VEMAIL1']		= 'Email and verification do not match, please try again.';
+$vm['_chg_email']			= 'Cambiar su dirección de correo electrónico';
+$vm['_email2']				= 'Confirmar correo electrónico';
+$vm['_change_pwd_valid']	= 'Su contraseña ha cambiado.';
+$vm['_change_email_valid']	= 'Tu correo electrónico ha cambiado.';
+$vm['_REGWARN_VEMAIL1']		= 'El correo electrónico y la verificación no coinciden, por favor, inténtelo de nuevo.';
 
 $vm = array_map('nl2br', $vm);
 
