@@ -82,7 +82,7 @@ class account {
 			return false;
 		}
 
-		$sql = "INSERT INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
+		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
 		
 		if(DEBUG) echo 'Insert the activation key on account_data for checking email<li>'.$sql.'</li>';
 
