@@ -103,6 +103,16 @@ Some Change 23/02/2008
 
 
 
+
 Some Change 19/03/2008
 
     * Added debug mode system
+
+
+
+
+Some Change 24/03/2008
+
+    * Fix typos bug about email script
+    * Added Terms and Condition Registration srcipt
+
