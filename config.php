@@ -27,6 +27,8 @@ $language		= 'english';							// language use by Account Manager :: name of lang
 
 $can_chg_email	= false;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
 
+$ack_cond		= false;								// User must accept before register :: conditions can be edited on language file
+
 //#################
 //#Advanced Config#
 //#################

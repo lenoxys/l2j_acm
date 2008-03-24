@@ -81,6 +81,9 @@ $vm['_change_pwd_valid']	= 'Your password has been changed.';
 $vm['_change_email_valid']	= 'Your email has been changed.';
 $vm['_REGWARN_VEMAIL1']		= 'Email and verification do not match, please try again.';
 
+$vm['_TERMS_AND_CONDITION']	= "<h2>Terms and conditions</h2><br /><br />1. GameMaster is always right.<br />2. If GameMaster is wrong refer to the first rule.";
+$vm['_accept_button'] = 'Accept';
+
 $vm = array_map('nl2br', $vm);
 
 ?>

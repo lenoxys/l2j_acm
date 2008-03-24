@@ -113,12 +113,36 @@ class core {
 		}
 		else
 		{
-			CORE::show_create();
+			CORE::show_create(true);
 		}
 	}
+	
+	function show_ack(){
+		global $template,$vm;
+		$template->set_filenames(array(
+			'content' => 'ack.tpl'
+		));
+		$template->assign_vars(array(
+		    'vm_terms_and_condition'	=> $vm['_TERMS_AND_CONDITION'],
+		    'vm_return'					=> $vm['_return'],
+		    'vm_accept_button'		=> $vm['_accept_button']
+		));
+		$_COOKIE['ack'] = '';
+	}
 
-	function show_create() {
-		global $template, $vm, $error, $act_img, $id_limit, $pwd_limit;
+	function show_create($acka = false) {
+		global $template, $vm, $error, $act_img, $id_limit, $pwd_limit,$ack_cond;
+		
+		CORE::secure_post();
+		
+		$ack = ($_POST['ack'] == 'ack') ? true : false;
+		$ack = ($acka) ? true : $ack;
+		
+		if($ack_cond && !$ack) {
+			CORE::show_ack();
+			return false;
+		}
+		
 		$template->set_filenames(array(
 			'content' => 'create.tpl'
 		));
@@ -339,8 +363,10 @@ class core {
 	}
 
 	function secure_post() {
-		global $_POST, $id_limit, $pwd_limit;
+		global $id_limit, $pwd_limit;
 
+		if (!$_POST) return;
+				
 		$_POST = array_map('htmlentities', $_POST);
 		$_POST = array_map('htmlspecialchars', $_POST);
 
