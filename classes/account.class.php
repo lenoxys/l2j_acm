@@ -174,7 +174,7 @@ class account {
 		if(DEBUG) echo 'Check if the email still exist<li>'.$sql.'</li>';
 
 
-		if(MYSQL::result($sql) === '0')
+		if(MYSQL::result($sql) == '0')
 			return false;
 
 		return true;
