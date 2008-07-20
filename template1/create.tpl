@@ -14,9 +14,9 @@
 				<!-- BEGIN error -->
 				<div class="error"><div class="error_container">{error.ERROR}</div></div>
 				<!-- END error -->
-				<div class="field"><label>{vm_account}</label><span class="field"><input type="text" id="Luser" name="Luser" value="{post_id}" autocomplete="off" maxlength="{vm_account_length}" /></span><em>&#8226;</em></div>
-				<div class="field"><label>{vm_password}</label><span class="field"><input type="password" id="Lpwd" name="Lpwd" autocomplete="off" maxlength="{vm_password_length}" /></span><em>&#8226;</em></div>
-				<div class="field"><label>{vm_password2}</label><span class="field"><input type="password" id="Lpwd2" name="Lpwd2" autocomplete="off" maxlength="{vm_password_length}" /></span><em>&#8226;</em></div>
+				<div class="field"><label>{vm_account}</label><span class="field"><input type="text" id="Luser" name="Luser" value="{post_id}" autocomplete="off" /></span><em>&#8226;</em></div>
+				<div class="field"><label>{vm_password}</label><span class="field"><input type="password" id="Lpwd" name="Lpwd" autocomplete="off" /></span><em>&#8226;</em></div>
+				<div class="field"><label>{vm_password2}</label><span class="field"><input type="password" id="Lpwd2" name="Lpwd2" autocomplete="off" /></span><em>&#8226;</em></div>
 				<div class="field"><label>{vm_email}</label><span class="field"><input type="text" id="Lemail" name="Lemail" value="{post_email}" autocomplete="off"></span><em>&#8226;</em></div>
 				<!-- BEGIN image -->
 				<div class="field"><label><img src="./img.php" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span><em>&#8226;</em></div>
