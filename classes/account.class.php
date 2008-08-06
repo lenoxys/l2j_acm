@@ -72,7 +72,7 @@ class account {
 
 		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`accessLevel`,`lastIP`,`email`) VALUES " .
 				"('".$login."', '".ACCOUNT::l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
-				
+
 		if(DEBUG) echo 'Create a new user on the accounts table with -1 on accessLevel<li>'.$sql.'</li>';
 
 		MYSQL::query($sql);
@@ -83,7 +83,7 @@ class account {
 		}
 
 		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
-		
+
 		if(DEBUG) echo 'Insert the activation key on account_data for checking email<li>'.$sql.'</li>';
 
 		MYSQL::query($sql);
@@ -98,7 +98,7 @@ class account {
 
 	function get_number_acc() {
 		$sql = "SELECT COUNT(login) FROM `accounts`";
-		
+
 		if(DEBUG) echo 'Get the amounth of account on accounts table<li>'.$sql.'</li>';
 
 		return MYSQL::result($sql);
@@ -144,6 +144,8 @@ class account {
 		if ($key != $_SESSION['code'])
 			return false;
 
+		if(DEBUG) echo 'Check if the image verification is correct <li> key gived: '.$key.'</li><li> key needed: '.$_SESSION['code'].'</li>';
+
 		return true;
 	}
 
@@ -151,7 +153,7 @@ class account {
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE login = "'.$login.'" LIMIT 1;';
-					
+
 		if(DEBUG) echo 'Check if the login still exist<li>'.$sql.'</li>';
 
 
@@ -170,7 +172,7 @@ class account {
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE email = "'.$email.'" LIMIT 1;';
-					
+
 		if(DEBUG) echo 'Check if the email still exist<li>'.$sql.'</li>';
 
 
@@ -214,8 +216,13 @@ class account {
 		return true;
 	}
 
-	function auth ($login, $password) {
-		global $MYSQL;
+	function auth ($login, $password, $img) {
+		global $MYSQL, $error, $vm;
+
+		if(!ACCOUNT::verif_img($img)) {
+			$error = $vm['_image_control']. '<br />';
+			return false;
+		}
 
 		$login = htmlentities($login);
 		$password = htmlentities($password);
@@ -354,13 +361,13 @@ class account {
 	}
 	function can_chg_email() {
 		global $MYSQL, $can_chg_email;
-		
+
 		if(ACCOUNT::get_email() == '')
 			return true;
-		
+
 		if(!$can_chg_email)
 			return false;
-			
+
 		return true;
 	}
 
@@ -379,24 +386,24 @@ class account {
 
 		return true;
 	}
-	
+
 	function get_email ()
 	{
 		global $MYSQL;
 
 		if(!ACCOUNT::is_logged())			// Check if user is logged
 			return false;
-			
+
 		$account = unserialize($_SESSION['acm']);
-			
+
 		$MYSQL->connect();
 		$sql = "SELECT email FROM accounts WHERE login = '" . $account->login . "' LIMIT 1;";
-		
+
 		if(DEBUG) echo 'Get the email of the user<li>'.$sql.'</li>';
 
-		$email = $MYSQL->result($sql);		
+		$email = $MYSQL->result($sql);
 		$MYSQL->close();
-		
+
 		return $email;
 	}
 
@@ -453,7 +460,7 @@ class account {
 					'WHERE login = "'.$account->login.'" ' .
 						'AND password = "'.$account->password.'" ' .
 						'AND accessLevel >= 0 LIMIT 1;';
-		
+
 		if(DEBUG) echo 'Verify if the user is correctly logged<li>'.$sql.'</li>';
 
 

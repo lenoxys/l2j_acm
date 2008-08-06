@@ -13,7 +13,7 @@ $db		= 'l2jdb';										// database name
 $server_name	= 'Private Server';						// server name
 $email_from		= 'support@host.com';					// Specify an adress email source
 
-$act_img		= false;								// Activate image verification ; set false if you want desactivate
+$act_img		= true;									// Activate image verification ; set false if you want desactivate
 $act_email		= false;								// Activate email verification ; set false if you want desactivate
 
 $acc_limit		= false;								// How many account can be registered ; set false for unlimited

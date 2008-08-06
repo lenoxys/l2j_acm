@@ -37,15 +37,15 @@ class core {
 
 			CORE::secure_post();
 
-			if(!ACCOUNT::auth($_POST['Luser'], $_POST['Lpwd']))
-				$error = $vm['_wrong_auth'];
+			if(!ACCOUNT::auth($_POST['Luser'], $_POST['Lpwd'], $_POST['Limage']))
+				$error .= $vm['_wrong_auth'];
 		}
 
 		CORE::index();
 	}
 
 	function show_login() {
-		global $template, $vm, $error, $valid, $id_limit, $pwd_limit;
+		global $template, $vm, $error, $valid, $id_limit, $pwd_limit, $act_img;
 		$template->set_filenames(array(
 			'content' => 'form.tpl'
 		));
@@ -61,6 +61,9 @@ class core {
 		    'vm_new_account_text'	=> $vm['_new_account_text'],
 		    'vm_create_button'		=> $vm['_create_button']
 		));
+		if($act_img) {
+			$template->assign_block_vars('image', null);
+		}
 		if($error != '') {
 			$template->assign_block_vars('error',array(
 				'ERROR' => $error
@@ -116,7 +119,7 @@ class core {
 			CORE::show_create(true);
 		}
 	}
-	
+
 	function show_ack(){
 		global $template,$vm;
 		$template->set_filenames(array(
@@ -132,17 +135,17 @@ class core {
 
 	function show_create($acka = false) {
 		global $template, $vm, $error, $act_img, $id_limit, $pwd_limit,$ack_cond;
-		
+
 		CORE::secure_post();
-		
+
 		$ack = ($_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
-		
+
 		if($ack_cond && !$ack) {
 			CORE::show_ack();
 			return false;
 		}
-		
+
 		$template->set_filenames(array(
 			'content' => 'create.tpl'
 		));
@@ -235,13 +238,13 @@ class core {
 
 	function change_pwd() {
 		global $valid, $error, $vm;
-		
+
 		if(!ACCOUNT::verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
 			CORE::index();
 			return;
 		}
-		
+
 		CORE::secure_post();
 
 		$account = unserialize($_SESSION['acm']);
@@ -287,18 +290,18 @@ class core {
 
 	function change_email() {
 		global $valid, $error, $vm;
-		
+
 		if(!ACCOUNT::verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
 			CORE::index();
 			return;
 		}
-		
+
 		if(!ACCOUNT::can_chg_email()) {
 			CORE::index();
 			return;
 		}
-		
+
 		CORE::secure_post();
 
 		$account = unserialize($_SESSION['acm']);
@@ -320,7 +323,7 @@ class core {
 			CORE::index();
 			return;
 		}
-		
+
 		if(!ACCOUNT::can_chg_email()) {
 			CORE::index();
 			return;
@@ -366,7 +369,7 @@ class core {
 		global $id_limit, $pwd_limit;
 
 		if (!$_POST) return;
-				
+
 		$_POST = array_map('htmlentities', $_POST);
 		$_POST = array_map('htmlspecialchars', $_POST);
 

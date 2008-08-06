@@ -9,6 +9,9 @@
 				<!-- END valid -->
 				<div class="field"><label>{vm_account}</label><span class="field"><input type="text" id="Luser" name="Luser" autocomplete="off" maxlength="{vm_account_length}" /></span></div>
 				<div class="field"><label>{vm_password}</label><span class="field"><input type="password" id="Lpwd" name="Lpwd" autocomplete="off" maxlength="{vm_password_length}" /></span></div>
+                <!-- BEGIN image -->
+				<div class="field"><label><img src="./img.php" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span></div>
+				<!-- END image -->
 				<hr class="clear">
 				<input type="hidden" name="action" value="login">
 				<input type="submit" class="button" value="{vm_login_button}">
