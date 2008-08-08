@@ -19,7 +19,7 @@ $vm['_new_account_text2'] = 'Usted necesitará una cuenta para jugar Lineage II. 
 
 			<span style="color: red">No confiar en el GM/Admin, quién decir su cuenta. No necesitamos la cuenta <u>Nombre de cuenta</u> y / o <u>Contraseña</u>! Nunca la revele o suministre!</span>
 
-			Todos los campos con un <img src="./images/required.gif" width="14" height="14" alt="" /> Se requiere campos y tener que ser terminado para llenar el formulario para registrar con éxito.
+			Todos los campos con un <img src="./template/images/required.gif" width="14" height="14" alt="" /> Se requiere campos y tener que ser terminado para llenar el formulario para registrar con éxito.
 ';
 $vm['_chg_pwd'] = 'Cambie su Contraseña';
 $vm['_chg_pwd_text'] = '<span style="color: red">No confiar en quién decir su cuenta GM/Admin. No necesitamos la cuenta <u>Nombre de cuenta</u> y / o <u>Contraseña</u>! Nunca la revele o suministre!</span>';

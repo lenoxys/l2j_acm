@@ -19,7 +19,7 @@ $vm['_new_account_text2'] = 'You will need an account to play on Lineage II. If 
 
 			<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>
 
-			All fields marked with a <img src="./images/required.gif" width="14" height="14" alt="" /> are required fields and need to be completed in order to fill out the signup form successfully.
+			All fields marked with a <img src="./template/images/required.gif" width="14" height="14" alt="" /> are required fields and need to be completed in order to fill out the signup form successfully.
 ';
 $vm['_chg_pwd'] = 'Change your password';
 $vm['_chg_pwd_text'] = '<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
