@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS `account_data` (
 #cleaning account
 
 ALTER TABLE `accounts` ADD `created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
-UPDATE `l2jdb`.`accounts` SET `created_time` = NOW( );
+UPDATE `accounts` SET `created_time` = NOW( );
