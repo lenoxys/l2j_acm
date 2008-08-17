@@ -116,3 +116,30 @@ Some Change 24/03/2008
     * Fix typos bug about email script
     * Added Terms and Condition Registration srcipt
 
+
+
+
+Some Change 20/07/2008
+
+    * Changed template password feature and sql installation script
+
+
+
+
+Some Change 06/08/2008
+
+    * Prevent brute force by image verification at login
+
+
+
+
+Some Change 08/08/2008
+
+    * New template
+
+
+
+
+Some Change 17/08/2008
+
+    * Implement cleanning unverified account
