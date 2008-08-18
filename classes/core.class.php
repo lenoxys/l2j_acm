@@ -138,7 +138,7 @@ class core {
 
 		CORE::secure_post();
 
-		$ack = ($_POST['ack'] == 'ack') ? true : false;
+		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
 
 		if($ack_cond && !$ack) {
