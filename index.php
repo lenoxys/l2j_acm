@@ -43,45 +43,47 @@ $template->assign_vars(array(
     'vm_title_page'  => $vm['_title_page']
 ));
 
+$core = new CORE();
+
 switch ($action) {
 	default:
-		CORE::index();
+		$core->index();
 	break;
 	case 'login':
-		CORE::login();
+		$core->login();
 	break;
 	case 'create':
-		CORE::show_create();
+		$core->show_create();
 	break;
 	case 'forgot_pwd':
-		CORE::show_forget();
+		$core->show_forget();
 	break;
 	case 'forgot_pwd_form':
-		CORE::forgot_pwd();
+		$core->forgot_pwd();
 	break;
 	case 'forgot_pwd_email':
-		CORE::forgot_pwd2();
+		$core->forgot_pwd2();
 	break;
 	case 'logged_out':
-		CORE::loggout();
+		$core->loggout();
 	break;
 	case 'chg_pwd':
-		CORE::show_chg_pwd();
+		$core->show_chg_pwd();
 	break;
 	case 'chg_pwd_form':
-		CORE::change_pwd();
+		$core->change_pwd();
 	break;
 	case 'registration':
-		CORE::create();
+		$core->create();
 	break;
 	case 'activation':
-		CORE::activation();
+		$core->activation();
 	break;
 	case 'chg_email':
-		CORE::show_chg_email();
+		$core->show_chg_email();
 	break;
 	case 'chg_email_form':
-		CORE::change_email();
+		$core->change_email();
 	break;
 }
 if(DEBUG) echo '</div>';

@@ -7,8 +7,10 @@ class account {
 	var $login, $password;
 
 	function account($login = null, $password = null) {
+		global $MYSQL;
 		$this->login = $login;
 		$this->password = $password;
+		$this->MYSQL = $MYSQL;
 	}
 
 	function getLogin() {
@@ -68,14 +70,14 @@ class account {
 		}
 
 		$this->login = $login;
-		$this->code = ACCOUNT::gen_img_cle(10);
+		$this->code = $this->gen_img_cle(10);
 
 		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`accessLevel`,`lastIP`,`email`) VALUES " .
-				"('".$login."', '".ACCOUNT::l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
+				"('".$login."', '".$this->l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
 
 		if(DEBUG) echo 'Create a new user on the accounts table with -1 on accessLevel<li>'.$sql.'</li>';
 
-		MYSQL::query($sql);
+		$this->MYSQL->query($sql);
 
 		if(!$this->is_login_exist($login)) {
 			$error = $vm['_creating_acc_prob'];
@@ -86,7 +88,7 @@ class account {
 
 		if(DEBUG) echo 'Insert the activation key on account_data for checking email<li>'.$sql.'</li>';
 
-		MYSQL::query($sql);
+		$this->MYSQL->query($sql);
 
 		if(!$act_email)
 			$this->valid_account($this->code);
@@ -101,7 +103,7 @@ class account {
 
 		if(DEBUG) echo 'Get the amounth of account on accounts table<li>'.$sql.'</li>';
 
-		return MYSQL::result($sql);
+		return $this->MYSQL->result($sql);
 	}
 
 	function verif_limit_create () {
@@ -157,7 +159,7 @@ class account {
 		if(DEBUG) echo 'Check if the login still exist<li>'.$sql.'</li>';
 
 
-		if(MYSQL::result($sql) == '0')
+		if($this->MYSQL->result($sql) == '0')
 			return false;
 
 		return true;
@@ -176,7 +178,7 @@ class account {
 		if(DEBUG) echo 'Check if the email still exist<li>'.$sql.'</li>';
 
 
-		if(MYSQL::result($sql) == '0')
+		if($this->MYSQL->result($sql) == '0')
 			return false;
 
 		return true;
@@ -185,11 +187,11 @@ class account {
 	function valid_key($key) {
 		$sql = "SELECT COUNT(account_data) FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
 		if(DEBUG) echo 'Check if there are an activation key on account_data<li>'.$sql.'</li>';
-		if (MYSQL::result($sql) === '0')
+		if ($this->MYSQL->result($sql) === '0')
 			return false;
 		$sql = "SELECT account_name FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
 		if(DEBUG) echo 'Get the account name linked with the activation key<li>'.$sql.'</li>';
-		return MYSQL::result($sql);
+		return $this->MYSQL->result($sql);
 	}
 
 	function valid_account($key) {
@@ -200,11 +202,11 @@ class account {
 
 		$sql = "UPDATE `accounts` SET `accessLevel` = '0' WHERE `login` = '".$login."' LIMIT 1;";
 		if(DEBUG) echo 'Update accessLevel to 0<li>'.$sql.'</li>';
-		MYSQL::query($sql);
+		$this->MYSQL->query($sql);
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
 		if(DEBUG) echo 'Delete activation key from account_data table<li>'.$sql.'</li>';
-		MYSQL::query($sql);
+		$this->MYSQL->query($sql);
 
 		if ($this->valid_key($key))
 			return false;
@@ -217,9 +219,9 @@ class account {
 	}
 
 	function auth ($login, $password, $img) {
-		global $MYSQL, $error, $vm;
+		global $error, $vm;
 
-		if(!ACCOUNT::verif_img($img)) {
+		if(!$this->verif_img($img)) {
 			$error = $vm['_image_control']. '<br />';
 			return false;
 		}
@@ -227,9 +229,8 @@ class account {
 		$login = htmlentities($login);
 		$password = htmlentities($password);
 
-		$password = ACCOUNT::l2j_encrypt($password);
+		$password = $this->l2j_encrypt($password);
 
-		$MYSQL->connect();
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE login = "'.$login.'" ' .
@@ -237,24 +238,24 @@ class account {
 						'AND accessLevel >= 0 LIMIT 1;';
 		if(DEBUG) echo 'Check if login and password match on account table<li>'.$sql.'</li>';
 
-		if($MYSQL->result($sql) != 1)
+		if($this->MYSQL->result($sql) != 1)
 			return false;
 
 		$_SESSION['acm'] = serialize(new account($login, $password));
-		$MYSQL->close();
+		
 		return true;
 	}
 
 	function change_pwd($pwd) {
-		global $MYSQL, $email_class;
+		global $email_class;
 
-		$MYSQL->connect();
+
 		$sql = "UPDATE `accounts` SET `password` = '" . $this->l2j_encrypt($pwd) . "',
 				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
 				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
 		if(DEBUG) echo 'Update password of the account<li>'.$sql.'</li>';
-		$MYSQL->query($sql);
-		$MYSQL->close();
+		$this->MYSQL->query($sql);
+
 
 		$this->code = $pwd;
 		$email_class->emailing($this, 'password_reseted');
@@ -262,7 +263,7 @@ class account {
 
 	function forgot_pwd($login, $email, $img = null)
 	{
-		global $error, $vm, $MYSQL, $email_class;
+		global $error, $vm, $email_class;
 
 		if(!$this->verif_img($img)) {
 			$error = $vm['_image_control'];
@@ -272,16 +273,16 @@ class account {
 		$sql = "SELECT COUNT(account_name) FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd'";
 		if(DEBUG) echo 'Check if user made a previous ask about lost password<li>'.$sql.'</li>';
 
-		if($MYSQL->result($sql) == 1) {
+		if($this->MYSQL->result($sql) == 1) {
 			$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd' LIMIT 1;";
 			if(DEBUG) echo 'User have made a previous ask about lost password delete that<li>'.$sql.'</li>';
-			$MYSQL->query($sql);
+			$this->MYSQL->query($sql);
 		}
 
 		$sql = "SELECT COUNT(login) FROM `accounts` WHERE `login` = '".$login."' AND `email` = '".$email."'";
 		if(DEBUG) echo 'Check if there are a login name match with an email<li>'.$sql.'</li>';
 
-		if($MYSQL->result($sql) != 1) {
+		if($this->MYSQL->result($sql) != 1) {
 			$error = $vm['_wrong_auth'];
 			return false;
 		}
@@ -291,7 +292,7 @@ class account {
 
 		$sql = "INSERT INTO account_data (account_name, var, value) VALUES('".$this->login."' , 'forget_pwd', '".$this->code."')";
 		if(DEBUG) echo 'Insert a random key and send it to the email for authenticate user<li>'.$sql.'</li>';
-		$MYSQL->query($sql);
+		$this->MYSQL->query($sql);
 
 		$email_class->emailing($this, 'forget_password_validation');
 
@@ -300,7 +301,7 @@ class account {
 
 	function forgot_pwd2($login, $key)
 	{
-		global $vm, $error, $MYSQL;
+		global $vm, $error;
 		$pwd = $this->gen_img_cle(10);
 
 		if(!$this->verif_tag($login, 'forget_pwd', $key)) {
@@ -310,7 +311,7 @@ class account {
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'forget_pwd' AND `value` = '".$key."' LIMIT 1;";
 		if(DEBUG) echo 'User has been authenticated. Delete the ask<li>'.$sql.'</li>';
-		$MYSQL->query($sql);
+		$this->MYSQL->query($sql);
 
 		$this->setLogin($login);
 
@@ -320,7 +321,6 @@ class account {
 	}
 
 	function verif_tag($login, $tag, $value){
-		global $MYSQL;
 		$sql = "SELECT COUNT(account_name) FROM `account_data` WHERE " .
 				"`account_name` = '".$login."' " .
 				"AND `var` = '".$tag."' " .
@@ -328,7 +328,7 @@ class account {
 		if(DEBUG) echo 'Check the tag on account_data<li>'.$sql.'</li>';
 
 
-		if($MYSQL->result($sql) != 1)
+		if($this->MYSQL->result($sql) != 1)
 			return false;
 
 		return true;
@@ -338,7 +338,7 @@ class account {
 	{
 		global $vm, $error;
 
-		if($this->password != ACCOUNT::l2j_encrypt($pass)) {
+		if($this->password != $this->l2j_encrypt($pass)) {
 			$error = $vm['_REGWARN_VPASS1'];
 			return false;
 		}
@@ -355,14 +355,14 @@ class account {
 
 		$this->change_pwd($newpass);
 
-		$_SESSION['acm'] = serialize(new account($this->login, ACCOUNT::l2j_encrypt($newpass)));
+		$_SESSION['acm'] = serialize(new account($this->login, $this->l2j_encrypt($newpass)));
 
 		return true;
 	}
 	function can_chg_email() {
-		global $MYSQL, $can_chg_email;
+		global $can_chg_email;
 
-		if(ACCOUNT::get_email() == '')
+		if($this->get_email() == '')
 			return true;
 
 		if(!$can_chg_email)
@@ -372,46 +372,38 @@ class account {
 	}
 
 	function change_email($email) {
-		global $MYSQL;
 
-		$MYSQL->connect();
 		$sql = "UPDATE `accounts` SET `email` = '" . $email . "',
 				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
 				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
 
 		if(DEBUG) echo 'Update the email on accounts table<li>'.$sql.'</li>';
 
-		$MYSQL->query($sql);
-		$MYSQL->close();
+		$this->MYSQL->query($sql);
 
 		return true;
 	}
 
 	function get_email ()
 	{
-		global $MYSQL;
 
-		if(!ACCOUNT::is_logged())			// Check if user is logged
+		if(!$this->is_logged())			// Check if user is logged
 			return false;
 
 		$account = unserialize($_SESSION['acm']);
 
-		$MYSQL->connect();
 		$sql = "SELECT email FROM accounts WHERE login = '" . $account->login . "' LIMIT 1;";
 
 		if(DEBUG) echo 'Get the email of the user<li>'.$sql.'</li>';
 
-		$email = $MYSQL->result($sql);
-		$MYSQL->close();
-
-		return $email;
+		return $this->MYSQL->result($sql);
 	}
 
 	function edit_email ($pass,$email,$reemail)
 	{
 		global $vm, $error;
 
-		if($this->password != ACCOUNT::l2j_encrypt($pass)) {
+		if($this->password != $this->l2j_encrypt($pass)) {
 			$error = $vm['_REGWARN_VPASS1'];
 			return false;
 		}
@@ -447,14 +439,13 @@ class account {
 	}
 
 	function verif () {
-		global $MYSQL;
 
-		if(!ACCOUNT::is_logged())			// Check if user is logged
+		if(!$this->is_logged())			// Check if user is logged
 			return false;
 
 		$account = unserialize($_SESSION['acm']);
 
-		$MYSQL->connect();
+
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
 					'WHERE login = "'.$account->login.'" ' .
@@ -464,10 +455,9 @@ class account {
 		if(DEBUG) echo 'Verify if the user is correctly logged<li>'.$sql.'</li>';
 
 
-		if($MYSQL->result($sql) != 1)	// Check if user session data are right
+		if($this->MYSQL->result($sql) != 1)	// Check if user session data are right
 			return false;
 
-		$MYSQL->close();
 		return true;
 	}
 

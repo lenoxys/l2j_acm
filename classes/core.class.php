@@ -7,13 +7,15 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 class core {
 
 	function core() {
+		$this->account = new account();
+		$this->secure_post();
 	}
 
 	function index() {
-		if(ACCOUNT::is_logged())
-			CORE::show_account();
+		if($this->account->is_logged())
+			$this->show_account();
 		else
-			CORE::show_login();
+			$this->show_login();
 	}
 
 	function show_auth() {
@@ -22,9 +24,9 @@ class core {
 
 	function loggout() {
 		global $valid, $vm;
-		ACCOUNT::loggout();
+		$this->account->loggout();
 		$valid = $vm['_logout'];
-		CORE::index();
+		$this->index();
 	}
 
 	function login() {
@@ -35,13 +37,13 @@ class core {
 			$error = $vm['_no_id_no_pwd'];
 		}else{
 
-			CORE::secure_post();
+			$this->secure_post();
 
-			if(!ACCOUNT::auth($_POST['Luser'], $_POST['Lpwd'], $_POST['Limage']))
+			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], $_POST['Limage']))
 				$error .= $vm['_wrong_auth'];
 		}
 
-		CORE::index();
+		$this->index();
 	}
 
 	function show_login() {
@@ -78,6 +80,7 @@ class core {
 
 	function show_account() {
 		global $template, $vm, $error, $valid;
+		
 		$template->set_filenames(array(
 			'content' => 'account.tpl'
 		));
@@ -96,7 +99,7 @@ class core {
 				'VALID' => $valid
 			));
 		}
-		if(ACCOUNT::can_chg_email()) {
+		if($this->account->can_chg_email()) {
 			$template->assign_block_vars('email',array(
 				'vm_chg_email' => $vm['_chg_email']
 			));
@@ -106,17 +109,13 @@ class core {
 	function create() {
 		global $valid, $error, $vm;
 
-		CORE::secure_post();
-
-		$account = new account();
-
-		if($account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], $_POST['Limage'])) {
+		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], $_POST['Limage'])) {
 			$valid = $vm['_account_created'];
-			CORE::show_login();
+			$this->show_login();
 		}
 		else
 		{
-			CORE::show_create(true);
+			$this->show_create(true);
 		}
 	}
 
@@ -136,13 +135,11 @@ class core {
 	function show_create($acka = false) {
 		global $template, $vm, $error, $act_img, $id_limit, $pwd_limit,$ack_cond;
 
-		CORE::secure_post();
-
 		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
 
 		if($ack_cond && !$ack) {
-			CORE::show_ack();
+			$this->show_ack();
 			return false;
 		}
 
@@ -204,15 +201,11 @@ class core {
 	function forgot_pwd() {
 		global $vm, $error, $valid;
 
-		CORE::secure_post();
-
-		$account = new account();
-
-		if($account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
+		if($this->account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
 			$valid = $vm['_password_request'];
-			CORE::index();
+			$this->index();
 		}else{
-			CORE::show_forget();
+			$this->show_forget();
 		}
 
 		return true;
@@ -221,16 +214,12 @@ class core {
 	function forgot_pwd2() {
 		global $vm, $error, $valid;
 
-		CORE::secure_post();
-
-		$account = new account();
-
-		if($account->forgot_pwd2($_GET['login'], $_GET['key'])) {
+		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
 			$valid = $vm['_password_reseted'];
-			CORE::index();
+			$this->index();
 		}else{
 			$error = $vm['_control'];
-			CORE::show_forget();
+			$this->show_forget();
 		}
 
 		return true;
@@ -239,31 +228,30 @@ class core {
 	function change_pwd() {
 		global $valid, $error, $vm;
 
-		if(!ACCOUNT::verif()) {
+		if(!$this->account->verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
-			CORE::index();
+			$this->index();
 			return;
 		}
 
-		CORE::secure_post();
-
 		$account = unserialize($_SESSION['acm']);
 
-		if($account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
+		if($this->account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
 			$valid = $vm['_change_pwd_valid'];
-			CORE::show_account();
+			$this->show_account();
 		}
 		else
 		{
-			CORE::show_chg_pwd();
+			$this->show_chg_pwd();
 		}
 	}
 
 	function show_chg_pwd() {
 		global $error, $vm;
-		if(!ACCOUNT::verif()) {
+		
+		if(!$this->account->verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
-			CORE::index();
+			$this->index();
 			return;
 		}
 
@@ -291,41 +279,39 @@ class core {
 	function change_email() {
 		global $valid, $error, $vm;
 
-		if(!ACCOUNT::verif()) {
+		if(!$this->account->verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
-			CORE::index();
+			$this->index();
 			return;
 		}
 
-		if(!ACCOUNT::can_chg_email()) {
-			CORE::index();
+		if(!$this->account->can_chg_email()) {
+			$this->index();
 			return;
 		}
 
-		CORE::secure_post();
+		$this->account = unserialize($_SESSION['acm']);
 
-		$account = unserialize($_SESSION['acm']);
-
-		if($account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
+		if($this->account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
 			$valid = $vm['_change_email_valid'];
-			CORE::show_account();
+			$this->show_account();
 		}
 		else
 		{
-			CORE::show_chg_email();
+			$this->show_chg_email();
 		}
 	}
 
 	function show_chg_email() {
 		global $error, $vm, $can_chg_email;
-		if(!ACCOUNT::verif()) {
+		if(!$this->account->verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
-			CORE::index();
+			$this->index();
 			return;
 		}
 
-		if(!ACCOUNT::can_chg_email()) {
-			CORE::index();
+		if(!$this->account->can_chg_email()) {
+			$this->index();
 			return;
 		}
 
@@ -353,14 +339,12 @@ class core {
 	function activation() {
 		global $vm, $valid, $error;
 
-		$account = new account();
-
-		if(!$account->valid_account(htmlentities($_GET['key'])))
+		if(!$this->account->valid_account(htmlentities($_GET['key'])))
 			$error = $vm['_activation_control'];
 		else
 			$valid = $vm['_account_actived'];
 
-		CORE::index();
+		$this->index();
 
 		return;
 	}
@@ -380,6 +364,8 @@ class core {
 			if ($key == 'Lpwd')
 				$_POST[$key] = substr($value, 0, $id_limit);
 		}
+		
+		return;
 	}
 
 	function gen_img_cle($num = 5) {
