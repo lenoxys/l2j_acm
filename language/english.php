@@ -76,6 +76,7 @@ $vm['_email_message_change_pwd_ok']	= "Someone at [IP] has reset your Lineage II
 $vm['_creating_acc_prob'] = 'Database problem : Account was not created. Please report this to the Staff.';
 
 $vm['_chg_email']			= 'Change your email';
+$vm['_chg_email_text']		= '<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
 $vm['_email2']				= 'Confirm email';
 $vm['_change_pwd_valid']	= 'Your password has been changed.';
 $vm['_change_email_valid']	= 'Your email has been changed.';

@@ -3,17 +3,23 @@
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
 class mysql {
+	
+	var $host, $user, $pass, $db;
 
-	function mysql() {
+	function mysql($host, $user, $pass, $db) {
+		$this->host	= $host;
+		$this->user	= $user;
+		$this->pass	= $pass;
+		$this->db	= $db;
 	}
 
 	function connect () {
-		global $host, $user, $pass, $db, $error, $vm;
-		if(!@mysql_connect ($host,$user,$pass)) {
+		global $error, $vm;
+		if(!@mysql_connect ($this->host,$this->user,$this->pass)) {
 			$error = $vm['_error_db_connect'];
 			return false;
 		}
-		if(!@mysql_select_db ($db)) {
+		if(!@mysql_select_db ($this->db)) {
 			$error = $vm['_error_db_select'];
 			return false;
 		}
@@ -32,4 +38,19 @@ class mysql {
 		@mysql_close ();
 	}
 }
+
+class mysql_ls extends mysql{
+	function mysql_ls() {
+		global $ls_host, $ls_user, $ls_pass, $ls_db;
+		$this->mysql($ls_host, $ls_user, $ls_pass, $ls_db);
+	}
+}
+
+class mysql_gs extends mysql{
+	function mysql_gs() {
+		global $gs_host, $gs_user, $gs_pass, $gs_db;
+		$this->mysql($gs_host, $gs_user, $gs_pass, $gs_db);
+	}
+}
+
 ?>

@@ -7,10 +7,10 @@ class account {
 	var $login, $password;
 
 	function account($login = null, $password = null) {
-		global $MYSQL;
+		global $MYSQL_LS;
 		$this->login = $login;
 		$this->password = $password;
-		$this->MYSQL = $MYSQL;
+		$this->MYSQL = $MYSQL_LS;
 	}
 
 	function getLogin() {

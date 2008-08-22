@@ -9,7 +9,7 @@ require './classes/smtp.class.php';
 require './classes/email.class.php';
 require './classes/core.class.php';
 require './classes/account.class.php';
-require './classes/template.class.php';
+require './libs/Smarty.class.php';
 
 if(DEBUG) echo '<div style="color: #000;background: #FFF;"><h1>DEBUG MODE ON</h1><br />';
 
@@ -24,8 +24,8 @@ $action = (!empty($_POST['action'])) ? $_POST['action'] : $action;
 $action = htmlentities($action);
 $action = htmlspecialchars($action);
 
-$MYSQL = new MYSQL;
-$MYSQL->connect();
+$MYSQL_LS = new MYSQL_LS;
+$MYSQL_LS->connect();
 
 $email_class = new EMAIL;
 
@@ -33,15 +33,13 @@ $email_class = new EMAIL;
 // Display
 //------------------------------------------------------------------
 
-$template = new Template('./template/');
-$template->set_filenames(array(
-	'index' => 'index.tpl'
-));
+$template = new Smarty;
 
-$template->assign_vars(array(
-    'vm_title' => $vm['_title'],
-    'vm_title_page'  => $vm['_title_page']
-));
+$template->template_dir = 'templates/'.$tmp;
+$template->compile_dir = 'cache';
+
+$template->assign('vm_title', $vm['_title']);
+$template->assign('vm_title_page', $vm['_title_page']);
 
 $core = new CORE();
 
@@ -88,10 +86,6 @@ switch ($action) {
 }
 if(DEBUG) echo '</div>';
 
-$template->assign_var_from_handle('CONTENT', 'content');
-
-$template->pparse('index');
-
-$MYSQL->close();
+$MYSQL_LS->close();
 
 ?>

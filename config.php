@@ -4,10 +4,19 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 
-$host	= 'localhost';									// host database DB
-$user	= 'root';										// user
-$pass	= '';											// password
-$db		= 'l2jdb';										// database name
+//	#	Login Server Configuration
+
+$ls_host	= 'localhost';								// login host database DB
+$ls_user	= 'root';									// login user
+$ls_pass	= '';										// login password
+$ls_db		= 'l2jdb';									// login database name
+
+//	#	Game Server Configuration
+
+$gs_host	= 'localhost';								// game host database DB
+$gs_user	= 'root';									// game user
+$gs_pass	= '';										// game password
+$gs_db		= 'l2jdb';									// game database name
 
 
 $server_name	= 'Private Server';						// server name
@@ -25,9 +34,11 @@ $pwd_limit		= 15;									// Limit pwd characters
 
 $language		= 'english';							// language use by Account Manager :: name of language file in language folder
 
-$can_chg_email	= false;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
+$can_chg_email	= true;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
 
-$ack_cond		= false;								// User must accept before register :: conditions can be edited on language file
+$ack_cond		= true;								// User must accept before register :: conditions can be edited on language file
+
+$tmp			= 'template';							// template directory
 
 //#################
 //#Advanced Config#

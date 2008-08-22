@@ -75,6 +75,7 @@ $vm['_email_message_change_pwd_ok']	= "Alguien en [IP] ha restablecido su contra
 $vm['_creating_acc_prob'] = 'Problema en la base de datos : Cuentas no ha sido creada. Por favor, informe de esto al equipo [SERVER] al correo electrónico [EMAIL_SUPPORT].';
 
 $vm['_chg_email']			= 'Cambiar su dirección de correo electrónico';
+$vm['_chg_email_text']		= '<span style="color: red">No confiar en quién decir su cuenta GM/Admin. No necesitamos la cuenta <u>Nombre de cuenta</u> y / o <u>Contraseña</u>! Nunca la revele o suministre!</span>';
 $vm['_email2']				= 'Confirmar correo electrónico';
 $vm['_change_pwd_valid']	= 'Su contraseña ha cambiado.';
 $vm['_change_email_valid']	= 'Tu correo electrónico ha cambiado.';

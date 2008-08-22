@@ -76,6 +76,7 @@ $vm['_email_message_change_pwd_ok']	= "Heslo Vašeho učtu [ID] na Lineage II se
 $vm['_creating_acc_prob'] = 'Database problem : Account was not created. Please report this to the Staff.';
 
 $vm['_chg_email']			= 'Change your email';
+$vm['_chg_email_text']		= '<span style="color: red">Nevěřte lidem, kteří po Vás chtejí heslo k Vašemu účtu a tvrdí, že jsou Game Master či Admin. Vaše heslo nepotřebujeme znát z žádného důvodu, proto jej nikdy nikomu nesdělujte!</span>';
 $vm['_email2']				= 'Confirm email';
 $vm['_change_pwd_valid']	= 'Your password has been changed.';
 $vm['_change_email_valid']	= 'Your email has been changed.';

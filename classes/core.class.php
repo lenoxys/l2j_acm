@@ -48,62 +48,48 @@ class core {
 
 	function show_login() {
 		global $template, $vm, $error, $valid, $id_limit, $pwd_limit, $act_img;
-		$template->set_filenames(array(
-			'content' => 'form.tpl'
-		));
-		$template->assign_vars(array(
-		    'vm_exist_account'		=> $vm['_exist_account'],
-		    'vm_account_length'		=> $id_limit,
-		    'vm_password_length'	=> $pwd_limit,
-		    'vm_account'			=> $vm['_account'],
-		    'vm_password'			=> $vm['_password'],
-		    'vm_login_button'		=> $vm['_login_button'],
-		    'vm_forgot_password'	=> $vm['_forgot_password'],
-		    'vm_new_account'		=> $vm['_new_account'],
-		    'vm_new_account_text'	=> $vm['_new_account_text'],
-		    'vm_create_button'		=> $vm['_create_button']
+		$template->assign('vm', array(
+		    'exist_account'		=> $vm['_exist_account'],
+		    'account_length'		=> $id_limit,
+		    'password_length'	=> $pwd_limit,
+		    'account'			=> $vm['_account'],
+		    'password'			=> $vm['_password'],
+		    'login_button'		=> $vm['_login_button'],
+		    'forgot_password'	=> $vm['_forgot_password'],
+		    'new_account'		=> $vm['_new_account'],
+		    'new_account_text'	=> $vm['_new_account_text'],
+		    'create_button'		=> $vm['_create_button']
 		));
 		if($act_img) {
-			$template->assign_block_vars('image', null);
+			$template->assign('image', 'image');
 		}
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
 		if($valid != '') {
-			$template->assign_block_vars('valid',array(
-				'VALID' => $valid
-			));
+			$template->assign('valid', $valid);
 		}
+		$template->display('form.tpl');
 	}
 
 	function show_account() {
 		global $template, $vm, $error, $valid;
 		
-		$template->set_filenames(array(
-			'content' => 'account.tpl'
-		));
-		$template->assign_vars(array(
-		    'vm_account_text'		=> $vm['_chg_pwd_text'],
-		    'vm_chg_pwd'			=> $vm['_chg_pwd'],
-		    'vm_logout_link'		=> $vm['_logout_link']
+		$template->assign('vm', array(
+		    'account_text'		=> $vm['_chg_pwd_text'],
+		    'chg_pwd'			=> $vm['_chg_pwd'],
+		    'logout_link'		=> $vm['_logout_link']
 		));
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
 		if($valid != '') {
-			$template->assign_block_vars('valid',array(
-				'VALID' => $valid
-			));
+			$template->assign('valid', $valid);
 		}
 		if($this->account->can_chg_email()) {
-			$template->assign_block_vars('email',array(
-				'vm_chg_email' => $vm['_chg_email']
-			));
+			$template->assign('email', $vm['_chg_email']);
 		}
+		$template->display('account.tpl');
 	}
 
 	function create() {
@@ -121,15 +107,12 @@ class core {
 
 	function show_ack(){
 		global $template,$vm;
-		$template->set_filenames(array(
-			'content' => 'ack.tpl'
+		$template->assign('vm', array(
+		    'terms_and_condition'		=> $vm['_TERMS_AND_CONDITION'],
+		    'return'					=> $vm['_return'],
+		    'accept_button'				=> $vm['_accept_button']
 		));
-		$template->assign_vars(array(
-		    'vm_terms_and_condition'	=> $vm['_TERMS_AND_CONDITION'],
-		    'vm_return'					=> $vm['_return'],
-		    'vm_accept_button'		=> $vm['_accept_button']
-		));
-		$_COOKIE['ack'] = '';
+		$template->display('ack.tpl');
 	}
 
 	function show_create($acka = false) {
@@ -142,60 +125,52 @@ class core {
 			$this->show_ack();
 			return false;
 		}
-
-		$template->set_filenames(array(
-			'content' => 'create.tpl'
-		));
-		$template->assign_vars(array(
-		    'vm_new_account'		=> $vm['_new_account'],
-		    'vm_new_account_text'	=> $vm['_new_account_text2'],
-		    'vm_account_length'		=> $id_limit,
-		    'vm_password_length'	=> $pwd_limit,
-		    'vm_account'			=> $vm['_account'],
-		    'vm_password'			=> $vm['_password'],
-		    'vm_password2'			=> $vm['_password2'],
-		    'vm_email'				=> $vm['_email'],
-		    'vm_image_control_desc'	=> $vm['_image_control_desc'],
-		    'vm_return'				=> $vm['_return'],
-		    'vm_create_button'		=> $vm['_create_button'],
+		
+		$template->assign('vm', array(
+		    'new_account'			=> $vm['_new_account'],
+		    'new_account_text'		=> $vm['_new_account_text2'],
+		    'account_length'		=> $id_limit,
+		    'password_length'		=> $pwd_limit,
+		    'account'				=> $vm['_account'],
+		    'password'				=> $vm['_password'],
+		    'password2'				=> $vm['_password2'],
+		    'email'					=> $vm['_email'],
+		    'image_control_desc'	=> $vm['_image_control_desc'],
+		    'return'				=> $vm['_return'],
+		    'create_button'			=> $vm['_create_button'],
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
 		if($act_img) {
-			$template->assign_block_vars('image', null);
+			$template->assign('image', 'image');
 		}
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
+		$template->display('create.tpl');
 	}
 
 	function show_forget() {
 		global $template, $vm, $error, $act_img, $id_limit;
-		$template->set_filenames(array(
-			'content' => 'forgot_pwd.tpl'
-		));
-		$template->assign_vars(array(
-		    'vm_forgot_pwd'			=> $vm['_forgot_pwd'],
-		    'vm_forgot_pwd_text'	=> $vm['_forgot_pwd_text'],
-		    'vm_account_length'		=> $id_limit,
-		    'vm_account'			=> $vm['_account'],
-		    'vm_email'				=> $vm['_email'],
-		    'vm_image_control_desc'	=> $vm['_image_control_desc'],
-		    'vm_return'				=> $vm['_return'],
-		    'vm_forgot_button'		=> $vm['_forgot_button'],
+		$template->assign('vm', array(
+		    'forgot_pwd'			=> $vm['_forgot_pwd'],
+		    'forgot_pwd_text'		=> $vm['_forgot_pwd_text'],
+		    'account_length'		=> $id_limit,
+		    'account'				=> $vm['_account'],
+		    'email'					=> $vm['_email'],
+		    'image_control_desc'	=> $vm['_image_control_desc'],
+		    'return'				=> $vm['_return'],
+		    'forgot_button'			=> $vm['_forgot_button'],
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
 		if($act_img) {
-			$template->assign_block_vars('image', null);
+			$template->assign('image', 'images');
 		}
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
+		$template->display('forgot_pwd.tpl');
 	}
 
 	function forgot_pwd() {
@@ -255,25 +230,24 @@ class core {
 			return;
 		}
 
-		global $template, $vm, $error, $pwd_limit;
-		$template->set_filenames(array(
-			'content' => 'chg_pwd.tpl'
+		global $template, $pwd_limit;
+
+		$template->assign('vm', array(
+		    'chg_pwd'				=> $vm['_chg_pwd'],
+		    'chg_pwd_text'			=> $vm['_chg_pwd_text'],
+		    'password_length'		=> $pwd_limit,
+		    'passwordold'			=> $vm['_passwordold'],
+		    'password'				=> $vm['_password'],
+		    'password2'				=> $vm['_password2'],
+		    'return'				=> $vm['_return'],
+		    'chg_button'			=> $vm['_chg_button']
 		));
-		$template->assign_vars(array(
-		    'vm_chg_pwd'			=> $vm['_chg_pwd'],
-		    'vm_chg_pwd_text'		=> $vm['_chg_pwd_text'],
-		    'vm_password_length'	=> $pwd_limit,
-		    'vm_passwordold'		=> $vm['_passwordold'],
-		    'vm_password'			=> $vm['_password'],
-		    'vm_password2'			=> $vm['_password2'],
-		    'vm_return'				=> $vm['_return'],
-		    'vm_chg_button'			=> $vm['_chg_button']
-		));
+		
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
+		
+		$template->display('chg_pwd.tpl');
 	}
 
 	function change_email() {
@@ -304,6 +278,7 @@ class core {
 
 	function show_chg_email() {
 		global $error, $vm, $can_chg_email;
+		
 		if(!$this->account->verif()) {
 			$error = $vm['_WARN_NOT_LOGGED'];
 			$this->index();
@@ -315,25 +290,25 @@ class core {
 			return;
 		}
 
-		global $template, $vm, $error, $pwd_limit;
-		$template->set_filenames(array(
-			'content' => 'chg_email.tpl'
+		global $template, $pwd_limit;
+		
+		$template->assign('vm', array(
+		    'chg_pwd'				=> $vm['_chg_email'],
+		    'chg_pwd_text'			=> $vm['_chg_email_text'],
+		    'password_length'		=> $pwd_limit,
+		    'password'				=> $vm['_password'],
+		    'email'					=> $vm['_email'],
+		    'email2'				=> $vm['_email2'],
+		    'return'				=> $vm['_return'],
+		    'chg_button'			=> $vm['_chg_button']
 		));
-		$template->assign_vars(array(
-		    'vm_chg_pwd'			=> $vm['_chg_pwd'],
-		    'vm_chg_pwd_text'		=> $vm['_chg_pwd_text'],
-		    'vm_password_length'	=> $pwd_limit,
-		    'vm_password'			=> $vm['_password'],
-		    'vm_email'				=> $vm['_email'],
-		    'vm_email2'				=> $vm['_email2'],
-		    'vm_return'				=> $vm['_return'],
-		    'vm_chg_button'			=> $vm['_chg_button']
-		));
+		
 		if($error != '') {
-			$template->assign_block_vars('error',array(
-				'ERROR' => $error
-			));
+			$template->assign('error', $error);
 		}
+		
+		$template->display('chg_email.tpl');
+
 	}
 
 	function activation() {

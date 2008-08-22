@@ -75,6 +75,7 @@ $vm['_email_message_change_pwd_ok']	= "Quelqu'un avec l'IP [IP] a changé le mot 
 $vm['_creating_acc_prob'] = 'Problème de base de donnée : Le compte utilisateur n\'a pas été créer. Merci de le reporter à l\'équipe.';
 
 $vm['_chg_email']			= 'Changer votre email';
+$vm['_chg_email_text']		= '<span style="color: red">Ne croyer pas les personnes qui se disent GM/Admin. Nous n\'avons pas besoin de votre <u>compte utilisateur</u> et/ou de votre <u>mot de passe</u>! Ne jamais donner ses informations!</span>';
 $vm['_email2']				= 'Confirmation de l\'email';
 $vm['_change_pwd_valid']	= 'Votre mot de passe a été changé.';
 $vm['_change_email_valid']	= 'Votre email a été changé.';

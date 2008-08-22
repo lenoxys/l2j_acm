@@ -75,6 +75,7 @@ $vm['_email_message_change_pwd_ok']	= "Qualcuno con questo IP [IP] ha resettato 
 $vm['_creating_acc_prob'] = 'Database problem : Account was not created. Please report this to the Staff.';
 
 $vm['_chg_email']			= 'Change your email';
+$vm['_chg_email_text']		= '<span style="color: red">Non credere a chi dice di essere un GM/admin. NON ABBIAMO BISOGNO DEL TUO <u>ACCOUNT</u> E/O DELLA TUA <u>PASSWORD</u>! NON FORNIRLE MAI A NESSUNO!</span>';
 $vm['_email2']				= 'Confirm email';
 $vm['_change_pwd_valid']	= 'Your password has been changed.';
 $vm['_change_email_valid']	= 'Your email has been changed.';
