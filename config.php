@@ -38,7 +38,7 @@ $can_chg_email	= true;								// User can change email ; set false if you want p
 
 $ack_cond		= true;								// User must accept before register :: conditions can be edited on language file
 
-$tmp			= 'template';							// template directory
+$tmp			= 'kamael';								// template directory
 
 //#################
 //#Advanced Config#

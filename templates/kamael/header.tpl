@@ -3,7 +3,7 @@
 <head>
 	<title>{$vm_title}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-	<link href="./template/style.css" rel="stylesheet" type="text/css" />
+	<link href="./templates/kamael/style.css" rel="stylesheet" type="text/css" />
 	{if isset($image)}{literal}<SCRIPT language="JavaScript" type="text/javascript">
 	function reloadImage(img) {
 		document.images["L_image"].src=document.images["L_image"].src+"?"+new Date();
