@@ -34,9 +34,9 @@ $pwd_limit		= 15;									// Limit pwd characters
 
 $language		= 'english';							// language use by Account Manager :: name of language file in language folder
 
-$can_chg_email	= true;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
+$can_chg_email	= false;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
 
-$ack_cond		= true;								// User must accept before register :: conditions can be edited on language file
+$ack_cond		= false;								// User must accept before register :: conditions can be edited on language file
 
 $tmp			= 'kamael';								// template directory
 
