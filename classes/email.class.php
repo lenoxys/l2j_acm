@@ -10,10 +10,10 @@ class email {
 
 	function get_email ($login)
 	{
-		global $MYSQL;
-		$MYSQL->connect();
+		global $MYSQL_LS;
+		$this->MYSQL = $MYSQL_LS;
 		$sql = "SELECT email FROM accounts WHERE login = '" . $login . "' LIMIT 1;";
-		$q = $MYSQL->query($sql);
+		$q = $this->MYSQL->query($sql);
 		$r = @mysql_fetch_array($q);
 		return $r['email'];
 	}
