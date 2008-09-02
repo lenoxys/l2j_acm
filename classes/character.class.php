@@ -2,22 +2,62 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-class character extends account{
+class character extends world {
 
-	var $charId, $char_name;
+	var $charId, $char_name, $login, $world, $classid, $gender, $accesslevel, $x, $y, $region, $online;
 
-	function character($charId = null) {
-		$this->MYSQL_GS = new MYSQL_GS();
+	function character($charId = null, $mysql = true) {
+		global $allow_char_mod;
+		
+		$this->MYSQL_GS = new MYSQL_GS;
+		
 		$this->charId = $charId;
+		
+		if(!$allow_char_mod)
+			exit('Access to this private class have been restricted by the admin');
 	}
 	
-	function allow_fix() {
+	function is_ban () {
+		return false;
+	}
+	
+	function get_chars($login) {
+		$chars = array();
+		
+		$sql = 'SELECT `charId`, `char_name`, `classid`, `sex`, `accesslevel`, `x`, `y`, `online` FROM `characters` WHERE `account_name` = "'.$login.'";';
+		
+		$MYSQL_GS = new MYSQL_GS;
+		$MYSQL_GS->connect();
+		$rslt = $MYSQL_GS->query($sql);
+		
+		while ($row = mysql_fetch_object($rslt)) {
+			$char = new character($row->charId);
+			$char->login = $login;
+			$char->char_name = $row->char_name;
+			$char->classid = $row->classid;
+			$char->gender = $row->sex;
+			$char->accesslevel = $row->accesslevel;
+			$char->x = $row->x;
+			$char->y = $row->y;
+			$char->online = $row->online;
+			$char->world = $this->get_world();
+			$chars[] = $char;
+		}
+		
+		$MYSQL_GS->close();
+		
+		return $chars;
+	}
+	
+	function allow_fix($unstuck = false) {
 		global $allow_fix, $allow_fix_time;
 		
 		if(!$allow_fix)
 			return false;
-			
-		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `account_name` = '.$this->charId.' AND `value` > '.(time()-($allow_fix_time * 3600));
+		
+		$last = ($unstuck) ? 'last_unstuck' : 'last_fix';
+		
+		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($allow_fix_time * 3600));
 		
 		if($this->MYSQL_GS->result($sql) > '0')
 			return false;
@@ -27,18 +67,202 @@ class character extends account{
 	
 	function fix() {
 	
-		if (!$this->allow_fix)
+		if (!$this->allow_fix())
 			return false;
 		
-		$sql = 'UPDATE `characters` SET `x`=-84318, `y`=244579, `z`=-3730 WHERE `charId`='.$this->charId;
+		$t = $this->get_nearest_town();
+		
+		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
 		$this->MYSQL_GS->query($sql);
-		$sql = 'DELETE FROM `character_shortcuts` WHERE `charId`='.$this->charId;
+		$sql = 'DELETE FROM `character_shortcuts` WHERE `charId`='.$this->charId.';';
 		$this->MYSQL_GS->query($sql);
-		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId;
+		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId.';';
 		$this->MYSQL_GS->query($sql);
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_fix', '".time()."');";
 		$this->MYSQL_GS->query($sql);
+		
 		return true;
+	}
+	
+	function unstuck () {
+	
+		if (!$this->allow_fix(true))
+			return false;
+		
+		$t = $this->get_nearest_town();
+		
+		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
+		$this->MYSQL_GS->query($sql);
+		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
+		$this->MYSQL_GS->query($sql);
+		return true;
+	}
+	
+	function getClassId() {
+		return $this->classid;
+	}
+	
+	function is_online() {
+		return true;
+	}
+	
+	function change_name() {
+		global $error, $vm;
+		
+	}
+	
+	function can_change_name () {
+		global $allow_account_services, $error, $vm;
+		
+		if( !$allow_account_services ) {	// Check if the admin allow account services
+			$error = $vm['_acc_serv_off'];
+			return false;
+		}
+		
+		if( $this->is_ban() ) {				// Check if the character is banned
+			$error = $vm['_acc_serv_ban'];
+			return false;
+		}
+		
+	}
+	
+	function change_gender() {
+		global $error, $vm, $item_female_only, $item_male_only;
+		
+		if(!$this->can_change_gender())
+			return false;
+		
+		$items = ($this->gender == 0) ? $item_male_only : $item_female_only;		// Check which items list by gender
+		foreach ($items as $id) {												// Foreach items listed set in inventory if they exist.
+			$sql = 'UPDATE `items` SET `loc` = "INVENTORY" WHERE `owner_id` = '.$this->charId.' AND `item_id` = '.$id.';';
+			$this->MYSQL_GS->query($sql);
+		}
+		
+		
+	}
+	
+	function can_change_gender () {
+		global $allow_account_services, $error, $vm;
+		
+		if( !$allow_account_services ) {	// Check if the admin allow account services
+			$error = $vm['_acc_serv_off'];
+			return false;
+		}
+		
+		if( $this->is_ban() ) {				// Check if the character is banned
+			$error = $vm['_acc_serv_ban'];
+			return false;
+		}
+		
+		if( 123 >= $this->classid && $this->classid <= 136 ) {		// Check if the character is kamael
+			$error = $vm['_acc_serv_kamael_gender'];
+			return false;
+		}
+	}
+	
+	function get_nearest_town() {
+		$this->mapRegionTable();
+		$town_id = $this->getMapRegion($this->x,$this->y);
+		return $this->get_spawn_town($town_id);
+	}
+	
+	function mapRegionTable() {
+		$sql = 'SELECT "plop", region, sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10 FROM mapregion;';
+		
+		$rslt = $this->MYSQL_GS->query($sql);
+		
+		while ($row = mysql_fetch_row($rslt)) {
+			$region = $row[1];
+			for ($j = 0; $j < 10; $j++)
+				$this->regions[$j][$region] = $row[($j + 2)];
+		}
+	}
+	
+	function getMapRegion($posX, $posY) {
+		return $this->regions[$this->getMapRegionX($posX)][$this->getMapRegionY($posY)];
+	}
+	
+	function getMapRegionX($posX) {
+		return ($posX >> 15) + 4;
+	}
+	
+	function getMapRegionY($posY) {
+		return ($posY >> 15) + 10;
+	}
+	
+	function get_spawn_town($townId) {
+		global $coord_static,$coord_default;
+		
+		if($coord_static)
+			return $coord_default;
+		
+		switch($townId) {
+			case 0:
+				$town_coord = array(-84176, 243382, -3126);		// Talking Island
+			break;
+			case 1:
+				$town_coord = array(45525, 48376, -3059);		// Elven Village
+			break;
+			case 2:
+				$town_coord = array(12181, 16675, -4580);		// DE Village
+			break;
+			case 3:
+				$town_coord = array(-45232, -113603, -224);		// Orc Village
+			break;
+			case 4:
+				$town_coord = array(115074, -178115, -880);		// Dwarven Village
+			break;
+			case 5:
+				$town_coord = array(-14138, 122042, -2988);		// Gludio Castle Town
+			break;
+			case 6:
+				$town_coord = array(-82856, 150901, -3128);		// Gludin Village
+			break;
+			case 7:
+				$town_coord = array(18823, 145048, -3126);		// Dion Castle Town
+			break;
+			case 8:
+				$town_coord = array(81236, 148638, -3469);		// Giran Castle Town
+			break;
+			case 9:
+				$town_coord = array(80853, 54653, -1524);		// Town of Oren
+			break;
+			case 10:
+				$town_coord = array(147391, 25967, -2012);		// Town of Aden
+			break;
+			case 11:
+				$town_coord = array(117163, 76511, -2712);		// Hunter Village
+			break;
+			case 13:
+				$town_coord = array(111381, 219064, -3543);		// Heine
+			break;
+			case 14:
+				$town_coord = array(43894, -48330, -797);		// Rune Castle Town
+			break;
+			case 15:
+				$town_coord = array(148558, -56030, -2781);		// Goddard
+			break;
+			case 16:
+				$town_coord = array(87331, -142842, -1317);		// Schuttgart
+			break;
+			case 17:
+				$town_coord = array(18823, 145048, -3126);		// Floran Village
+			break;
+			case 18:
+				$town_coord = array(10468, -24569, -3645);		// Primeval Isle
+			break;
+			case 19:
+				$town_coord = array(-118092, 46955, 360);		// Kamael Village
+			case 21:
+			break;
+				$town_coord = array(-58752, -56898, -2032);		// Fantasy Isle
+			break;
+			default:
+				$town_coord = array(18823, 145048, -3126);		// Floran Village
+			break;
+		}
+		
+		return $town_coord;
 	}
 	
 }

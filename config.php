@@ -4,6 +4,8 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 
+
+
 //	#	Login Server Configuration
 
 $ls_host	= 'localhost';								// login host database DB
@@ -13,17 +15,31 @@ $ls_db		= 'l2jdb';									// login database name
 
 //	#	Game Server Configuration
 
-$gs_host	= 'localhost';								// game host database DB
-$gs_user	= 'root';									// game user
-$gs_pass	= '';										// game password
-$gs_db		= 'l2jdb';									// game database name
+$id = 1;
+$gs_host[$id]	= 'localhost';							// game host database DB
+$gs_user[$id]	= 'root';								// game user
+$gs_pass[$id]	= '';									// game password
+$gs_db[$id]		= 'l2jdb';								// game database name
 
+/**
+
+Copy line under this text for add a new world. The id need to be same as the id registred into gameservers table.
+
+$id = 2;
+$gs_host[$id]	= 'localhost';							// game host database DB
+$gs_user[$id]	= 'root';								// game user
+$gs_pass[$id]	= '';									// game password
+$gs_db[$id]		= 'l2jdb';								// game database name
+
+*/
+
+//	#	Web Configuration
 
 $server_name	= 'Private Server';						// server name
 $email_from		= 'support@host.com';					// Specify an adress email source
 
 $act_img		= true;									// Activate image verification ; set false if you want desactivate
-$act_email		= false;								// Activate email verification ; set false if you want desactivate
+$act_email		= true;									// Activate email verification ; set false if you want desactivate
 
 $acc_limit		= false;								// How many account can be registered ; set false for unlimited
 
@@ -40,9 +56,30 @@ $ack_cond		= false;								// User must accept before register :: conditions can
 
 $tmp			= 'kamael';								// template directory
 
-//#################
-//#Advanced Config#
-//#################
+
+//#####################
+//# Characters Config #
+//#####################
+
+/**
+
+$allow_char_mod				= false;					// Enable characters mod
+$allow_account_services		= false;					// Enable Account services feature (change name and gender) for offline character
+$time_account_services		= 7;						// Need to wait 7 days after change gender before to change another time for the same or another character
+$item_female_only			= array(8559,8913,8917);	// Check female-use only items before to change gender
+$item_male_only				= array(8923);				// Check male-use only items before to change gender
+
+$allow_fix					= false;					// Enable fixing feature for offline character
+$allow_unstuck				= false;					// Enable unstuck feature for offline character
+$time_fix					= 24;						// Need to wait 24 hours before to use fix or unstuck against
+$coord_static				= false;					// Use static coords when using unstuck and fix feature
+$coord_default				= array(0,0,0);				// When coord static enable tp player to the coords (x,y,z)
+
+*/
+
+//###################
+//# Advanced Config #
+//###################
 
 $use_smtp = false;										// Set to true if you want use an smtp server
 $smtp_address = 'smtp.server.com';						// Address of the smtp server
