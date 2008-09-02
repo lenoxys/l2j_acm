@@ -226,36 +226,45 @@ class account {
 			return false;
 		}
 
-		$login = htmlentities($login);
-		$password = htmlentities($password);
+		$this->login = htmlentities($login);
+		$this->password = htmlentities($password);
 
-		$password = $this->l2j_encrypt($password);
+		$this->password = $this->l2j_encrypt($this->password);
 
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
-					'WHERE login = "'.$login.'" ' .
-						'AND password = "'.$password.'" ' .
+					'WHERE login = "'.$this->login.'" ' .
+						'AND password = "'.$this->password.'" ' .
 						'AND accessLevel >= 0 LIMIT 1;';
 		if(DEBUG) echo 'Check if login and password match on account table<li>'.$sql.'</li>';
 
 		if($this->MYSQL->result($sql) != 1)
 			return false;
+			
+		$this->update_last_active();
 
-		$_SESSION['acm'] = serialize(new account($login, $password));
+		$_SESSION['acm'] = serialize(new account($this->login, $this->password));
 		
+		return true;
+	}
+	
+	function update_last_active() {
+		$sql = "UPDATE `accounts` SET `lastactive` = '" . time() . "',
+				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
+				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
+		if(DEBUG) echo 'Update last connexion of the account<li>'.$sql.'</li>';
+		$this->MYSQL->query($sql);
 		return true;
 	}
 
 	function change_pwd($pwd) {
 		global $email_class;
 
-
 		$sql = "UPDATE `accounts` SET `password` = '" . $this->l2j_encrypt($pwd) . "',
 				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
 				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
 		if(DEBUG) echo 'Update password of the account<li>'.$sql.'</li>';
 		$this->MYSQL->query($sql);
-
 
 		$this->code = $pwd;
 		$email_class->emailing($this, 'password_reseted');
