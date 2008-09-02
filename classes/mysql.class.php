@@ -47,8 +47,7 @@ class mysql_ls extends mysql{
 }
 
 class mysql_gs extends mysql{
-	function mysql_gs() {
-		global $gs_host, $gs_user, $gs_pass, $gs_db;
+	function mysql_gs($gs_host, $gs_user, $gs_pass, $gs_db) {
 		$this->mysql($gs_host, $gs_user, $gs_pass, $gs_db);
 	}
 }
