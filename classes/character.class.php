@@ -182,8 +182,9 @@ class character extends world {
 			return false;
 		}
 		
-		if() {
-			
+		if($new_name == $this->char_name) {		// Check if the new name is the same than currently
+			$error = $vm['_acc_serv_name_error1'];
+			return false;
 		}
 		
 		if( $this->is_ban() ) {				// Check if the character is banned
@@ -196,12 +197,12 @@ class character extends world {
 							AND `account_name` = "'.$this->charId.'";';
 		
 		if($this->world->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
-			$error = $vm['_acc_serv_name_error1'];
+			$error = $vm['_acc_serv_name_error2'];
 			return false;
 		}
 		
 		if (!preg_match($name_regex , $new_name)) {				// Check if new name is a valid name
-			$error = $vm['_acc_serv_name_error2'];
+			$error = $vm['_acc_serv_name_error3'];
 			return false;
 		}
 		
@@ -210,12 +211,12 @@ class character extends world {
 							AND `char_name` = "'.$new_name.'";';
 		
 		if($this->world->MYSQL_GS->result($sql) > '0') {		// Check if character is in clan.
-			$error = $vm['_acc_serv_name_error3'];
+			$error = $vm['_acc_serv_name_error4'];
 			return false;
 		}
 		
 		if(!$this->is_hero()) {		// Check if character is hero.
-			$error = $vm['_acc_serv_name_error4'];
+			$error = $vm['_acc_serv_name_error5'];
 			return false;
 		}
 		
