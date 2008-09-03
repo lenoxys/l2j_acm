@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 /**
  *	Lineage II World class
-*/
+ */
 
 class world extends account {
 
@@ -14,14 +14,13 @@ class world extends account {
  *	Construct a new world
  *	@param $id
  *			ID of the world selected
-*/
+ */
 	function world($id) {
 		global $MYSQL_LS, $allow_char_mod;
 		
 		if(!$allow_char_mod)
 			exit('Access to this private class have been restricted by the admin');
 
-		$this->MYSQL = $MYSQL_LS;
 		$this->set_name();
 		$this->get_config();
 		if($mysql)
@@ -30,7 +29,7 @@ class world extends account {
 
 /**
  *	Get mysql identity for the world
-*/
+ */
 	function get_config() {
 		global $gs_host, $gs_user, $gs_pass, $gs_db;
 		$this->gs_host = $gs_host[$this->id];
@@ -42,7 +41,7 @@ class world extends account {
 /**
  *	Get world name
  *		return world name
-*/
+ */
 	function get_name(){
 		return $this->name;
 	}
@@ -50,7 +49,7 @@ class world extends account {
 /**
  *	Set world name
  *		return nothing
-*/
+ */
 	function set_name(){
 		$this->name = get_name_world();
 	}
@@ -58,8 +57,8 @@ class world extends account {
 /**
  *	Get worlds list registred into login server
  *		return world list
-*/
-	function listing () {
+ */
+	function load_worlds () {
 		global $MYSQL_LS;
 		$sql = ' SELECT `server_id` FROM `gameservers`;';
 		$rslt = $MYSQL_LS->query($sql);
@@ -73,7 +72,7 @@ class world extends account {
 /**
  *	Get name world by id
  *		return name world
-*/	
+ */	
 	function get_name_world () {
 		$name = array();
 		$name['1']="Bartz";
@@ -148,6 +147,32 @@ class world extends account {
 		$name['70']="Zaken";
 		$name['71']="Core";
 		return $name[$this->id];
+	}
+
+
+/**
+ * Getting all characters in the world linked with the account gived in parameter
+ * 
+ * @param $login : account name
+ * 
+ * 		return list of their chars
+ */
+	function get_chars($login) {
+		$chars = array();
+		
+		$sql = 'SELECT `charId` FROM `characters` WHERE `account_name` = "'.$login.'";';
+		
+		$MYSQL_GS->connect();
+		$rslt = $MYSQL_GS->query($sql);
+		
+		while ($row = mysql_fetch_object($rslt)) {
+			$char = new character($row->charId, $login, $this);
+			$chars[] = $char;
+		}
+		
+		$MYSQL_GS->close();
+		
+		return $chars;
 	}
 
 }
