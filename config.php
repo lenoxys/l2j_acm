@@ -68,6 +68,7 @@ $allow_account_services		= false;					// Enable Account services feature (change
 $time_account_services		= 7;						// Need to wait 7 days after change gender before to change another time for the same or another character
 $item_female_only			= array(8559,8913,8917);	// Check female-use only items before to change gender
 $item_male_only				= array(8923);				// Check male-use only items before to change gender
+$name_regex	= '`^[[:alnum:]]{3,16}$`';					// allow alphanumeric character in char name (3-16 char.)
 
 $allow_fix					= false;					// Enable fixing feature for offline character
 $allow_unstuck				= false;					// Enable unstuck feature for offline character
