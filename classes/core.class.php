@@ -209,7 +209,7 @@ class core {
 		return true;
 	}
 
-	function change_pwd() {
+	function chg_pwd_form() {
 		global $valid, $error, $vm;
 
 		if(!$this->account->verif()) {
