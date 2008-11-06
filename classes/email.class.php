@@ -41,10 +41,6 @@ class email{
 		$entity_p = array ($_SERVER['REMOTE_ADDR'], $this->account->login, $email_from, $this->url, $this->account->code, $server_name,'');
 		$title = preg_replace($entity_b, $entity_p, $title);
 		$message = preg_replace($entity_b, $entity_p, $message);
-		
-		DEBUG::add($email.", ".$title.", ".$message.", ".$from);
-		
-		return true;
 
 		if($smtp['use']){
 			$smtp = new SMTP($smtp['address'], $smtp['login'], $smtp['password'], $smtp['port'], $smtp['domain'], 0);
