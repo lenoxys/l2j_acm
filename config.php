@@ -2,7 +2,7 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-define ('DEBUG', true);								// Enable debug mode ; for set on replace false by true
+define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 
 
 
@@ -61,9 +61,9 @@ $template		= 'kamael';								// template directory
 //# Characters Config #
 //#####################
 
-/** */
+// Don't use those settings for now
 
-$allow_char_mod				= true;						// Enable characters mod
+$allow_char_mod				= false;					// Enable characters mod
 $allow_account_services		= false;					// Enable Account services feature (change name and gender) for offline character
 $time_account_services		= 7;						// Need to wait 7 days after change gender before to change another time for the same or another character
 $item_female_only			= array(8559,8913,8917);	// Check female-use only items before to change gender
@@ -75,8 +75,6 @@ $allow_unstuck				= false;					// Enable unstuck feature for offline character
 $time_fix					= 24;						// Need to wait 24 hours before to use fix or unstuck against
 $coord_static				= false;					// Use static coords when using unstuck and fix feature
 $coord_default				= array(0,0,0);				// When coord static enable tp player to the coords (x,y,z)
-
-/** */
 
 //###################
 //# Advanced Config #

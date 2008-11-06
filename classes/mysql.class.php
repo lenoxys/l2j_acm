@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class mysql {
 	
-	var $host, $user, $pass, $db;
+	private $host, $user, $pass, $db;
 
 	function mysql($host, $user, $pass, $db) {
 		$this->host	= $host;

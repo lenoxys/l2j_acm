@@ -259,7 +259,7 @@ class core {
 		$template->display('chg_pwd.tpl');
 	}
 
-	function change_email() {
+	function chg_email_form() {
 		global $valid, $error, $vm;
 
 		if(!$this->account->verif()) {
@@ -423,6 +423,19 @@ class core {
 			$error = $vm['_activation_control'];
 		else
 			$valid = $vm['_account_actived'];
+
+		$this->index();
+
+		return;
+	}
+
+	function email_validation() {
+		global $vm, $valid, $error;
+
+		if(!$this->account->email_validation(htmlentities($_GET['login']), htmlentities($_GET['key'])))
+			$error = $vm['_activation_control'];
+		else
+			$valid = $vm['_email_valided'];
 
 		$this->index();
 

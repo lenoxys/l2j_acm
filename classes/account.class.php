@@ -110,7 +110,7 @@ class account extends login{
 		if(!$act_email)
 			$this->valid_account($this->code);
 		else
-			EMAIL::operator($this, 'created_account_validation');
+			EMAIL::OP()->operator($this, 'created_account_validation');
 
 		return true;
 	}
@@ -233,7 +233,7 @@ class account extends login{
 
 		$this->login = $login;
 
-		EMAIL::operator($this, 'created_account_activation');
+		EMAIL::OP()->operator($this, 'created_account_activation');
 
 		return true;
 	}
@@ -287,7 +287,7 @@ class account extends login{
 		$this->MYSQL->query($sql);
 
 		$this->code = $pwd;
-		EMAIL::operator($this, 'password_reseted');
+		EMAIL::OP()->operator($this, 'password_reseted');
 	}
 
 	function forgot_pwd($login, $email, $img = null)
@@ -314,7 +314,7 @@ class account extends login{
 		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES('".$this->login."' , 'forget_pwd', '".$this->code."')";
 		$this->MYSQL->query($sql);
 
-		EMAIL::operator($this, 'forget_password_validation');
+		EMAIL::OP()->operator($this, 'forget_password_validation');
 
 		return true;
 	}
@@ -412,6 +412,35 @@ class account extends login{
 		return $this->MYSQL->result($sql);
 	}
 
+	function valid_email($login, $key) {
+		$sql = "SELECT COUNT(var) FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		DEBUG::add('Check if there are an activation key on account_data');
+		if ($this->MYSQL->result($sql) === '0')
+			return false;
+		$sql = "SELECT var FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		DEBUG::add('Get the account name linked with the activation key');
+		return $this->MYSQL->result($sql);
+	}
+
+	function email_validation($login, $key) {
+
+		if (!($email = $this->valid_email($login, $key)))
+			return false;
+
+		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		DEBUG::add('Delete activation key from account_data table');
+		$this->MYSQL->query($sql);
+
+		if ($this->valid_key($login, $key))
+			return false;
+
+		$this->change_email($email);
+
+		EMAIL::OP()->operator($this, 'created_account_activation');
+
+		return true;
+	}
+
 	function edit_email ($pass,$email,$reemail)
 	{
 		global $vm, $error;
@@ -435,8 +464,16 @@ class account extends login{
 			$error = $vm['_REGWARN_VEMAIL1'];
 			return false;
 		}
+		
+		$this->code = $this->gen_img_cle(10);
 
-		$this->change_email($email);
+		DEBUG::add('Insert the activation key on account_data for checking email');
+		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$this->login."' , '".$email."', '".$this->code."');";
+		$this->MYSQL->query($sql);
+		
+		$this->email = $email;
+		
+		EMAIL::OP()->operator($this, 'email_validation');
 
 		return true;
 	}

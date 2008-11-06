@@ -14,7 +14,7 @@ class email{
 		trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	public static function singleton() {
+	public static function OP() {
 		if (!isset(self::$instance)) {
 			$c = __CLASS__;
 			self::$instance = new $c;
@@ -24,6 +24,9 @@ class email{
 	
 	function get_email ()
 	{
+		if(!empty($this->account->email))
+			return $this->account->email;
+		
 		$sql = "SELECT email FROM accounts WHERE login = '" . $this->account->login . "' LIMIT 1;";
 		return $this->account->MYSQL->result($sql);
 	}
@@ -32,14 +35,16 @@ class email{
 	{
 		global $email_from,$server_name,$error,$smtp;
 
-		$this->email = $this->get_email();
+		$email = $this->get_email();
 
 		$entity_b = array ('[\[IP\]]','[\[ID\]]','[\[EMAIL_SUPPORT\]]','[\[URL\]]','[\[CODE\]]','[\[SERVER\]]');
 		$entity_p = array ($_SERVER['REMOTE_ADDR'], $this->account->login, $email_from, $this->url, $this->account->code, $server_name,'');
 		$title = preg_replace($entity_b, $entity_p, $title);
 		$message = preg_replace($entity_b, $entity_p, $message);
 		
-				
+		DEBUG::add($email.", ".$title.", ".$message.", ".$from);
+		
+		return true;
 
 		if($smtp['use']){
 			$smtp = new SMTP($smtp['address'], $smtp['login'], $smtp['password'], $smtp['port'], $smtp['domain'], 0);
@@ -60,28 +65,27 @@ class email{
 
 	function operator($account, $mode) {
 		global $vm;
-		$d = DEBUG::singleton();
-		$d->account = $account;
+		$this->account = $account;
 		switch($mode) {
 			default:
 			break;
 			case 'created_account_validation':
-				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=activation&amp;key=".$this->code;
+				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=activation&amp;key=".$this->account->code;
 				$this->send_email($vm['_email_title_verif'], $vm['_email_message_verif']);
 			break;
 			case 'created_account_activation':
 				$this->send_email($vm['_email_title_ok'], $vm['_email_message_ok']);
 			break;
 			case 'forget_password_validation':
-				$this->login = $account->login;
-				$this->code = $account->code;
-				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=forgot_pwd_email&amp;login=".$this->login."&amp;key=".$this->code;
+				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=forgot_pwd_email&amp;login=".$this->account->login."&amp;key=".$this->account->code;
 				$this->send_email($vm['_email_title_change_pwd'], $vm['_email_message_change_pwd']);
 			break;
 			case 'password_reseted':
-				$this->login = $account->login;
-				$this->code = $account->code;
 				$this->send_email($vm['_email_title_change_pwd_ok'], $vm['_email_message_change_pwd_ok']);
+			break;
+			case 'email_validation':
+				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=email_validation&amp;login=".$this->account->login."&amp;key=".$this->account->code;
+				$this->send_email($vm['_email_title_verif'], $vm['_email_message_verif']);
 			break;
 		}
 	}
