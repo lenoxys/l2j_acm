@@ -7,7 +7,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 class core {
 
 	function core() {
-		$this->account = new account();
+		$this->account = ACCOUNT::load();
 		$this->secure_post();
 	}
 
@@ -16,10 +16,6 @@ class core {
 			$this->show_account();
 		else
 			$this->show_login();
-	}
-
-	function show_auth() {
-
 	}
 
 	function loggout() {
@@ -73,26 +69,39 @@ class core {
 	}
 
 	function show_account() {
-		global $template, $vm, $error, $valid;
+		global $template, $vm, $error, $valid, $allow_char_mod;
 		
 		$template->assign('vm', array(
-		    'account_text'		=> $vm['_chg_pwd_text'],
-		    'chg_pwd'			=> $vm['_chg_pwd'],
-		    'logout_link'		=> $vm['_logout_link']
+			'title_page'		=> $vm['_title_page'],
+		    'account_text'		=> $vm['_chg_pwd_text']
 		));
+		
+		$modules = array();
+		
+		$modules[] = array('name'=>$vm['_chg_pwd'], 'link'=>'?action=show_chg_pwd');
+		
+		if ($allow_char_mod)
+			$modules[] = array('name'=>$vm['_select_worlds'], 'link'=>'?action=show_worlds');
+		
+		if ($this->account->can_chg_email())
+			$modules[] = array('name'=>$vm['_chg_email'], 'link'=>'?action=show_chg_email');
+		
+		$modules[] = array('name'=>$vm['_logout_link'], 'link'=>'?action=loggout');
+		
+		$template->assign('modules', $modules);
+		
+		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		
 		if($error != '') {
 			$template->assign('error', $error);
 		}
 		if($valid != '') {
 			$template->assign('valid', $valid);
 		}
-		if($this->account->can_chg_email()) {
-			$template->assign('email', $vm['_chg_email']);
-		}
 		$template->display('account.tpl');
 	}
 
-	function create() {
+	function registration() {
 		global $valid, $error, $vm;
 
 		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], $_POST['Limage'])) {
@@ -310,6 +319,102 @@ class core {
 		$template->display('chg_email.tpl');
 
 	}
+	
+	function show_worlds(){
+		global $allow_char_mod;
+		
+		if(!$allow_char_mod) {
+			$this->index();
+			return;
+		}
+				
+		global $template, $vm;
+		
+		$_SESSION['worlds'] = WORLD::load_worlds();
+		
+		$template->assign('vm', array(
+			'select_item'			=> $vm['_select_worlds'],
+			'return'				=> $vm['_return'],
+		));
+		
+		$items = array();
+		foreach  ($_SESSION['worlds'] as $world)
+			$items[] = array('id' => $world->id, 'name' => $world->name, 'link' => '?action=show_chars&world_id='.$world->id);
+		
+		$template->assign('items', $items);
+		
+		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		
+		if($error != '') {
+			$template->assign('error', $error);
+		}
+		
+		$template->display('select.tpl');
+	}
+	
+	function show_chars(){
+		global $allow_char_mod, $vm;
+		
+		if(!$allow_char_mod) {
+			$this->index();
+			return;
+		}
+		
+		global $template;
+		
+		$world = new WORLD($_GET['world_id']);
+		
+		$this->account = unserialize($_SESSION['acm']);
+		$chars = $world->get_chars($this->account->login);
+		
+		$template->assign('vm', array(
+			'select_item'			=> $vm['_select_character'],
+		    'return'				=> $vm['_return']
+		));
+		
+		$items = array();
+		foreach  ($chars as $char)
+			$items[] = array('id' => $char->charId, 'name' => $char->char_name, 'link' => '?action=show_char&?id='.$char->charId);
+		
+		$template->assign('items', $items);
+		
+		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		
+		if($error != '') {
+			$template->assign('error', $error);
+		}
+		
+		$template->display('select.tpl');
+	}
+	
+	function show_char(){
+		global $allow_char_mod, $vm;
+		
+		if(!$allow_char_mod) {
+			$this->index();
+			return;
+		}
+		
+		global $template;
+		
+		$this->account = unserialize($_SESSION['acm']);
+		$world = new WORLD($_GET['world_id']);
+		$chars = $world->get_chars($this->account->login);
+		
+		$template->assign('vm', array(
+			'select_character'		=> $vm['_select_character'],
+		    'return'				=> $vm['_return']
+		));
+		
+		$template->assign('characters', $chars);
+		$template->assign('id', '');
+		
+		if($error != '') {
+			$template->assign('error', $error);
+		}
+		
+		$template->display('select.tpl');
+	}
 
 	function activation() {
 		global $vm, $valid, $error;
@@ -324,7 +429,7 @@ class core {
 		return;
 	}
 
-	function secure_post() {
+	protected function secure_post() {
 		global $id_limit, $pwd_limit;
 
 		if (!$_POST) return;

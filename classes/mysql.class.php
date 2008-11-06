@@ -11,6 +11,9 @@ class mysql {
 		$this->user	= $user;
 		$this->pass	= $pass;
 		$this->db	= $db;
+		
+		if(empty($this->pass))
+			DEBUG::add('Your configuration file contains settings ('.$user.' with no password) that correspond to the default MySQL privileged account. Your MySQL server is running with this default, is open to intrusion, and you really should fix this security hole.', 'red');
 	}
 
 	function connect () {
@@ -27,11 +30,17 @@ class mysql {
 	}
 
 	function query ($q) {
-		return @mysql_query ($q);
+		DEBUG::add($q);
+		$rslt = @mysql_query ($q);
+		DEBUG::add('Records: '.mysql_affected_rows());
+		return $rslt;
 	}
 
 	function result ($q) {
-		return @mysql_result (@mysql_query($q), 0);
+		DEBUG::add($q);
+		$rslt = @mysql_result (@mysql_query($q), 0);
+		DEBUG::add('Result: '.gettype($rslt).'('.var_export($rslt, true).')');
+		return $rslt;
 	}
 
 	function close () {
@@ -47,8 +56,9 @@ class mysql_ls extends mysql{
 }
 
 class mysql_gs extends mysql{
-	function mysql_gs($gs_host, $gs_user, $gs_pass, $gs_db) {
-		$this->mysql($gs_host, $gs_user, $gs_pass, $gs_db);
+	function mysql_gs($id) {
+		global $gs_host, $gs_user, $gs_pass, $gs_db;
+		$this->mysql($gs_host[$id], $gs_user[$id], $gs_pass[$id], $gs_db[$id]);
 	}
 }
 

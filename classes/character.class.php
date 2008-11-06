@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class character extends world {
 
-	var $charId, $char_name, $login, $world, $classid, $gender, $accesslevel, $x, $y, $region, $online, $clanid;
+	var $charId, $char_name, $login, $world, $classid, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
 
 	function character($charId, $login, $world) {
 		global $allow_char_mod;
@@ -25,32 +25,29 @@ class character extends world {
 		
 		$this->char_name	= $row->char_name;
 		$this->classid		= $row->classid;
-		$this->gender		= $row->sex;
+		$this->sex			= $row->sex;
 		$this->accesslevel	= $row->accesslevel;
 		$this->x			= $row->x;
 		$this->y			= $row->y;
 		$this->online		= $row->online;
 		$this->clanid		= $row->clanid;
+		$this->level		= $row->level;
 		
 		return true;
 	}
 	
-	function reload() {
-		$sql = 'SELECT `sex`, `accesslevel`, `x`, `y`, `online`, `clanid` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
+	function reload($chp) {
+		$sql = 'SELECT `'.$chp.'` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = $this->world->MYSQL_GS->query($sql);
 		$row = mysql_fetch_object($rslt);
 		
-		$this->accesslevel	= $row->accesslevel;
-		$this->x			= $row->x;
-		$this->y			= $row->y;
-		$this->online		= $row->online;
-		$this->clanid		= $row->clanid;
+		$this->$chp	= $row->$chp;
 		
 		return true;
 	}
 	
 	function is_online() {
-		$this->reload();
+		$this->reload('online');
 		
 		if($this->online == 1)
 			return true;
@@ -59,7 +56,7 @@ class character extends world {
 	}
 	
 	function is_ban () {
-		$this->reload();
+		$this->reload('accesslevel');
 		
 		if ($this->accesslevel < 0)
 			return true;
@@ -79,7 +76,7 @@ class character extends world {
 	}
 	
 	function have_clan () {
-		$this->reload();
+		$this->reload('clanid');
 		
 		if ($this->clanid == 0)
 			return false;
@@ -158,23 +155,24 @@ class character extends world {
 		return $this->classid;
 	}
 	
-	function change_name($new_name) {
+	function change_name($char2) {
 		global $error, $vm;
 		
-		if( !$this->can_change_name($new_name) )
+		if( !$this->can_change_name() )
 			return false;
 		
-		
-		$sql = 'UPDATE `characters` SET `char_name` = '.$this->gender.' WHERE `charId`='.$this->charId.';';
+		$sql = 'UPDATE `characters` SET `char_name` = '.$new_name.' WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
 		
-		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".time()."');";
+		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
 		$this->world->MYSQL_GS->query($sql);
 		
+		$this->char_name = $new_name;
+			
 		return true;
 	}
 	
-	function can_change_name ($new_name) {
+	function can_change_name ($char1, $char2) {
 		global $allow_account_services, $error, $vm, $name_regex;
 		
 		if( !$allow_account_services ) {	// Check if the admin allow account services
@@ -229,15 +227,15 @@ class character extends world {
 		if(!$this->can_change_gender())
 			return false;
 		
-		$items = ($this->gender == 0) ? $item_male_only : $item_female_only;		// Check which items list by gender
+		$items = ($this->sex == 0) ? $item_male_only : $item_female_only;		// Check which items list by gender
 		foreach ($items as $id) {												// Foreach items listed set in inventory if they exist.
 			$sql = 'UPDATE `items` SET `loc` = "INVENTORY" WHERE `owner_id` = '.$this->charId.' AND `item_id` = '.$id.';';
 			$this->world->MYSQL_GS->query($sql);
 		}
 		
-		$this->gender = ($this->gender == 1) ? 0 : 1;
+		$this->sex = ($this->sex == 1) ? 0 : 1;
 		
-		$sql = 'UPDATE `characters` SET `sex` = '.$this->gender.', `face` = 0, `hairStyle` = 0,`hairColor` = 0 WHERE `charId`='.$this->charId.';';
+		$sql = 'UPDATE `characters` SET `sex` = '.$this->sex.', `face` = 0, `hairStyle` = 0,`hairColor` = 0 WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
 		
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_gender_change', '".time()."');";

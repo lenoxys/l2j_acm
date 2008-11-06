@@ -85,6 +85,12 @@ $vm['_REGWARN_VEMAIL1']		= 'Email and verification do not match, please try agai
 $vm['_TERMS_AND_CONDITION']	= "<h2>Terms and conditions</h2><br /><br />1. GameMaster is always right.<br />2. If GameMaster is wrong refer to the first rule.";
 $vm['_accept_button'] = 'Accept';
 
+
+
+$vm['_select_worlds']		= 'Select your Lineage 2 World';
+$vm['_select_character']		= 'Select your character';
+
+
 $vm = array_map('nl2br', $vm);
 
 ?>
