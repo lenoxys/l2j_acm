@@ -33,7 +33,7 @@ $vm['_forgot_pwd'] = 'Forgot Password';
 $vm['_forgot_pwd_text'] = 'Please verify the following information in order to update your password.
 
 			If you do not remember what information you entered during registration, you will need to contact support.';
-$vm['_forgot_button'] = 'Retreive';
+$vm['_forgot_button'] = 'Retrieve';
 $vm['_logout'] = 'You have logged out.';
 $vm['_logout_link'] = 'Logout';
 $vm['_wrong_auth'] = 'We were unable to verify your login. Either your login information was entered incorrectly, or the account system is currently unavailable.';
