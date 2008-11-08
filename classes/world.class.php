@@ -187,14 +187,14 @@ class world extends account {
 	function get_chars($login) {
 		$chars = array();
 		
-		$sql = 'SELECT `charId` FROM `characters` WHERE `account_name` = "'.$login.'";';
+		$sql = 'SELECT `charId`, `char_name` FROM `characters` WHERE `account_name` = "'.$login.'";';
 		
 		$this->MYSQL_GS->connect();
 		$rslt = $this->MYSQL_GS->query($sql);
 		
 		while ($row = mysql_fetch_object($rslt)) {
-			$char = new character($row->charId, $login, $this);
-			$chars[] = $char;
+			$char = array($row->charId, $row->char_name, $this);
+			$chars[$row->charId] = $char;
 		}
 		
 		$this->MYSQL_GS->close();

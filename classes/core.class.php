@@ -80,7 +80,7 @@ class core {
 		
 		$modules[] = array('name'=>$vm['_chg_pwd'], 'link'=>'?action=show_chg_pwd');
 		
-		if ($allow_char_mod)
+		if ($this->allow_char_mod())
 			$modules[] = array('name'=>$vm['_select_worlds'], 'link'=>'?action=show_worlds');
 		
 		if ($this->account->can_chg_email())
@@ -323,7 +323,7 @@ class core {
 	function show_worlds(){
 		global $allow_char_mod;
 		
-		if(!$allow_char_mod) {
+		if(!$this->allow_char_mod()) {
 			$this->index();
 			return;
 		}
@@ -355,7 +355,7 @@ class core {
 	function show_chars(){
 		global $allow_char_mod, $vm;
 		
-		if(!$allow_char_mod) {
+		if(!$this->allow_char_mod()) {
 			$this->index();
 			return;
 		}
@@ -364,8 +364,8 @@ class core {
 		
 		$world = new WORLD($_GET['world_id']);
 		
-		$this->account = unserialize($_SESSION['acm']);
-		$chars = $world->get_chars($this->account->login);
+		$this->account->chars = $world->get_chars($this->account->login);
+		$_SESSION['acm'] = serialize($this->account);
 		
 		$template->assign('vm', array(
 			'select_item'			=> $vm['_select_character'],
@@ -373,8 +373,8 @@ class core {
 		));
 		
 		$items = array();
-		foreach  ($chars as $char)
-			$items[] = array('id' => $char->charId, 'name' => $char->char_name, 'link' => '?action=show_char&?id='.$char->charId);
+		foreach  ($this->account->chars as $char)
+			$items[] = array('id' => $char[0], 'name' => $char[1], 'link' => '?action=show_char&id='.$char[0]);
 		
 		$template->assign('items', $items);
 		
@@ -388,32 +388,98 @@ class core {
 	}
 	
 	function show_char(){
-		global $allow_char_mod, $vm;
 		
-		if(!$allow_char_mod) {
+		if(!$this->allow_char_mod()) {
 			$this->index();
 			return;
 		}
 		
-		global $template;
+		global $template, $vm, $error, $valid, $allow_fix, $allow_unstuck;
 		
-		$this->account = unserialize($_SESSION['acm']);
-		$world = new WORLD($_GET['world_id']);
-		$chars = $world->get_chars($this->account->login);
+		if(empty($_GET['id'])) {
+			$error = 'Error when select your character';
+			$this->index();
+			return;
+		}
+		
+		$this->char = $this->account->chars[$_GET['id']];
+		
+		if(empty($this->char)) {
+			$error = 'Error when select your character';
+			$this->index();
+			return;
+		}
+		
+		$this->char = new character($this->char[0], $this->account->login, $this->char[2]);
+		
+		$_SESSION['acm_char'] = serialize($this->char);
 		
 		$template->assign('vm', array(
-			'select_character'		=> $vm['_select_character'],
-		    'return'				=> $vm['_return']
+			'select_item'		=> $this->char->char_name,
+		    'return'		=> $vm['_return']
 		));
 		
-		$template->assign('characters', $chars);
-		$template->assign('id', '');
+		$items = array();
+		
+		if($allow_fix)
+			$items[] = array('id' => 0, 'name' => $vm['_character_fix'], 'link' => '?action=char_fix&id='.$this->char->charId);
+		
+		if($allow_unstuck)
+			$items[] = array('id' => 1, 'name' => $vm['_character_unstuck'], 'link' => '?action=char_unstuck&id='.$this->char->charId);
+		
+		$template->assign('items', $items);
+		
+		$template->register_block('dynamic', 'smarty_block_dynamic', false);
 		
 		if($error != '') {
 			$template->assign('error', $error);
 		}
-		
+		if($valid != '') {
+			$template->assign('valid', $valid);
+		}
 		$template->display('select.tpl');
+	}
+
+	function char_fix() {
+		
+		if(!$this->allow_char_mod()) {
+			$this->index();
+			return;
+		}
+		
+		global $vm, $valid, $error;
+		
+		$this->char = unserialize($_SESSION['acm_char']);
+
+		if(!$this->char->fix())
+			$error = $vm['_character_fix_no'];
+		else
+			$valid = $vm['_character_fix_yes'];
+
+		$this->index();
+
+		return;
+	}
+
+	function char_unstuck() {
+		
+		if(!$this->allow_char_mod()) {
+			$this->index();
+			return;
+		}
+		
+		global $vm, $valid, $error;
+		
+		$this->char = unserialize($_SESSION['acm_char']);
+
+		if(!$this->char->unstuck())
+			$error = $vm['_character_unstuck_no'];
+		else
+			$valid = $vm['_character_unstuck_yes'];
+
+		$this->index();
+
+		return;
 	}
 
 	function activation() {
@@ -440,6 +506,18 @@ class core {
 		$this->index();
 
 		return;
+	}
+	
+	function allow_char_mod() {
+		global $allow_char_mod, $allow_account_services, $allow_fix, $allow_unstuck;
+		
+		if(!$allow_char_mod)
+			return false;
+		
+		if(!$allow_fix && !$allow_unstuck && !$allow_account_services)
+			return false;
+		
+		return true;
 	}
 
 	protected function secure_post() {

@@ -83,6 +83,15 @@ $vm['_REGWARN_VEMAIL1']		= 'Email e verifica&ccedil;&atilde;o n&atilde;o confere
 $vm['_TERMS_AND_CONDITION']	= "<h2>Termos e Condi&ccedil;&otilde;es</h2><br /><br />1. O GameMaster est&aacute; sempre certo.<br />2. Se o GameMaster est&aacute; errado, leia a primeira regra.";
 $vm['_accept_button'] = 'Aceito';
 
+$vm['_select_worlds']			= 'Select your Lineage 2 World';
+$vm['_select_character']		= 'Select your character';
+$vm['_character_fix']			= 'Fix your character';
+$vm['_character_unstuck']		= 'Move your character to the nearest town';
+$vm['_character_unstuck_yes']	= 'Your character has been moved to the nearest town.';
+$vm['_character_unstuck_no']	= 'Your character hasn\'t been moved to the nearest town.';
+$vm['_character_fix_yes']		= 'Your character has been fixed.';
+$vm['_character_fix_no']		= 'Your character hasn\'t been fixed.';
+
 $vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
 
 $vm = array_map('nl2br', $vm);

@@ -11,11 +11,15 @@ class character extends world {
 		
 		if(!$allow_char_mod)
 			exit('Access to this private class have been restricted by the admin');
+			
+		if(false)
+			return false;
 		
 		$this->charId = $charId;
 		$this->login = $login;
 		$this->world = $world;
 		$this->load();
+		return true;
 	}
 	
 	function load() {
@@ -99,6 +103,8 @@ class character extends world {
 			}
 		}
 		
+		DEBUG::add('Look if tag is here');
+		
 		$last = ($unstuck) ? 'last_unstuck' : 'last_fix';
 		
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($time_fix * 3600));
@@ -108,7 +114,9 @@ class character extends world {
 			return false;
 		}
 		
-		if(!$this->is_online()) {
+		DEBUG::add('Look if player is online');
+		
+		if($this->is_online()) {
 			$error = $vm['_char_online'];
 			return false;
 		}
@@ -123,12 +131,20 @@ class character extends world {
 		
 		$t = $this->get_nearest_town();
 		
+		
+		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
+		
+		DEBUG::add('Fix shortcuts of character');
 		$sql = 'DELETE FROM `character_shortcuts` WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
+		
+		DEBUG::add('Fix inventory of character');
 		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
+		
+		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_fix', '".time()."');";
 		$this->world->MYSQL_GS->query($sql);
 		
