@@ -12,11 +12,9 @@
 					<div class="valid"><div class="valid_container">{$valid}</div></div>
 {/if}
 					<ul class="menu">
-						<li><a href="?action=chg_pwd">{$vm.chg_pwd}</a></li>
-{if isset($email)}
-                        <li><a href="?action=chg_email">{$email}</a></li>
-{/if}
-						<li><a href="?action=logged_out">{$vm.logout_link}</a></li>
+{dynamic}{section name=i loop=$modules}
+						<li><a href="{$modules[i].link}">{$modules[i].name}</a></li>
+{/section}{/dynamic}
 					</ul>
 				</p>
 
