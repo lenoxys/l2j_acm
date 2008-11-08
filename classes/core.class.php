@@ -412,8 +412,6 @@ class core {
 		
 		$this->char = new character($this->char[0], $this->account->login, $this->char[2]);
 		
-		print_r($this->char);
-		
 		if(!$this->char) {
 			$error = 'Error when select your character';
 			$this->index();
