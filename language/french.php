@@ -84,6 +84,8 @@ $vm['_REGWARN_VEMAIL1']		= 'L\'email et sa confirmation ne concorde pas, merci d
 $vm['_TERMS_AND_CONDITION']	= "<h2>Règles et Conditions</h2><br /><br />1. Le Maître du Jeux a toujours raison.<br />2. Si le Maître du Jeux a tort ce référer à la règle numéro une.";
 $vm['_accept_button'] = 'Accepter';
 
+$vm['_REGWARN_UNAME3'] = 'Merci de choisir un pseudo différent de votre mot de passe.';
+
 $vm = array_map('nl2br', $vm);
 
 ?>

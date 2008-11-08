@@ -58,6 +58,11 @@ class account extends login{
 			return false;
 		}
 
+		if($login == $pwd) {
+			$error = $vm['_REGWARN_UNAME3'];
+			return false;
+		}
+
 		if($this->is_login_exist($login)) {
 			$error = $vm['_REGWARN_INUSE'];
 			return false;
@@ -360,6 +365,11 @@ class account extends login{
 
 		if($this->password != $this->l2j_encrypt($pass)) {
 			$error = $vm['_REGWARN_VPASS1'];
+			return false;
+		}
+
+		if($this->login == $pwd) {
+			$error = $vm['_REGWARN_UNAME3'];
 			return false;
 		}
 

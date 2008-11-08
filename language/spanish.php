@@ -84,6 +84,8 @@ $vm['_REGWARN_VEMAIL1']        = 'El correo electrónico y la verificación no coi
 $vm['_TERMS_AND_CONDITION']    = "<h2>Términos y condiciones</h2><br /><br />1. EL GameMaster siempre tiene la razón.<br />2. Si el GameMaster es incorrecto referirse a la primera regla.";
 $vm['_accept_button'] = 'Aceptar';
 
+$vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
+
 $vm = array_map('nl2br', $vm);
 
 ?>

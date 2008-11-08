@@ -83,6 +83,8 @@ $vm['_REGWARN_VEMAIL1']		= 'Email e verifica&ccedil;&atilde;o n&atilde;o confere
 $vm['_TERMS_AND_CONDITION']	= "<h2>Termos e Condi&ccedil;&otilde;es</h2><br /><br />1. O GameMaster est&aacute; sempre certo.<br />2. Se o GameMaster est&aacute; errado, leia a primeira regra.";
 $vm['_accept_button'] = 'Aceito';
 
+$vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
+
 $vm = array_map('nl2br', $vm);
 
 ?>

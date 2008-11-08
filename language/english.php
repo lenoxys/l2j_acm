@@ -91,6 +91,8 @@ $vm['_select_worlds']		= 'Select your Lineage 2 World';
 $vm['_select_character']		= 'Select your character';
 
 
+$vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
+
 $vm = array_map('nl2br', $vm);
 
 ?>
