@@ -11,14 +11,29 @@ class character extends world {
 		
 		if(!$allow_char_mod)
 			exit('Access to this private class have been restricted by the admin');
-			
-		if(false)
-			return false;
 		
 		$this->charId = $charId;
 		$this->login = $login;
 		$this->world = $world;
-		$this->load();
+			
+		if(!$this->is_owner()) {
+			$this->charId = null;
+			$this->login = null;
+			$this->world = null;
+		}else{
+			$this->load();
+		}
+		return true;
+	}
+	
+	function is_owner () {
+		
+		$sql = 'SELECT COUNT(charId) FROM `characters` 
+						WHERE `account_name` = "'.$this->login.'" AND `charId` = "'.$this->charId.'";';
+		
+		if($this->world->MYSQL_GS->result($sql) == '0')
+			return false;
+		
 		return true;
 	}
 	
