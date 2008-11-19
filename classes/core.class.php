@@ -514,19 +514,6 @@ class core {
 
 		return;
 	}
-
-	function email_validation() {
-		global $vm, $valid, $error;
-
-		if(!$this->account->email_validation(htmlentities($_GET['login']), htmlentities($_GET['key'])))
-			$error = $vm['_activation_control'];
-		else
-			$valid = $vm['_email_valided'];
-
-		$this->index();
-
-		return;
-	}
 	
 	function allow_char_mod() {
 		global $allow_char_mod, $allow_account_services, $allow_fix, $allow_unstuck;
