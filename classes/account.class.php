@@ -446,7 +446,7 @@ class account extends login{
 
 		$this->change_email($email);
 
-		EMAIL::OP()->operator($this, 'created_account_activation');
+		EMAIL::OP()->operator($this, 'modified_email_activation');
 
 		return true;
 	}
@@ -514,8 +514,10 @@ class account extends login{
 		DEBUG::add('Verify if the user is correctly logged');
 
 
-		if($this->MYSQL->result($sql) != 1)	// Check if user session data are right
+		if($this->MYSQL->result($sql) != 1)	{	// Check if user session data are right
+			$this->loggout();
 			return false;
+		}
 
 		return true;
 	}

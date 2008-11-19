@@ -195,7 +195,7 @@ class core {
 		return true;
 	}
 
-	function forgot_pwd2() {
+	function forgot_pwd_email() {
 		global $vm, $error, $valid;
 
 		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
@@ -318,6 +318,20 @@ class core {
 		
 		$template->display('chg_email.tpl');
 
+	}
+
+	function email_validation() {
+		global $vm, $error, $valid;
+
+		if($this->account->email_validation($_GET['login'], $_GET['key'])) {
+			$valid = $vm['_email_activated'];
+		}else{
+			$error = $vm['_control'];
+		}
+		
+		$this->index();
+
+		return true;
 	}
 	
 	function show_worlds(){

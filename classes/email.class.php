@@ -83,6 +83,9 @@ class email{
 				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=email_validation&amp;login=".$this->account->login."&amp;key=".$this->account->code;
 				$this->send_email($vm['_email_title_verif'], $vm['_email_message_verif']);
 			break;
+			case 'modified_email_activation':
+				$this->send_email($vm['_email_title_change_email_ok'], $vm['_email_message_change_email_ok']);
+			break;
 		}
 	}
 }
