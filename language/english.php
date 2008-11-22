@@ -47,7 +47,7 @@ If you can\'t read the image control, click on it for reload. ';
 $vm['_account_created'] = 'Your account has been created.';
 $vm['_account_actived'] = 'Your account has been actived.';
 $vm['_REGWARN_UNAME1'] = 'Please enter a username.';
-$vm['_REGWARN_UNAME2'] = 'Please enter an valid username.';
+$vm['_REGWARN_UNAME2'] = 'Please enter a valid username.';
 $vm['_REGWARN_MAIL'] = 'Please enter a valid e-mail address.';
 $vm['_REGWARN_PASS'] = 'Please enter a valid password.  No spaces, more than 6 characters and contain 0-9,a-z,A-Z';
 $vm['_REGWARN_VPASS1'] = 'Please verify the password.';
