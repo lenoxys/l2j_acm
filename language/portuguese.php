@@ -70,6 +70,8 @@ $vm['_email_message_change_pwd']	= "Algu&eacute;m com o IP: [IP] quer resetar a 
 $vm['_email_title_change_pwd_ok']	= 'Senha resetada com sucesso';
 $vm['_email_message_change_pwd_ok']	= "Algu&eacute;m com o IP: [IP] quer resetar a senha da sua conta [ID] do [SERVER].<br> Nova Senha : [CODE]<br> Se voc&ecirc; n&atilde;o solicitou esta mudan&ccedil;a, entre em contato com nosso suporte o quanto antes.";
 
+$vm['_email_title_change_email_ok']	= 'Your email has been changed';
+$vm['_email_message_change_email_ok']	= "Someone at [IP] has changed your Lineage II Game Account email for account [ID].<br> New email : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
 
 $vm['_creating_acc_prob'] = 'Falha no Banco de Dados : Conta n&atilde;o criada. Por favor, comunique este erro para a Staff.';
 

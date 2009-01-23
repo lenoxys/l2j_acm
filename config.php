@@ -3,8 +3,7 @@
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
 define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
-
-
+define ('LOG', false);									// Enable log mode ; for set off replace true by false
 
 //	#	Login Server Configuration
 
@@ -61,7 +60,7 @@ $template		= 'kamael';								// template directory
 //# Characters Config #
 //#####################
 
-// Don't use those settings for now
+// Don't use those settings for now keep to false please
 
 $allow_char_mod				= false;					// Enable characters mod
 $allow_account_services		= false;					// Enable Account services feature (change name and gender) for offline character

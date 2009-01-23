@@ -72,6 +72,9 @@ $vm['_email_message_change_pwd']    = "Alguien en [IP] quieren restablecer la co
 $vm['_email_title_change_pwd_ok']    = 'El Reset de su contraseña se hecho con éxito';
 $vm['_email_message_change_pwd_ok']    = "Alguien en [IP] ha restablecido su contraseña de su cuenta de el juego de Lineage II a [ID].<br> Nueva contraseña: [CODE]<br> Si usted no hiciera este cambio, por favor contacte con el soporte inmediatamente en [EMAIL_SUPPORT].";
 
+$vm['_email_title_change_email_ok']	= 'Your email has been changed';
+$vm['_email_message_change_email_ok']	= "Someone at [IP] has changed your Lineage II Game Account email for account [ID].<br> New email : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
+
 $vm['_creating_acc_prob'] = 'Problema en la base de datos : La cuenta no ha sido creada. Por favor, informe de esto al equipo de [SERVER] al correo electrónico [EMAIL_SUPPORT].';
 
 $vm['_chg_email']            = 'Cambiar su dirección de correo electrónico';

@@ -22,7 +22,7 @@ $s = time();
 
 $sql = ' FROM `accounts` WHERE `accessLevel` = -1 AND `created_time` < "'.date("Y-m-d H:i:s", mktime(date("H")-$hours, date("i"), 0, date("m")-$months, date("d")-$days, date("Y")-$years)).'";';
 
-$MYSQL = new MYSQL;
+$MYSQL = new MYSQL_LS;
 $MYSQL->connect();
 $r = $MYSQL->result('SELECT COUNT(`login`)'.$sql);
 print 'DELETING ACCOUNT...<br />';

@@ -7,8 +7,7 @@
 				<p>
 {if isset($error)}
 					<div class="error"><div class="error_container">{$error}</div></div>
-{/if}
-{if isset($valid)}
+{/if}{if isset($valid)}
 					<div class="valid"><div class="valid_container">{$valid}</div></div>
 {/if}
 					<ul class="menu">

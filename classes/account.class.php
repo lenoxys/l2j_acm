@@ -246,10 +246,18 @@ class account extends login{
 	function auth ($login, $password, $img) {
 		global $error, $vm;
 
+		if($_SESSION['sp'] > 5) {
+			LOGDAEMON::l()->add('Warning : SPAMMING AUTHENTICATION');
+			$error = 'Warning : SPAMMING AUTHENTICATION'.'<br />';
+			return false;
+		}
+		
 		if(!$this->verif_img($img)) {
 			$error = $vm['_image_control']. '<br />';
 			return false;
 		}
+		
+		DEBUG::add('sp='.$_SESSION['sp']);
 
 		$this->login = htmlentities($login);
 		$this->password = htmlentities($password);
@@ -262,9 +270,13 @@ class account extends login{
 						'AND password = "'.$this->password.'" ' .
 						'AND accessLevel >= 0 LIMIT 1;';
 		DEBUG::add('Check if login and password match on account table');
+		
+		LOGDAEMON::l()->add($sql);
 
-		if($this->MYSQL->result($sql) != 1)
+		if($this->MYSQL->result($sql) != 1) {
+			$_SESSION['sp'] = (empty($_SESSION['sp'])) ? 1 : ($_SESSION['sp']+1);
 			return false;
+		}
 			
 		$this->update_last_active();
 
@@ -443,10 +455,15 @@ class account extends login{
 
 		if ($this->valid_key($login, $key))
 			return false;
-
+			
+		$this->email = $this->get_email();
+		$this->code = $email;
+		
 		$this->change_email($email);
-
-		EMAIL::OP()->operator($this, 'modified_email_activation');
+		EMAIL::OP()->operator($this, 'modified_email_activation');		// warn the old email box
+			
+		$this->email = $this->get_email();
+		EMAIL::OP()->operator($this, 'modified_email_activation');		// warn the new email box
 
 		return true;
 	}

@@ -72,6 +72,8 @@ $vm['_email_message_change_pwd']	= "Někdo s IP [IP] chce změnit heslo Vašeho 
 $vm['_email_title_change_pwd_ok']	= 'Změna hesla proběhla úspěšně';
 $vm['_email_message_change_pwd_ok']	= "Heslo Vašeho učtu [ID] na Lineage II serveru [SERVER] bylo úspěšně změněno.<br> Nové heslo : [CODE]<br> Tato změna byla provedena z IP [IP], pokud to nejste Vy, neprodleně kontaktujte [EMAIL_SUPPORT].";
 
+$vm['_email_title_change_email_ok']	= 'Your email has been changed';
+$vm['_email_message_change_email_ok']	= "Someone at [IP] has changed your Lineage II Game Account email for account [ID].<br> New email : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
 
 $vm['_creating_acc_prob'] = 'Database problem : Account was not created. Please report this to the Staff.';
 

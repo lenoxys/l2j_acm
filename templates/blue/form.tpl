@@ -17,11 +17,11 @@
 				<input type="hidden" name="action" value="login">
 				<input type="submit" class="button" value="{$vm.login_button}">
 			</form>
-				<a href="?action=forgot_pwd">{$vm.forgot_password}</a>
+				<a href="?action=show_forget">{$vm.forgot_password}</a>
 
 			<hr class="clear" />
 			<h2>{$vm.new_account}</h2>
 			<p>{$vm.new_account_text}</p>
-			<input type="button" onClick="document.location='./?action=create'" class="button" value="{$vm.create_button}" />
+			<input type="button" onClick="document.location='./?action=show_create'" class="button" value="{$vm.create_button}" />
             
 {include file="footer.tpl"}

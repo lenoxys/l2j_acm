@@ -18,7 +18,7 @@
 {if isset($image)}
 				<div class="field"><label><img src="./img.php" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span></div>
 {/if}
-				<input type="hidden" name="action" value="forgot_pwd_form">
+				<input type="hidden" name="action" value="forgot_pwd">
 				<hr class="clear">
 				<input type="button" onClick="document.location='./'" class="button" value="{$vm.return}" />
 				<input type="submit" class="button" value="{$vm.forgot_button}">

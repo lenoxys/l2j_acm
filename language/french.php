@@ -72,6 +72,9 @@ $vm['_email_message_change_pwd']	= "Quelqu'un avec l'IP [IP] veut changer le mot
 $vm['_email_title_change_pwd_ok']	= 'Mot de passe changé';
 $vm['_email_message_change_pwd_ok']	= "Quelqu'un avec l'IP [IP] a changé le mot de passe de votre compte utilisateur [ID].<br> Votre nouveau mot de passe : [CODE]<br> Si vous n'avez pas effectuée cette demande, merci de contacter immédiatement le support à [EMAIL_SUPPORT].";
 
+$vm['_email_title_change_email_ok']	= 'Votre email a été changé';
+$vm['_email_message_change_email_ok']	= "Quelqu'un avec l'IP [IP] a changé l'email de votre compte utilisateur [ID].<br> Votre nouvel email : [CODE]<br> Si vous n'avez pas effectuée cette demande, merci de contacter immédiatement le support à [EMAIL_SUPPORT].";
+
 $vm['_creating_acc_prob'] = 'Problème de base de donnée : Le compte utilisateur n\'a pas été créer. Merci de le reporter à l\'équipe.';
 
 $vm['_chg_email']			= 'Changer votre email';
