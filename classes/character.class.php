@@ -179,6 +179,8 @@ class character extends world {
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
 		$this->world->MYSQL_GS->query($sql);
 		
+		LOGDAEMON::l()->add($sql);
+		
 		return true;
 	}
 	
@@ -197,6 +199,8 @@ class character extends world {
 		
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
 		$this->world->MYSQL_GS->query($sql);
+		
+		LOGDAEMON::l()->add($sql);
 		
 		$this->char_name = $new_name;
 			
