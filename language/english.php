@@ -98,6 +98,26 @@ $vm['_character_unstuck_no']	= 'Your character hasn\'t been moved to the nearest
 $vm['_character_fix_yes']		= 'Your character has been fixed.';
 $vm['_character_fix_no']		= 'Your character hasn\'t been fixed.';
 
+$vm['_acc_serv_off']			= 'Account services are offline.';
+$vm['_acc_serv_ban']			= 'Banned user are not able to use account services.';
+
+$vm['_character_sex']			= 'Change Gender';
+$vm['_character_sex_confirm']	= 'You have chosen "%s" on "%s" to change from %s to %s';
+$vm['_character_sex_yes']		= 'Character gender has been changed.';
+$vm['_character_sex_no']		= 'Character gender hasn\'t been changed.';
+$vm['_character_sex_0']			= 'male';
+$vm['_character_sex_1']			= 'female';
+$vm['_acc_serv_gender_kamael']	= 'The Gender Change Service is not available for Kamael characters.';
+$vm['_acc_serv_gender_time']	= 'You may request to change a character\'s gender as often as once a week.';
+
+$vm['_character_name']			= 'Change Name';
+$vm['_character_name_confirm']	= 'Change Name';
+$vm['_character_name_yes']		= 'Change Name';
+$vm['_character_name_no']		= 'Change Name';
+
+$vm['_confirm']					= 'Confirm';
+$vm['_back']					= 'Back';
+
 $vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
 
 $vm = array_map('nl2br', $vm);
