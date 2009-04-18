@@ -408,7 +408,7 @@ class core {
 			return;
 		}
 		
-		global $template, $vm, $error, $valid, $allow_fix, $allow_unstuck;
+		global $template, $vm, $error, $valid, $allow_fix, $allow_unstuck, $allow_account_services;
 		
 		if(empty($_GET['id'])) {
 			$error = 'Error when select your character';
@@ -441,11 +441,17 @@ class core {
 		
 		$items = array();
 		
-		if($allow_fix)
+		if($this->char->allow_fix())
 			$items[] = array('id' => 0, 'name' => $vm['_character_fix'], 'link' => '?action=char_fix&id='.$this->char->charId);
 		
-		if($allow_unstuck)
+		if($this->char->allow_fix(true))
 			$items[] = array('id' => 1, 'name' => $vm['_character_unstuck'], 'link' => '?action=char_unstuck&id='.$this->char->charId);
+		
+		if($this->char->can_change_gender())
+			$items[] = array('id' => 1, 'name' => $vm['_character_sex'], 'link' => '?action=char_sex&id='.$this->char->charId);
+		
+		if($this->char->can_change_name(null, true))
+			$items[] = array('id' => 1, 'name' => $vm['_character_name'], 'link' => '?action=char_unstuck&id='.$this->char->charId);
 		
 		$template->assign('items', $items);
 		
@@ -496,6 +502,84 @@ class core {
 			$error = $vm['_character_unstuck_no'];
 		else
 			$valid = $vm['_character_unstuck_yes'];
+
+		$this->index();
+
+		return;
+	}
+
+	function char_sex() {
+		
+		if(!$this->allow_char_mod() and !$allow_account_services) {
+			$this->index();
+			return;
+		}
+		
+		global $allow_account_services;
+		
+		if(empty($_GET['id'])) {
+			$error = 'Error when select your character';
+			$this->index();
+			return;
+		}
+		
+		$this->char = $this->account->chars[$_GET['id']];
+		
+		if(empty($this->char)) {
+			$error = 'Error when select your character';
+			$this->index();
+			return;
+		}
+		
+		global $template, $vm;
+		
+		$this->char = unserialize($_SESSION['acm_char']);
+		
+		$this->after = ($this->char->sex == 1) ? 0 : 1;
+		
+		$p1 = $this->char->char_name;
+		$p2 = $this->char->world->name;
+		$p3 = $vm['_character_sex_'.$this->char->sex];
+		$p4 = $vm['_character_sex_'.$this->after];
+		
+		$template->assign('vm', array(
+			'select_item'		=> sprintf($vm['_character_sex_confirm'], $p1, $p2, $p3, $p4),
+		    'return'		=> $vm['_return']
+		));
+		
+		$items = array();
+		
+		$items[] = array('id' => 1, 'name' => $vm['_confirm'], 'link' => '?action=char_sex_confirm&id='.$this->char->charId);
+		$items[] = array('id' => 1, 'name' => $vm['_back'], 'link' => '?action=show_char&id='.$this->char->charId);
+		
+		$template->assign('items', $items);
+		
+		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		
+		if($error != '') {
+			$template->assign('error', $error);
+		}
+		if($valid != '') {
+			$template->assign('valid', $valid);
+		}
+		$template->display('select.tpl');
+	}
+
+	function char_sex_confirm() {
+		
+		if(!$this->allow_char_mod()) {
+			$this->index();
+			return;
+		}
+		
+		global $vm, $valid, $error;
+		
+		$this->char = unserialize($_SESSION['acm_char']);
+
+		if(!$this->char->change_gender())
+			$error .= $vm['_character_sex_no'];
+		else
+			$valid .= $vm['_character_sex_yes'];
 
 		$this->index();
 

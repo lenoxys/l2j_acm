@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class character extends world {
 
-	var $charId, $char_name, $login, $world, $classid, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
+	public $charId, $char_name, $login, $world, $base_class, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
 
 	function character($charId, $login, $world) {
 		global $allow_char_mod;
@@ -38,12 +38,12 @@ class character extends world {
 	}
 	
 	function load() {
-		$sql = 'SELECT `char_name`, `classid`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
+		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = $this->world->MYSQL_GS->query($sql);
 		$row = mysql_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
-		$this->classid		= $row->classid;
+		$this->base_class	= $row->base_class;
 		$this->sex			= $row->sex;
 		$this->accesslevel	= $row->accesslevel;
 		$this->x			= $row->x;
@@ -173,9 +173,11 @@ class character extends world {
 		
 		$t = $this->get_nearest_town();
 		
+		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
 		
+		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
 		$this->world->MYSQL_GS->query($sql);
 		
@@ -188,15 +190,17 @@ class character extends world {
 		return $this->classid;
 	}
 	
-	function change_name($char2) {
+	function change_name($new_name) {
 		global $error, $vm;
 		
-		if( !$this->can_change_name() )
+		if( !$this->can_change_name($new_name) )
 			return false;
 		
+		DEBUG::add('Change name of the character');
 		$sql = 'UPDATE `characters` SET `char_name` = '.$new_name.' WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
 		
+		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
 		$this->world->MYSQL_GS->query($sql);
 		
@@ -207,21 +211,11 @@ class character extends world {
 		return true;
 	}
 	
-	function can_change_name ($char1, $char2) {
+	function can_change_name ($new_name = null, $test = null) {
 		global $allow_account_services, $error, $vm, $name_regex;
 		
 		if( !$allow_account_services ) {	// Check if the admin allow account services
 			$error = $vm['_acc_serv_off'];
-			return false;
-		}
-		
-		if($new_name == $this->char_name) {		// Check if the new name is the same than currently
-			$error = $vm['_acc_serv_name_error1'];
-			return false;
-		}
-		
-		if( $this->is_ban() ) {				// Check if the character is banned
-			$error = $vm['_acc_serv_ban'];
 			return false;
 		}
 		
@@ -230,12 +224,31 @@ class character extends world {
 							AND `account_name` = "'.$this->charId.'";';
 		
 		if($this->world->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
+			$error = $vm['_acc_serv_name_error1'];
+			return false;
+		}
+		
+		if($test) {
+			return true;
+		}
+		
+		if(is_null($new_name)) {		// Check if the new name is the same than currently
 			$error = $vm['_acc_serv_name_error2'];
 			return false;
 		}
 		
-		if (!preg_match($name_regex , $new_name)) {				// Check if new name is a valid name
+		if($new_name == $this->char_name) {		// Check if the new name is the same than currently
 			$error = $vm['_acc_serv_name_error3'];
+			return false;
+		}
+		
+		if( $this->is_ban() ) {				// Check if the character is banned
+			$error = $vm['_acc_serv_ban'];
+			return false;
+		}
+		
+		if (!preg_match($name_regex , $new_name)) {				// Check if new name is a valid name
+			$error = $vm['_acc_serv_name_error4'];
 			return false;
 		}
 		
@@ -243,13 +256,13 @@ class character extends world {
 						WHERE `var` = "previous_name" 
 							AND `char_name` = "'.$new_name.'";';
 		
-		if($this->world->MYSQL_GS->result($sql) > '0') {		// Check if character is in clan.
-			$error = $vm['_acc_serv_name_error4'];
+		if($this->clanid != '0') {		// Check if character is in clan.
+			$error = $vm['_acc_serv_name_error5'];
 			return false;
 		}
 		
 		if(!$this->is_hero()) {		// Check if character is hero.
-			$error = $vm['_acc_serv_name_error5'];
+			$error = $vm['_acc_serv_name_error6'];
 			return false;
 		}
 		
@@ -270,40 +283,43 @@ class character extends world {
 		
 		$this->sex = ($this->sex == 1) ? 0 : 1;
 		
+		DEBUG::add('Change gender of the character');
 		$sql = 'UPDATE `characters` SET `sex` = '.$this->sex.', `face` = 0, `hairStyle` = 0,`hairColor` = 0 WHERE `charId`='.$this->charId.';';
 		$this->world->MYSQL_GS->query($sql);
 		
+		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_gender_change', '".time()."');";
 		$this->world->MYSQL_GS->query($sql);
 		
 		return true;
 	}
 	
-	function can_change_gender () {
-		global $allow_account_services, $error, $vm;
+	function can_change_gender ($test = null) {
+		global $allow_account_services, $error, $vm, $time_account_services;
 		
 		if( !$allow_account_services ) {	// Check if the admin allow account services
-			$error = $vm['_acc_serv_off'];
-			return false;
-		}
-		
-		if( $this->is_ban() ) {				// Check if the character is banned
-			$error = $vm['_acc_serv_ban'];
-			return false;
-		}
-		
-		if( 123 >= $this->classid && $this->classid <= 136 ) {		// Check if the character is kamael
-			$error = $vm['_acc_serv_gender_kamael'];
+			$error = $vm['_acc_serv_off'].'<br />';
+			echo $error;
 			return false;
 		}
 		
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` 
 						WHERE `var` = "last_gender_change" 
 							AND `account_name` = "'.$this->charId.'" 
-							AND `value` > "'.(time()-($allow_fix_time * 3600)).'";';
+							AND `value` > "'.(time()-($time_account_services * 24 * 3600)).'";';
 		
 		if($this->world->MYSQL_GS->result($sql) > '0') {
-			$error = $vm['_acc_serv_gender_time'];
+			$error = $vm['_acc_serv_gender_time'].'<br />';
+			return false;
+		}
+		
+		if( $this->is_ban() ) {				// Check if the character is banned
+			$error = $vm['_acc_serv_ban'].'<br />';
+			return false;
+		}
+		
+		if( 123 <= $this->base_class && $this->base_class >= 136 ) {		// Check if the character is kamael
+			$error = $vm['_acc_serv_gender_kamael'].'<br />';
 			return false;
 		}
 		
