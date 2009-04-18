@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class account extends login{
 
-	var $login, $password;
+	public $login, $password;
 	
 	private static $instance;
 
@@ -245,6 +245,8 @@ class account extends login{
 
 	function auth ($login, $password, $img) {
 		global $error, $vm;
+		
+		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;
 
 		if($_SESSION['sp'] > 5) {
 			LOGDAEMON::l()->add('Warning : SPAMMING AUTHENTICATION');
