@@ -8,7 +8,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class world extends account {
 
-	var $id, $name, $gs_host, $gs_user, $gs_pass, $gs_db;
+	public $id, $name, $gs_host, $gs_user, $gs_pass, $gs_db;
 
 /**
  *	Construct a new world
