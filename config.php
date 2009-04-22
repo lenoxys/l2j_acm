@@ -55,6 +55,7 @@ $ack_cond		= false;								// User must accept before register :: conditions can
 
 $template		= 'kamael';								// template directory
 
+$interlude		= false;								// If you are using interlude database set to true
 
 //#####################
 //# Characters Config #
@@ -88,5 +89,6 @@ $smtp['domain']		= '';								// domain of your host
 
 $id_regex	= '`^[[:alnum:]]{4,'.$id_limit.'}$`';		// allow alphanumeric character in login name and login character min needed is 4
 $pwd_regex	= '`^[[:alnum:]@\\\/]{4,'.$pwd_limit.'}$`';	//allow alphanumeric character and \ / @ in password and pwd character min needed is 4
+$accesslevel = ($interlude) ? 'access_level' : 'accessLevel';
 
 ?>

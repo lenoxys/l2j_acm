@@ -41,7 +41,7 @@ class account extends login{
 	}
 
 	function create ($login, $pwd, $repwd, $email, $img) {
-		global $vm, $error, $act_email;
+		global $vm, $error, $act_email, $accesslevel;
 
 		if(!$this->verif_limit_create()) {
 			$error = $vm['_REGWARN_LIMIT_CREATING'];
@@ -96,10 +96,10 @@ class account extends login{
 		$this->login = $login;
 		$this->code = $this->gen_img_cle(10);
 
-		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`accessLevel`,`lastIP`,`email`) VALUES " .
+		$sql = "INSERT INTO `accounts` (`login`,`password`,`lastactive`,`".$accesslevel."`,`lastIP`,`email`) VALUES " .
 				"('".$login."', '".$this->l2j_encrypt($pwd)."', '".time()."', '-1', '".$_SERVER['REMOTE_ADDR']."', '".$email."');";
 
-		DEBUG::add('Create a new user on the accounts table with -1 on accessLevel');
+		DEBUG::add('Create a new user on the accounts table with -1 on accesslevel');
 
 		$this->MYSQL->query($sql);
 
@@ -221,12 +221,14 @@ class account extends login{
 	}
 
 	function valid_account($key) {
-
+		
+		global $accesslevel;
+		
 		if (!($login = $this->valid_key($key)))
 			return false;
 
-		$sql = "UPDATE `accounts` SET `accessLevel` = '0' WHERE `login` = '".$login."' LIMIT 1;";
-		DEBUG::add('Update accessLevel to 0');
+		$sql = "UPDATE `accounts` SET `".$accesslevel."` = '0' WHERE `login` = '".$login."' LIMIT 1;";
+		DEBUG::add('Update accesslevel to 0');
 		$this->MYSQL->query($sql);
 
 		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = 'activation_key' AND `value` = '".$key."' LIMIT 1;";
@@ -244,7 +246,7 @@ class account extends login{
 	}
 
 	function auth ($login, $password, $img) {
-		global $error, $vm;
+		global $error, $vm, $accesslevel;
 		
 		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;
 
@@ -270,7 +272,7 @@ class account extends login{
 				'FROM accounts ' .
 					'WHERE login = "'.$this->login.'" ' .
 						'AND password = "'.$this->password.'" ' .
-						'AND accessLevel >= 0 LIMIT 1;';
+						'AND '.$accesslevel.' >= 0 LIMIT 1;';
 		DEBUG::add('Check if login and password match on account table');
 		
 		LOGDAEMON::l()->add($sql);
@@ -518,6 +520,7 @@ class account extends login{
 	}
 
 	function verif () {
+		global $accesslevel;
 
 		if(!$this->is_logged())			// Check if user is logged
 			return false;
@@ -528,7 +531,7 @@ class account extends login{
 				'FROM accounts ' .
 					'WHERE login = "'.$account->login.'" ' .
 						'AND password = "'.$account->password.'" ' .
-						'AND accessLevel >= 0 LIMIT 1;';
+						'AND '.$accesslevel.' >= 0 LIMIT 1;';
 
 		DEBUG::add('Verify if the user is correctly logged');
 
