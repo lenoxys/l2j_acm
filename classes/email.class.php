@@ -38,7 +38,7 @@ class email{
 		$email = $this->get_email();
 
 		$entity_b = array ('[\[IP\]]','[\[ID\]]','[\[EMAIL_SUPPORT\]]','[\[URL\]]','[\[CODE\]]','[\[SERVER\]]');
-		$entity_p = array ($_SERVER['REMOTE_ADDR'], $this->account->login, $email_from, $this->url, $this->account->code, $server_name,'');
+		$entity_p = array ($_SERVER['REMOTE_ADDR'], $this->account->login, $email_from, @$this->url, @$this->account->code, $server_name);
 		$title = preg_replace($entity_b, $entity_p, $title);
 		$message = preg_replace($entity_b, $entity_p, $message);
 
