@@ -40,7 +40,7 @@ class account extends login{
 		$this->login = $login;
 	}
 
-	function create ($login, $pwd, $repwd, $email, $img) {
+	function create ($login, $pwd, $repwd, $email, $img = null) {
 		global $vm, $error, $act_email, $accesslevel;
 
 		if(!$this->verif_limit_create()) {
@@ -245,7 +245,7 @@ class account extends login{
 		return true;
 	}
 
-	function auth ($login, $password, $img) {
+	function auth ($login, $password, $img = null) {
 		global $error, $vm, $accesslevel;
 		
 		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;

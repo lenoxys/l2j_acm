@@ -35,7 +35,7 @@ class core {
 
 			$this->secure_post();
 
-			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], $_POST['Limage']))
+			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], @$_POST['Limage']))
 				$error .= $vm['_wrong_auth'];
 		}
 
@@ -104,7 +104,7 @@ class core {
 	function registration() {
 		global $valid, $error, $vm;
 
-		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], $_POST['Limage'])) {
+		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
 			$valid = $vm['_account_created'];
 			$this->show_login();
 		}
