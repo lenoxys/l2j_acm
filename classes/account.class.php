@@ -384,7 +384,7 @@ class account extends login{
 			return false;
 		}
 
-		if($this->login == $pwd) {
+		if($this->login == $newpass) {
 			$error = $vm['_REGWARN_UNAME3'];
 			return false;
 		}
@@ -400,8 +400,8 @@ class account extends login{
 		}
 
 		$this->change_pwd($newpass);
-
-		$_SESSION['acm'] = serialize(new account($this->login, $this->l2j_encrypt($newpass)));
+		
+		$this->auth($this->login, $newpass, $_SESSION['code']);
 
 		return true;
 	}
