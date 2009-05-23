@@ -1,4 +1,8 @@
 <?php
+
+if(file_exists('./install.php'))
+	exit('delete install.php before use acm');
+
 session_start();
 
 define ('_ACM_VALID', 1);
