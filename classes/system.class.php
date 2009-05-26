@@ -20,21 +20,20 @@ class Smarty2 extends Smarty {
 	
 	function display($t) {
 		global $error;
-		DEBUG::add($error);
-		DEBUG::publish();
+		DEBUG::publish($this);
+		MSG::display($this);
 		parent::display($t);
 	}
 }
 
-class error {
+class msg {
 
-	private $error_text;
+	private $error_text = null;
+	private $valid_text = null;
 	
 	private static $instance;
 
-	private function __construct() {
-		
-	}
+	private function __construct() {}
 	
 	public function __clone() {
 		trigger_error('Clone is not allowed.', E_USER_ERROR);
@@ -48,18 +47,34 @@ class error {
 		return self::$instance;
 	}
 
-	public function add($txt) {
-		$d = DEBUG::singleton();
+	public function add_error($txt) {
+		$d = MSG::singleton();
 		$d->error_text .= $txt.'<br />'."\n\r";
 	}
 
-	public function publish() {
-		if(!DEBUG)
-			return false;
-		
-		$d = DEBUG::singleton();
-		
-		return $d->error_text."\n\r";
+	public function get_error() {
+		$d = MSG::singleton();
+		return $d->error_text;
+	}
+
+	public function add_valid($txt) {
+		$d = MSG::singleton();
+		$d->valid_text .= $txt.'<br />'."\n\r";
+	}
+
+	public function get_valid() {
+		$d = MSG::singleton();
+		return $d->valid_text;
+	}
+
+	public function display($t) {	
+		$d = MSG::singleton();
+		if(!empty($d->error_text)) {
+			$t->assign('error', $d->error_text);
+		}
+		if(!empty($d->valid_text)) {
+			$t->assign('valid', $d->valid_text);
+		}
 	}
 }
 
@@ -92,15 +107,15 @@ class debug {
 		$d->debug_text .= $txt.'<br />'."\n\r";
 	}
 
-	public function publish() {
+	public function publish($t) {
 		if(!DEBUG)
 			return false;
 		
 		$d = DEBUG::singleton();
 		
-		echo '<div style="color: #000;background: #FFF;"><h1>DEBUG MODE ON</h1><br />'."\n\r";
-		echo $d->debug_text."\n\r";
-		echo '</div>'."\n\r";
+		if(!empty($d->debug_text)) {
+			$t->assign('debug', $d->debug_text);
+		}
 	}
 }
 

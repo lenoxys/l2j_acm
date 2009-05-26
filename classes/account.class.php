@@ -2,7 +2,7 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-class account extends login{
+class account{
 
 	public $login, $password;
 	
@@ -44,52 +44,52 @@ class account extends login{
 		global $vm, $error, $act_email, $accesslevel;
 
 		if(!$this->verif_limit_create()) {
-			$error = $vm['_REGWARN_LIMIT_CREATING'];
+			MSG::add_error($vm['_REGWARN_LIMIT_CREATING']);
 			return false;
 		}
 
 		if($login == '') {
-			$error = $vm['_REGWARN_UNAME1'];
+			MSG::add_error($vm['_REGWARN_UNAME1']);
 			return false;
 		}
 
 		if(!$this->verif_char($login, true)) {
-			$error = $vm['_REGWARN_UNAME2'];
+			MSG::add_error($vm['_REGWARN_UNAME2']);
 			return false;
 		}
 
 		if($login == $pwd) {
-			$error = $vm['_REGWARN_UNAME3'];
+			MSG::add_error($vm['_REGWARN_UNAME3']);
 			return false;
 		}
 
 		if($this->is_login_exist($login)) {
-			$error = $vm['_REGWARN_INUSE'];
+			MSG::add_error($vm['_REGWARN_INUSE']);
 			return false;
 		}
 
 		if($pwd != $repwd) {
-			$error = $vm['_REGWARN_VPASS2'];
+			MSG::add_error($vm['_REGWARN_VPASS2']);
 			return false;
 		}
 
 		if(!$this->verif_char($pwd)) {
-			$error = $vm['_REGWARN_VPASS1'];
+			MSG::add_error($vm['_REGWARN_VPASS1']);
 			return false;
 		}
 
 		if(!$this->verif_email($email)) {
-			$error = $vm['_REGWARN_MAIL'];
+			MSG::add_error($vm['_REGWARN_MAIL']);
 			return false;
 		}
 
 		if($this->is_email_exist($email)) {
-			$error = $vm['_REGWARN_EMAIL_INUSE'];
+			MSG::add_error($vm['_REGWARN_EMAIL_INUSE']);
 			return false;
 		}
 
 		if(!$this->verif_img($img)) {
-			$error = $vm['_image_control'];
+			MSG::add_error($vm['_image_control']);
 			return false;
 		}
 
@@ -104,7 +104,7 @@ class account extends login{
 		$this->MYSQL->query($sql);
 
 		if(!$this->is_login_exist($login)) {
-			$error = $vm['_creating_acc_prob'];
+			MSG::add_error($vm['_creating_acc_prob']);
 			return false;
 		}
 
@@ -112,10 +112,13 @@ class account extends login{
 		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$login."' , 'activation_key', '".$this->code."');";
 		$this->MYSQL->query($sql);
 
-		if(!$act_email)
+		if(!$act_email) {
 			$this->valid_account($this->code);
-		else
+			MSG::add_valid($vm['_account_created']);
+		}else{
+			MSG::add_valid($vm['_account_actived']);
 			EMAIL::OP()->operator($this, 'created_account_validation');
+		}
 
 		return true;
 	}
@@ -252,12 +255,12 @@ class account extends login{
 
 		if($_SESSION['sp'] > 5) {
 			LOGDAEMON::l()->add('Warning : SPAMMING AUTHENTICATION');
-			$error = 'Warning : SPAMMING AUTHENTICATION'.'<br />';
+			MSG::add_error('Warning : SPAMMING AUTHENTICATION'.'<br />');
 			return false;
 		}
 		
 		if(!$this->verif_img($img)) {
-			$error = $vm['_image_control']. '<br />';
+			MSG::add_error($vm['_image_control']. '<br />');
 			return false;
 		}
 		
@@ -283,6 +286,8 @@ class account extends login{
 		}
 			
 		$this->update_last_active();
+		
+		$this->email = $this->get_email();
 
 		$_SESSION['acm'] = serialize($this);
 		
@@ -316,7 +321,7 @@ class account extends login{
 		global $error, $vm;
 
 		if(!$this->verif_img($img)) {
-			$error = $vm['_image_control'];
+			MSG::add_error($vm['_image_control']);
 			return false;
 		}
 		
@@ -324,7 +329,7 @@ class account extends login{
 		$sql = "SELECT COUNT(login) FROM `accounts` WHERE `login` = '".$login."' AND `email` = '".$email."'";
 		
 		if($this->MYSQL->result($sql) != 1) {
-			$error = $vm['_wrong_auth'];
+			MSG::add_error($vm['_wrong_auth']);
 			return false;
 		}
 
@@ -345,7 +350,7 @@ class account extends login{
 		global $vm, $error;
 
 		if(!$this->verif_tag($login, 'forget_pwd', $key)) {
-			$error = $vm['_activation_control'];
+			MSG::add_error($vm['_activation_control']);
 			return false;
 		}
 
@@ -380,22 +385,22 @@ class account extends login{
 		global $vm, $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
-			$error = $vm['_REGWARN_VPASS1'];
+			MSG::add_error($vm['_REGWARN_VPASS1']);
 			return false;
 		}
 
 		if($this->login == $newpass) {
-			$error = $vm['_REGWARN_UNAME3'];
+			MSG::add_error($vm['_REGWARN_UNAME3']);
 			return false;
 		}
 
 		if(!$this->verif_char($newpass)) {
-			$error = $vm['_REGWARN_VPASS1'];
+			MSG::add_error($vm['_REGWARN_VPASS1']);
 			return false;
 		}
 
 		if ($newpass != $renewpass) {
-			$error = $vm['_REGWARN_VPASS2'];
+			MSG::add_error($vm['_REGWARN_VPASS2']);
 			return false;
 		}
 
@@ -409,7 +414,7 @@ class account extends login{
 	function can_chg_email() {
 		global $can_chg_email;
 		
-		if($this->get_email() == '')
+		if($this->email == '')
 			return true;
 		
 		if(!$can_chg_email)
@@ -477,22 +482,22 @@ class account extends login{
 		global $vm, $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
-			$error = $vm['_REGWARN_VPASS1'];
+			MSG::add_error($vm['_REGWARN_VPASS1']);
 			return false;
 		}
 
 		if(!$this->verif_email($email)) {
-			$error = $vm['_REGWARN_MAIL'];
+			MSG::add_error($vm['_REGWARN_MAIL']);
 			return false;
 		}
 
 		if($this->is_email_exist($email)) {
-			$error = $vm['_REGWARN_EMAIL_INUSE'];
+			MSG::add_error($vm['_REGWARN_EMAIL_INUSE']);
 			return false;
 		}
 
 		if ($email != $reemail) {
-			$error = $vm['_REGWARN_VEMAIL1'];
+			MSG::add_error($vm['_REGWARN_VEMAIL1']);
 			return false;
 		}
 		
@@ -537,6 +542,7 @@ class account extends login{
 
 
 		if($this->MYSQL->result($sql) != 1)	{	// Check if user session data are right
+			MSG::add_error($vm['_logout']);
 			$this->loggout();
 			return false;
 		}

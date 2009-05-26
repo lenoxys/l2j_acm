@@ -1,6 +1,7 @@
 {include file="header.tpl"}
 
 				<h2>{$vm.select_item}</h2>
+                <p>{$vm.select_desc}</p>
 				<p>
 {if isset($error)}
 					<div class="error"><div class="error_container">{$error}</div></div>

@@ -6,9 +6,9 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
  *	Lineage II World class
  */
 
-class world extends account {
+class world {
 
-	public $id, $name, $gs_host, $gs_user, $gs_pass, $gs_db;
+	private $id, $name, $char_list;
 
 /**
  *	Construct a new world
@@ -16,33 +16,33 @@ class world extends account {
  *			ID of the world selected
  */
 	function world($id) {
-		global $MYSQL_LS, $allow_char_mod;
+		global $MYSQL_LS, $accserv, $interlude;
 		
-		if(!$allow_char_mod)
+		if(!$accserv['allow_char_mod'])
 			exit('Access to this private class have been restricted by the admin');
+		
+		if($interlude)
+			exit('Accounts Services can\'t be used with interlude server');
 		
 		$this->id = $id;
 		$this->set_name();
-		$this->get_config();
 		$this->MYSQL_GS = new MYSQL_GS($this->id);
+		$this->load_chars();
 	}
 
 /**
- *	Get mysql identity for the world
+ *	Get world id
+ *		return world id
  */
-	function get_config() {
-		global $gs_host, $gs_user, $gs_pass, $gs_db;
-		$this->gs_host = $gs_host[$this->id];
-		$this->gs_user = $gs_user[$this->id];
-		$this->gs_pass = $gs_pass[$this->id];
-		$this->gs_db = $gs_db[$this->id];
+	public function get_id(){
+		return $this->id;
 	}
 
 /**
  *	Get world name
  *		return world name
  */
-	function get_name(){
+	public function get_name(){
 		return $this->name;
 	}
 
@@ -50,8 +50,16 @@ class world extends account {
  *	Set world name
  *		return nothing
  */
-	function set_name(){
-		$this->name = $this->get_name_world();
+	private function set_name(){
+		$this->name = $this->get_name_world($this->id);
+	}
+
+/**
+ *	Get world characters list
+ *		return world characters list
+ */
+	public function get_chars(){
+		return $this->char_list;
 	}
 
 /**
@@ -80,7 +88,7 @@ class world extends account {
  *	Get name world by id
  *		return name world
  */	
-	function get_name_world () {
+	public function get_name_world ($id) {
 		$name = array();
 		$name['1']="Bartz";
 		$name['2']="Sieghardt";
@@ -153,28 +161,7 @@ class world extends account {
 		$name['69']="Hallate";
 		$name['70']="Zaken";
 		$name['71']="Core";
-		return $name[$this->id];
-	}
-
-/**
- * Verify 
- *
- *
- *
- *
- */
-	function verif_tag($login, $tag, $value){
-		$sql = "SELECT COUNT(account_name) FROM `account_data` WHERE " .
-				"`account_name` = '".$login."' " .
-				"AND `var` = '".$tag."' " .
-				"AND `value` = '".$value."' LIMIT 1;";
-		
-		DEBUG::add('Check the tag on account_data');
-
-		if($this->MYSQL->result($sql) != 1)
-			return false;
-
-		return true;
+		return $name[$id];
 	}
 
 /**
@@ -184,22 +171,19 @@ class world extends account {
  * 
  * 		return list of their chars
  */
-	function get_chars($login) {
-		$chars = array();
+	function load_chars() {
+		$this->char_list = array();
 		
-		$sql = 'SELECT `charId`, `char_name` FROM `characters` WHERE `account_name` = "'.$login.'";';
+		$sql = 'SELECT `charId`, `char_name` FROM `characters` WHERE `account_name` = "'.(ACCOUNT::load()->getLogin()).'";';
 		
 		$this->MYSQL_GS->connect();
 		$rslt = $this->MYSQL_GS->query($sql);
 		
 		while ($row = mysql_fetch_object($rslt)) {
-			$char = array($row->charId, $row->char_name, $this);
-			$chars[$row->charId] = $char;
+			$char = new character ($row->charId, $this->id);
+			$this->char_list[] = $char;
 		}
-		
 		$this->MYSQL_GS->close();
-		
-		return $chars;
 	}
 
 }

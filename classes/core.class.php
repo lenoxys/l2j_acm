@@ -19,31 +19,31 @@ class core {
 	}
 
 	function loggout() {
-		global $valid, $vm;
+		global $vm;
 		$this->account->loggout();
-		$valid = $vm['_logout'];
+		MSG::add_valid($vm['_logout']);
 		$this->index();
 	}
 
 	function login() {
-		global $error, $vm;
+		global $vm;
 
 		if(empty($_POST['Luser']) || empty($_POST['Lpwd']))
 		{
-			$error = $vm['_no_id_no_pwd'];
+			MSG::add_error($vm['_no_id_no_pwd']);
 		}else{
 
 			$this->secure_post();
 
 			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], @$_POST['Limage']))
-				$error .= $vm['_wrong_auth'];
+				MSG::add_error($vm['_wrong_auth']);
 		}
 
 		$this->index();
 	}
 
 	function show_login() {
-		global $template, $vm, $error, $valid, $id_limit, $pwd_limit, $act_img;
+		global $template, $vm, $id_limit, $pwd_limit, $act_img;
 		$template->assign('vm', array(
 		    'exist_account'		=> $vm['_exist_account'],
 		    'account_length'		=> $id_limit,
@@ -59,17 +59,11 @@ class core {
 		if($act_img) {
 			$template->assign('image', 'image');
 		}
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		if($valid != '') {
-			$template->assign('valid', $valid);
-		}
 		$template->display('form.tpl');
 	}
 
 	function show_account() {
-		global $template, $vm, $error, $valid, $allow_char_mod;
+		global $template, $vm;
 		
 		$template->assign('vm', array(
 			'title_page'		=> $vm['_title_page'],
@@ -81,7 +75,7 @@ class core {
 		$modules[] = array('name'=>$vm['_chg_pwd'], 'link'=>'?action=show_chg_pwd');
 		
 		if ($this->allow_char_mod())
-			$modules[] = array('name'=>$vm['_select_worlds'], 'link'=>'?action=show_worlds');
+			$modules[] = array('name'=>$vm['_accounts_services'], 'link'=>'?action=acc_serv');
 		
 		if ($this->account->can_chg_email())
 			$modules[] = array('name'=>$vm['_chg_email'], 'link'=>'?action=show_chg_email');
@@ -91,25 +85,15 @@ class core {
 		$template->assign('modules', $modules);
 		
 		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		if($valid != '') {
-			$template->assign('valid', $valid);
-		}
 		$template->display('account.tpl');
 	}
 
 	function registration() {
-		global $valid, $error, $vm;
+		global $vm;
 
 		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
-			$valid = $vm['_account_created'];
 			$this->show_login();
-		}
-		else
-		{
+		}else{
 			$this->show_create(true);
 		}
 	}
@@ -125,7 +109,7 @@ class core {
 	}
 
 	function show_create($acka = false) {
-		global $template, $vm, $error, $act_img, $id_limit, $pwd_limit,$ack_cond;
+		global $template, $vm, $act_img, $id_limit, $pwd_limit,$ack_cond;
 
 		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
@@ -153,14 +137,11 @@ class core {
 		if($act_img) {
 			$template->assign('image', 'image');
 		}
-		if($error != '') {
-			$template->assign('error', $error);
-		}
 		$template->display('create.tpl');
 	}
 
 	function show_forget() {
-		global $template, $vm, $error, $act_img, $id_limit;
+		global $template, $vm, $act_img, $id_limit;
 		$template->assign('vm', array(
 		    'forgot_pwd'			=> $vm['_forgot_pwd'],
 		    'forgot_pwd_text'		=> $vm['_forgot_pwd_text'],
@@ -176,17 +157,14 @@ class core {
 		if($act_img) {
 			$template->assign('image', 'images');
 		}
-		if($error != '') {
-			$template->assign('error', $error);
-		}
 		$template->display('forgot_pwd.tpl');
 	}
 
 	function forgot_pwd() {
-		global $vm, $error, $valid;
+		global $vm;
 
 		if($this->account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
-			$valid = $vm['_password_request'];
+			MSG::add_valid($vm['_password_request']);
 			$this->index();
 		}else{
 			$this->show_forget();
@@ -196,13 +174,13 @@ class core {
 	}
 
 	function forgot_pwd_email() {
-		global $vm, $error, $valid;
+		global $vm;
 
 		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
-			$valid = $vm['_password_reseted'];
+			MSG::add_valid($vm['_password_reseted']);
 			$this->index();
 		}else{
-			$error = $vm['_control'];
+			MSG::add_error($vm['_control']);
 			$this->show_forget();
 		}
 
@@ -210,10 +188,10 @@ class core {
 	}
 
 	function chg_pwd_form() {
-		global $valid, $error, $vm;
+		global $vm;
 
 		if(!$this->account->verif()) {
-			$error = $vm['_WARN_NOT_LOGGED'];
+			MSG::add_error($vm['_WARN_NOT_LOGGED']);
 			$this->index();
 			return;
 		}
@@ -221,7 +199,7 @@ class core {
 		$account = unserialize($_SESSION['acm']);
 
 		if($this->account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
-			$valid = $vm['_change_pwd_valid'];
+			MSG::add_valid($vm['_change_pwd_valid']);
 			$this->show_account();
 		}
 		else
@@ -231,10 +209,10 @@ class core {
 	}
 
 	function show_chg_pwd() {
-		global $error, $vm;
+		global $vm;
 		
 		if(!$this->account->verif()) {
-			$error = $vm['_WARN_NOT_LOGGED'];
+			MSG::add_error($vm['_WARN_NOT_LOGGED']);
 			$this->index();
 			return;
 		}
@@ -252,18 +230,14 @@ class core {
 		    'chg_button'			=> $vm['_chg_button']
 		));
 		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		
 		$template->display('chg_pwd.tpl');
 	}
 
 	function chg_email_form() {
-		global $valid, $error, $vm;
+		global $vm;
 
 		if(!$this->account->verif()) {
-			$error = $vm['_WARN_NOT_LOGGED'];
+			MSG::add_error($vm['_WARN_NOT_LOGGED']);
 			$this->index();
 			return;
 		}
@@ -276,7 +250,7 @@ class core {
 		$this->account = unserialize($_SESSION['acm']);
 
 		if($this->account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
-			$valid = $vm['_change_email_valid'];
+			MSG::add_valid($vm['_change_email_valid']);
 			$this->show_account();
 		}
 		else
@@ -286,10 +260,10 @@ class core {
 	}
 
 	function show_chg_email() {
-		global $error, $vm, $can_chg_email;
+		global $vm, $can_chg_email;
 		
 		if(!$this->account->verif()) {
-			$error = $vm['_WARN_NOT_LOGGED'];
+			MSG::add_error($vm['_WARN_NOT_LOGGED']);
 			$this->index();
 			return;
 		}
@@ -312,21 +286,17 @@ class core {
 		    'chg_button'			=> $vm['_chg_button']
 		));
 		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		
 		$template->display('chg_email.tpl');
 
 	}
 
 	function email_validation() {
-		global $vm, $error, $valid;
+		global $vm;
 
 		if($this->account->email_validation($_GET['login'], $_GET['key'])) {
-			$valid = $vm['_email_activated'];
+			MSG::add_valid($vm['_email_activated']);
 		}else{
-			$error = $vm['_control'];
+			MSG::add_error($vm['_control']);
 		}
 		
 		$this->index();
@@ -334,265 +304,207 @@ class core {
 		return true;
 	}
 	
-	function show_worlds(){
-		global $allow_char_mod;
-		
+	function acc_serv(){
+		global $vm;
 		if(!$this->allow_char_mod()) {
+			MSG::add_error($vm['_acc_serv_off']);
 			$this->index();
 			return;
 		}
 				
-		global $template, $vm;
-		
-		$_SESSION['worlds'] = WORLD::load_worlds();
+		global $template, $accserv;
 		
 		$template->assign('vm', array(
-			'select_item'			=> $vm['_select_worlds'],
+			'select_item'			=> $vm['_accounts_services'],
 			'return'				=> $vm['_return'],
 		));
 		
 		$items = array();
-		foreach  ($_SESSION['worlds'] as $world)
-			$items[] = array('id' => $world->id, 'name' => $world->name, 'link' => '?action=show_chars&world_id='.$world->id);
+		
+		if($accserv['allow_fix'])
+			$items[] = array('id' => 0, 'name' => $vm['_character_fix'], 'link' => '?action=char_fix_l');
+		
+		if($accserv['allow_unstuck'])
+			$items[] = array('id' => 1, 'name' => $vm['_character_unstuck'], 'link' => '?action=char_unstuck_l');
+		
+		if($accserv['allow_sex'])
+			$items[] = array('id' => 1, 'name' => $vm['_character_sex'], 'link' => '?action=char_sex_l');
+		
+		if($accserv['allow_name'])
+			$items[] = array('id' => 1, 'name' => $vm['_character_name'], 'link' => '?action=char_name_l');
 		
 		$template->assign('items', $items);
 		
 		$template->register_block('dynamic', 'smarty_block_dynamic', false);
 		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		
 		$template->display('select.tpl');
 	}
 	
-	function show_chars(){
-		global $allow_char_mod, $vm;
+	function char_ufl($mod = null){
 		
-		if(!$this->allow_char_mod()) {
+		global $accserv, $vm;
+		
+		if(is_null($mod)) {$this->index(); return;}
+		
+		if(!$this->allow_char_mod() || !$accserv['allow_'.$mod]) {
+			MSG::add_error($vm['_acc_serv_off']);
 			$this->index();
 			return;
 		}
 		
 		global $template;
 		
-		$world = new WORLD($_GET['world_id']);
-		
-		$this->account->chars = $world->get_chars($this->account->login);
-		$_SESSION['acm'] = serialize($this->account);
+		unset($worlds);
+		$worlds = WORLD::load_worlds(); // charging world
 		
 		$template->assign('vm', array(
-			'select_item'			=> $vm['_select_character'],
+			'select_item'			=> $vm['_character_'.$mod],
+			'select_desc'			=> $vm['_character_'.$mod.'_desc'],
 		    'return'				=> $vm['_return']
 		));
 		
 		$items = array();
-		foreach  ($this->account->chars as $char)
-			$items[] = array('id' => $char[0], 'name' => $char[1], 'link' => '?action=show_char&id='.$char[0]);
+		foreach  ($worlds as $world) {
+			foreach  ($world->get_chars() as $char) {
+				$items[] = array('id' => $world->get_id(), 'name' => $world->get_name() . ' : ' .$char->getName(), 'link' => '?action=char_'.$mod.'&wid='.$world->get_id().'&cid='.$char->getId());
+			}
+		}
 		
 		$template->assign('items', $items);
 		
 		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
 		
 		$template->display('select.tpl');
 	}
 	
-	function show_char(){
-		
-		if(!$this->allow_char_mod()) {
-			$this->index();
-			return;
-		}
-		
-		global $template, $vm, $error, $valid, $allow_fix, $allow_unstuck, $allow_account_services;
-		
-		if(empty($_GET['id'])) {
-			$error = 'Error when select your character';
-			$this->index();
-			return;
-		}
-		
-		$this->char = $this->account->chars[$_GET['id']];
-		
-		if(empty($this->char)) {
-			$error = 'Error when select your character';
-			$this->index();
-			return;
-		}
-		
-		$this->char = new character($this->char[0], $this->account->login, $this->char[2]);
-		
-		if(!$this->char) {
-			$error = 'Error when select your character';
-			$this->index();
-			return;
-		}
-		
-		$_SESSION['acm_char'] = serialize($this->char);
-		
-		$template->assign('vm', array(
-			'select_item'		=> $this->char->char_name,
-		    'return'		=> $vm['_return']
-		));
-		
-		$items = array();
-		
-		if($this->char->allow_fix())
-			$items[] = array('id' => 0, 'name' => $vm['_character_fix'], 'link' => '?action=char_fix&id='.$this->char->charId);
-		
-		if($this->char->allow_fix(true))
-			$items[] = array('id' => 1, 'name' => $vm['_character_unstuck'], 'link' => '?action=char_unstuck&id='.$this->char->charId);
-		
-		if($this->char->can_change_gender())
-			$items[] = array('id' => 1, 'name' => $vm['_character_sex'], 'link' => '?action=char_sex&id='.$this->char->charId);
-		
-		if($this->char->can_change_name(null, true))
-			$items[] = array('id' => 1, 'name' => $vm['_character_name'], 'link' => '?action=char_unstuck&id='.$this->char->charId);
-		
-		$template->assign('items', $items);
-		
-		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		if($valid != '') {
-			$template->assign('valid', $valid);
-		}
-		$template->display('select.tpl');
+	function char_unstuck_l() {
+		$this->char_ufl('unstuck');
 	}
-
-	function char_fix() {
-		
-		if(!$this->allow_char_mod()) {
-			$this->index();
-			return;
-		}
-		
-		global $vm, $valid, $error;
-		
-		$this->char = unserialize($_SESSION['acm_char']);
-
-		if(!$this->char->fix())
-			$error = $vm['_character_fix_no'];
-		else
-			$valid = $vm['_character_fix_yes'];
-
-		$this->index();
-
-		return;
+	
+	function char_fix_l() {
+		$this->char_ufl('fix');
 	}
-
-	function char_unstuck() {
-		
-		if(!$this->allow_char_mod()) {
-			$this->index();
-			return;
-		}
-		
-		global $vm, $valid, $error;
-		
-		$this->char = unserialize($_SESSION['acm_char']);
-
-		if(!$this->char->unstuck())
-			$error = $vm['_character_unstuck_no'];
-		else
-			$valid = $vm['_character_unstuck_yes'];
-
-		$this->index();
-
-		return;
+	
+	function char_sex_l() {
+		$this->char_ufl('sex');
 	}
+	
+	function char_name_l() {
+		$this->char_ufl('name');
+	}
+	
+	function char_uf($mod = null) {
+		
+		if(is_null($mod)) {$this->index(); return;}
 
-	function char_sex() {
+		global $accserv, $vm;
 		
-		if(!$this->allow_char_mod() and !$allow_account_services) {
+		if(!$this->allow_char_mod() and !$accserv['allow_'.$mod]) {
+			MSG::add_error($vm['_acc_serv_off']);
 			$this->index();
 			return;
 		}
 		
-		global $allow_account_services;
-		
-		if(empty($_GET['id'])) {
-			$error = 'Error when select your character';
+		if(empty($_GET['wid']) || empty($_GET['cid'])) {
+			MSG::add_error($vm['_error_select_char']);
 			$this->index();
 			return;
 		}
 		
-		$this->char = $this->account->chars[$_GET['id']];
+		$char = new character($_GET['cid'], $_GET['wid']);
 		
-		if(empty($this->char)) {
-			$error = 'Error when select your character';
+		if(is_null($char->getId())) {
+			MSG::add_error($vm['_error_select_char']);
 			$this->index();
 			return;
 		}
 		
 		global $template, $vm;
 		
-		$this->char = unserialize($_SESSION['acm_char']);
-		
-		$this->after = ($this->char->sex == 1) ? 0 : 1;
-		
-		$p1 = $this->char->char_name;
-		$p2 = $this->char->world->name;
-		$p3 = $vm['_character_sex_'.$this->char->sex];
-		$p4 = $vm['_character_sex_'.$this->after];
-		
 		$template->assign('vm', array(
-			'select_item'		=> sprintf($vm['_character_sex_confirm'], $p1, $p2, $p3, $p4),
+			'select_item'	=> $vm['_character_'.$mod],
+			'select_desc'	=> sprintf($vm['_character_'.$mod.'_confirm'], $char->getName(), world::get_name_world($char->getWorldId()), $vm['_character_sex_'.$char->getGender()], $vm['_character_sex_'.((int)(!$char->getGender()))]),
 		    'return'		=> $vm['_return']
 		));
 		
 		$items = array();
-		
-		$items[] = array('id' => 1, 'name' => $vm['_confirm'], 'link' => '?action=char_sex_confirm&id='.$this->char->charId);
-		$items[] = array('id' => 1, 'name' => $vm['_back'], 'link' => '?action=show_char&id='.$this->char->charId);
-		
+		$items[] = array('id' => 1, 'name' => $vm['_confirm'], 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId());
+		$items[] = array('id' => 1, 'name' => $vm['_back'], 'link' => '?action=char_'.$mod.'_l');
 		$template->assign('items', $items);
 		
 		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		
-		if($error != '') {
-			$template->assign('error', $error);
-		}
-		if($valid != '') {
-			$template->assign('valid', $valid);
-		}
 		$template->display('select.tpl');
 	}
+	
+	function char_unstuck() {
+		$this->char_uf('unstuck');
+	}
+	
+	function char_fix() {
+		$this->char_uf('fix');
+	}
+	
+	function char_sex() {
+		$this->char_uf('sex');
+	}
+	
+	function char_name() {
+		$this->char_uf('name');
+	}
 
-	function char_sex_confirm() {
+	function char_ufc($mod = null) {
 		
-		if(!$this->allow_char_mod()) {
+		if(is_null($mod)) {$this->index(); return;}
+		
+		global $accserv, $vm;
+		
+		if(!$this->allow_char_mod() or !$accserv['allow_'.$mod]) {
+			MSG::add_error($vm['_acc_serv_off']);
 			$this->index();
 			return;
 		}
 		
-		global $vm, $valid, $error;
+		if(empty($_GET['wid']) || empty($_GET['cid'])) {
+			MSG::add_error($vm['_error_select_char']);
+			$this->index();
+			return;
+		}
 		
-		$this->char = unserialize($_SESSION['acm_char']);
+		$char = new character($_GET['cid'], $_GET['wid']);
 
-		if(!$this->char->change_gender())
-			$error .= $vm['_character_sex_no'];
+		if(!$char->$mod())
+			MSG::add_error($vm['_character_'.$mod.'_no']);
 		else
-			$valid .= $vm['_character_sex_yes'];
+			MSG::add_valid($vm['_character_'.$mod.'_yes']);
 
 		$this->index();
 
 		return;
 	}
+	
+	function char_unstuck_confirm() {
+		$this->char_ufc('unstuck');
+	}
+	
+	function char_fix_confirm() {
+		$this->char_ufc('fix');
+	}
+	
+	function char_sex_confirm() {
+		$this->char_ufc('sex');
+	}
+	
+	function char_name_confirm() {
+		$this->char_ufc('name');
+	}
 
 	function activation() {
-		global $vm, $valid, $error;
+		global $vm;
 
 		if(!$this->account->valid_account(htmlentities($_GET['key'])))
-			$error = $vm['_activation_control'];
+			MSG::add_error($vm['_activation_control']);
 		else
-			$valid = $vm['_account_actived'];
+			MSG::add_valid($vm['_account_actived']);
 
 		$this->index();
 
@@ -600,12 +512,14 @@ class core {
 	}
 	
 	function allow_char_mod() {
-		global $allow_char_mod, $allow_account_services, $allow_fix, $allow_unstuck;
+		global $accserv;
 		
-		if(!$allow_char_mod)
+		$accserv['allow_name'] = false;
+		
+		if(!$accserv['allow_char_mod'])
 			return false;
 		
-		if(!$allow_fix && !$allow_unstuck && !$allow_account_services)
+		if(!$accserv['allow_fix'] && !$accserv['allow_unstuck'] && !$accserv['allow_name'] && !$accserv['allow_sex'])
 			return false;
 		
 		return true;

@@ -17,12 +17,12 @@ $vm['_new_account_text2']				= 'You will need an account to play on Lineage II. 
 
 			Your account is non-transferable, and both your account name and password are private and should never be given out to anyone!
 
-			<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>
+			<span style="color: red">GMs will never ask you for any items or account passwords under any circumstances.</span>
 
 			All fields marked with a <img src="./images/required.gif" width="14" height="14" alt="" /> are required fields and need to be completed in order to fill out the signup form successfully.
 ';
 $vm['_chg_pwd']							= 'Change your password';
-$vm['_chg_pwd_text']					= '<span style="color: red">Don\'t trust anyone claiming to be a GM/admin. WE DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
+$vm['_chg_pwd_text']					= '<span style="color: red">GMs will never ask you for any items or account passwords under any circumstances.</span>';
 $vm['_chg_button']						= 'Change';
 $vm['_password2']						= 'Confirm password';
 $vm['_passwordold']						= 'Old password';
@@ -43,7 +43,7 @@ $vm['_image_control']					= 'Image control isn\'t correct';
 $vm['_pwd_difference']					= 'Please retape your password';
 $vm['_pwd_incorrect']					= 'Please use another password';
 $vm['_image_control_desc']				= 'To prevent automated registrations creation account requires you to enter a confirmation code. If you can\'t read the image control, click on it for reload. ';
-$vm['_account_created']					= 'Your account has been created.';
+$vm['_account_created']					= 'Your account has been created but you need to activate by email.';
 $vm['_account_actived']					= 'Your account has been actived.';
 $vm['_REGWARN_UNAME1']					= 'Please enter a username.';
 $vm['_REGWARN_UNAME2']					= 'Please enter a valid username.';
@@ -96,31 +96,64 @@ $vm['_accept_button']					= 'Accept';
 -----------------------------------------------------------------
 */
 
+$vm['_accounts_services']				= 'Accounts Services';
 $vm['_select_worlds']					= 'Select your Lineage 2 World';
 $vm['_select_character']				= 'Select your character';
+
 $vm['_character_fix']					= 'Fix your character';
-$vm['_character_unstuck']				= 'Move your character to the nearest town';
-$vm['_character_unstuck_yes']			= 'Your character has been moved to the nearest town.';
-$vm['_character_unstuck_no']			= 'Your character hasn\'t been moved to the nearest town.';
+$vm['_character_fix_desc']				= 'Fix your character';
+$vm['_character_fix_confirm']			= '"%s" on "%s" will be fixed';
 $vm['_character_fix_yes']				= 'Your character has been fixed.';
 $vm['_character_fix_no']				= 'Your character hasn\'t been fixed.';
 
+$vm['_character_unstuck']				= 'Move your character to the nearest town';
+$vm['_character_unstuck_desc']			= 'Please try /unstuck command when a character is trapped in an immovable geographic location. If it is determined that the character really is confined in the map, the character is quickly moved to a nearby place. If it is determined otherwise, the five-minute escape function is activated and the character is moved to a nearby village after five minutes.
+
+If you are not able to run this command in game, select the character who will be moved to the nearest town.';
+$vm['_character_unstuck_confirm']		= '"%s" on "%s" will be moved.';
+$vm['_character_unstuck_yes']			= 'Your character has been moved to the nearest town.';
+$vm['_character_unstuck_no']			= 'Your character hasn\'t been moved to the nearest town.';
+
+$vm['_allow_time']						= 'You need to wait %s hour(s) after the last %s.';
+
 $vm['_acc_serv_off']					= 'Account services are offline.';
+$vm['_acc_serv_offline']				= 'Account services are avaible for offline character only.';
 $vm['_acc_serv_ban']					= 'Banned user are not able to use account services.';
 
-$vm['_character_sex']					= 'Change Gender';
-$vm['_character_sex_confirm']			= 'You have chosen "%s" on "%s" to change from %s to %s';
-$vm['_character_sex_yes']				= 'Character gender has been changed.';
-$vm['_character_sex_no']				= 'Character gender hasn\'t been changed.';
+$vm['_error_select_char']				= 'We are not able to run account services on your character at this time.';
+
+$vm['_character_sex']					= 'Character Gender Change';
+$vm['_character_sex_desc']				= "Choose the character whose gender you would like to change.
+
+You may only select one character. The list below shows all eligible characters on all servers. Kamael characters are not eligible for gender change.
+
+After gender has been changed, hair style, hair color, and face type will be set to 'A-type'.
+
+<i>Please not that your selection is applied during a maintenance windows. It may take up ten business days before the change appears in game.</i>";
+$vm['_character_sex_confirm']			= 'You have chosen "%s" on "%s" to change from %s to %s.';
+$vm['_character_change_sex_yes']		= 'Character gender has been changed.';
+$vm['_character_change_sex_no']			= 'Character gender hasn\'t been changed.';
 $vm['_character_sex_0']					= 'male';
 $vm['_character_sex_1']					= 'female';
 $vm['_acc_serv_gender_kamael']			= 'The Gender Change Service is not available for Kamael characters.';
 $vm['_acc_serv_gender_time']			= 'You may request to change a character\'s gender as often as once a week.';
 
-$vm['_character_name']					= 'Change Name';
+$vm['_character_name']					= 'Rename Character';
+$vm['_character_name_desc']				= "Choose the character whose name you would like to change.
+
+In order to change character's name, you must create a new level 1 character in game with the new name you desire. This new character must remain at level 1 in order for the renaming to take place.
+
+Please be aware that this level 1 character and all ites associated items will be deleted after the name change is executed.
+
+<i>Please not that your selection is applied during a maintenance windows. It may take up ten business days before the change appears in game.</i>";
 $vm['_character_name_confirm']			= 'Change Name';
 $vm['_character_name_yes']				= 'Change Name';
 $vm['_character_name_no']				= 'Change Name';
+
+$vm['_character_world_t']				= 'World';
+$vm['_character_name_t']				= 'Name';
+$vm['_character_gender_t']				= 'Gender';
+
 
 $vm['_confirm']							= 'Confirm';
 $vm['_back']							= 'Back';

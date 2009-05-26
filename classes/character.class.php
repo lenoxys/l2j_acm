@@ -2,44 +2,79 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-class character extends world {
+class character {
 
-	public $charId, $char_name, $login, $world, $base_class, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
+	private $charId, $char_name, $worldId, $base_class, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
 
-	function character($charId, $login, $world) {
-		global $allow_char_mod;
+	function __construct($charId, $worldId) {
+		global $accserv, $interlude;
 		
-		if(!$allow_char_mod)
+		if(!$accserv['allow_char_mod'])
 			exit('Access to this private class have been restricted by the admin');
 		
+		if($interlude)
+			exit('Accounts Services can\'t be used with interlude server');
+		
 		$this->charId = $charId;
-		$this->login = $login;
-		$this->world = $world;
-			
+		$this->worldId = $worldId;
+		$this->MYSQL_GS = new MYSQL_GS($this->worldId);
+		
+		$this->MYSQL_GS->connect();
+		
 		if(!$this->is_owner()) {
 			$this->charId = null;
-			$this->login = null;
-			$this->world = null;
-		}else{
-			$this->load();
+			$this->worldId = null;
+			return false;
 		}
+		
+		$this->load();
+
 		return true;
+	}
+	
+	function __destruct() {
+		$this->MYSQL_GS->close();
+		$this->MYSQL_GS = null;
+	}
+	
+	function getId() {
+		return $this->charId;
+	}
+	
+	function getWorldId() {
+		return $this->worldId;
+	}
+	
+	function getName() {
+		return $this->char_name;
+	}
+	
+	function getGender() {
+		return $this->sex;
+	}
+	
+	function getClassId() {
+		return $this->classid;
+	}
+	
+	function getLevel() {
+		return $this->level;
 	}
 	
 	function is_owner () {
 		
 		$sql = 'SELECT COUNT(charId) FROM `characters` 
-						WHERE `account_name` = "'.$this->login.'" AND `charId` = "'.$this->charId.'";';
+						WHERE `account_name` = "'.(ACCOUNT::load()->getLogin()).'" AND `charId` = "'.$this->charId.'";';
 		
-		if($this->world->MYSQL_GS->result($sql) == '0')
+		if($this->MYSQL_GS->result($sql) == '0')
 			return false;
 		
 		return true;
 	}
 	
 	function load() {
-		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
-		$rslt = $this->world->MYSQL_GS->query($sql);
+		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
+		$rslt = $this->MYSQL_GS->query($sql);
 		$row = mysql_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
@@ -57,7 +92,7 @@ class character extends world {
 	
 	function reload($chp) {
 		$sql = 'SELECT `'.$chp.'` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
-		$rslt = $this->world->MYSQL_GS->query($sql);
+		$rslt = $this->MYSQL_GS->query($sql);
 		$row = mysql_fetch_object($rslt);
 		
 		$this->$chp	= $row->$chp;
@@ -88,7 +123,7 @@ class character extends world {
 		$sql = 'SELECT COUNT(charId) FROM `heroes` 
 						WHERE `charId` = "'.$this->charId.'";';
 		
-		if($this->world->MYSQL_GS->result($sql) == '0')
+		if($this->MYSQL_GS->result($sql) == '0')
 			return false;
 		
 		return true;
@@ -104,35 +139,35 @@ class character extends world {
 	}
 	
 	function allow_fix($unstuck = false) {
-		global $error, $vm, $allow_fix, $allow_unstuck, $time_fix;
+		global $vm, $accserv;
 		
 		if($unstuck) {
-			if(!$allow_unstuck) {
-				$error = $vm['_allow_unstuck'];
+			if(!$accserv['allow_unstuck']) {
+				MSG::add_error($vm['_allow_unstuck']);
 				return false;
 			}
 		} else {
-			if(!$allow_fix) {
-				$error = $vm['_allow_fix'];
+			if(!$accserv['allow_fix']) {
+				MSG::add_error($vm['_allow_fix']);
 				return false;
 			}
 		}
 		
 		DEBUG::add('Look if tag is here');
 		
-		$last = ($unstuck) ? 'last_unstuck' : 'last_fix';
+		$last = ($unstuck) ? 'unstuck' : 'fix';
 		
-		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($time_fix * 3600));
+		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "last_'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($accserv['time_fix'] * 3600));
 		
-		if($this->world->MYSQL_GS->result($sql) > '0') {
-			$error = $vm['_allow_time'];
+		if($this->MYSQL_GS->result($sql) > '0') {
+			MSG::add_error(sprintf($vm['_allow_time'], $accserv['time_fix'], $last));
 			return false;
 		}
 		
 		DEBUG::add('Look if player is online');
 		
 		if($this->is_online()) {
-			$error = $vm['_char_online'];
+			MSG::add_error($vm['_char_online']);
 			return false;
 		}
 		
@@ -149,19 +184,19 @@ class character extends world {
 		
 		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Fix shortcuts of character');
 		$sql = 'DELETE FROM `character_shortcuts` WHERE `charId`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Fix inventory of character');
 		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_fix', '".time()."');";
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		return true;
 	}
@@ -175,34 +210,30 @@ class character extends world {
 		
 		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		LOGDAEMON::l()->add($sql);
 		
 		return true;
 	}
 	
-	function getClassId() {
-		return $this->classid;
-	}
-	
-	function change_name($new_name) {
-		global $error, $vm;
+	function name($new_name) {
+		global $vm;
 		
 		if( !$this->can_change_name($new_name) )
 			return false;
 		
 		DEBUG::add('Change name of the character');
 		$sql = 'UPDATE `characters` SET `char_name` = '.$new_name.' WHERE `charId`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		LOGDAEMON::l()->add($sql);
 		
@@ -212,10 +243,10 @@ class character extends world {
 	}
 	
 	function can_change_name ($new_name = null, $test = null) {
-		global $allow_account_services, $error, $vm, $name_regex;
+		global $accserv, $vm;
 		
-		if( !$allow_account_services ) {	// Check if the admin allow account services
-			$error = $vm['_acc_serv_off'];
+		if( !$accserv['allow_change_name']) {	// Check if the admin allow account services
+			MSG::add_error($vm['_acc_serv_off']);
 			return false;
 		}
 		
@@ -223,8 +254,8 @@ class character extends world {
 						WHERE `var` = "previous_name" 
 							AND `account_name` = "'.$this->charId.'";';
 		
-		if($this->world->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
-			$error = $vm['_acc_serv_name_error1'];
+		if($this->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
+			MSG::add_error($vm['_acc_serv_name_error1']);
 			return false;
 		}
 		
@@ -233,22 +264,22 @@ class character extends world {
 		}
 		
 		if(is_null($new_name)) {		// Check if the new name is the same than currently
-			$error = $vm['_acc_serv_name_error2'];
+			MSG::add_error($vm['_acc_serv_name_error2']);
 			return false;
 		}
 		
 		if($new_name == $this->char_name) {		// Check if the new name is the same than currently
-			$error = $vm['_acc_serv_name_error3'];
+			MSG::add_error($vm['_acc_serv_name_error3']);
 			return false;
 		}
 		
 		if( $this->is_ban() ) {				// Check if the character is banned
-			$error = $vm['_acc_serv_ban'];
+			MSG::add_error($vm['_acc_serv_ban']);
 			return false;
 		}
 		
-		if (!preg_match($name_regex , $new_name)) {				// Check if new name is a valid name
-			$error = $vm['_acc_serv_name_error4'];
+		if (!preg_match($accserv['name_regex'] , $new_name)) {				// Check if new name is a valid name
+			MSG::add_error($vm['_acc_serv_name_error4']);
 			return false;
 		}
 		
@@ -257,69 +288,73 @@ class character extends world {
 							AND `char_name` = "'.$new_name.'";';
 		
 		if($this->clanid != '0') {		// Check if character is in clan.
-			$error = $vm['_acc_serv_name_error5'];
+			MSG::add_error($vm['_acc_serv_name_error5']);
 			return false;
 		}
 		
 		if(!$this->is_hero()) {		// Check if character is hero.
-			$error = $vm['_acc_serv_name_error6'];
+			MSG::add_error($vm['_acc_serv_name_error6']);
 			return false;
 		}
 		
 		return true;
 	}
 	
-	function change_gender() {
-		global $error, $vm, $item_female_only, $item_male_only;
+	function sex() {
+		global $vm, $accserv;
 		
 		if(!$this->can_change_gender())
 			return false;
 		
-		$items = ($this->sex == 0) ? $item_male_only : $item_female_only;		// Check which items list by gender
+		$items = ($this->sex == 0) ? $accserv['item_male_only'] : $accserv['item_female_only'];		// Check which items list by gender
 		foreach ($items as $id) {												// Foreach items listed set in inventory if they exist.
 			$sql = 'UPDATE `items` SET `loc` = "INVENTORY" WHERE `owner_id` = '.$this->charId.' AND `item_id` = '.$id.';';
-			$this->world->MYSQL_GS->query($sql);
+			$this->MYSQL_GS->query($sql);
 		}
 		
 		$this->sex = ($this->sex == 1) ? 0 : 1;
 		
 		DEBUG::add('Change gender of the character');
 		$sql = 'UPDATE `characters` SET `sex` = '.$this->sex.', `face` = 0, `hairStyle` = 0,`hairColor` = 0 WHERE `charId`='.$this->charId.';';
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_gender_change', '".time()."');";
-		$this->world->MYSQL_GS->query($sql);
+		$this->MYSQL_GS->query($sql);
 		
 		return true;
 	}
 	
 	function can_change_gender ($test = null) {
-		global $allow_account_services, $error, $vm, $time_account_services;
+		global $accserv, $vm;
 		
-		if( !$allow_account_services ) {	// Check if the admin allow account services
-			$error = $vm['_acc_serv_off'].'<br />';
-			echo $error;
+		if( !$accserv['allow_change_sex']) {	// Check if the admin allow account services
+			MSG::add_error($vm['_acc_serv_off']);
 			return false;
 		}
 		
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` 
 						WHERE `var` = "last_gender_change" 
 							AND `account_name` = "'.$this->charId.'" 
-							AND `value` > "'.(time()-($time_account_services * 24 * 3600)).'";';
+							AND `value` > "'.(time()-($accserv['time_account_services'] * 24 * 3600)).'";';
 		
-		if($this->world->MYSQL_GS->result($sql) > '0') {
-			$error = $vm['_acc_serv_gender_time'].'<br />';
+		if($this->MYSQL_GS->result($sql) > '0') {
+			MSG::add_error($vm['_acc_serv_gender_time']);
+			return false;
+		}
+		
+		if( $this->is_online() ) {				// Check if the character is online
+			MSG::add_error($vm['_acc_serv_offline']);
 			return false;
 		}
 		
 		if( $this->is_ban() ) {				// Check if the character is banned
-			$error = $vm['_acc_serv_ban'].'<br />';
+			MSG::add_error($vm['_acc_serv_ban']);
 			return false;
 		}
 		
 		if( 123 <= $this->base_class && $this->base_class >= 136 ) {		// Check if the character is kamael
-			$error = $vm['_acc_serv_gender_kamael'].'<br />';
+			MSG::add_error($vm['_acc_serv_gender_kamael']);
 			return false;
 		}
 		
@@ -335,7 +370,7 @@ class character extends world {
 	function mapRegionTable() {
 		$sql = 'SELECT "plop", region, sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10 FROM mapregion;';
 		
-		$rslt = $this->world->MYSQL_GS->query($sql);
+		$rslt = $this->MYSQL_GS->query($sql);
 		
 		while ($row = mysql_fetch_row($rslt)) {
 			$region = $row[1];
@@ -357,10 +392,10 @@ class character extends world {
 	}
 	
 	function get_spawn_town($townId) {
-		global $coord_static,$coord_default;
+		global $accserv;
 		
-		if($coord_static)
-			return $coord_default;
+		if($accserv['coord_static'])
+			return $accserv['coord_default'];
 		
 		switch($townId) {
 			case 0:

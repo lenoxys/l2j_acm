@@ -4,7 +4,7 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class mysql {
 	
-	private $host, $user, $pass, $db;
+	private $m, $host, $user, $pass, $db;
 
 	function mysql($host, $user, $pass, $db) {
 		$this->host	= $host;
@@ -17,34 +17,34 @@ class mysql {
 	}
 
 	function connect () {
-		global $error, $vm;
-		if(!@mysql_connect ($this->host,$this->user,$this->pass)) {
-			$error = $vm['_error_db_connect'];
+		global $vm;
+		if(!$this->m = @mysql_connect ($this->host,$this->user,$this->pass)) {
+			ERROR::add($vm['_error_db_connect']);
 			return false;
 		}
-		if(!@mysql_select_db ($this->db)) {
-			$error = $vm['_error_db_select'];
+		if(!@mysql_select_db ($this->db, $this->m)) {
+			ERROR::add($vm['_error_db_select']);
 			return false;
 		}
 		return true;
 	}
 
 	function query ($q) {
-		DEBUG::add($q);
-		$rslt = @mysql_query ($q);
-		DEBUG::add('Records: '.mysql_affected_rows());
+		DEBUG::add($this->db.'->'.$q);
+		$rslt = @mysql_query ($q, $this->m);
+		DEBUG::add('Records: '.mysql_affected_rows($this->m));
 		return $rslt;
 	}
 
 	function result ($q) {
-		DEBUG::add($q);
+		DEBUG::add($this->db.'->'.$q);
 		$rslt = @mysql_result (@mysql_query($q), 0);
 		DEBUG::add('Result: '.gettype($rslt).'('.var_export($rslt, true).')');
 		return $rslt;
 	}
 
 	function close () {
-		@mysql_close ();
+		@mysql_close ($this->m);
 	}
 }
 
