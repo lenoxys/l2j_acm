@@ -245,7 +245,7 @@ class character {
 	function can_change_name ($new_name = null, $test = null) {
 		global $accserv, $vm;
 		
-		if( !$accserv['allow_change_name']) {	// Check if the admin allow account services
+		if( !$accserv['allow_name']) {	// Check if the admin allow account services
 			MSG::add_error($vm['_acc_serv_off']);
 			return false;
 		}
@@ -257,10 +257,6 @@ class character {
 		if($this->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
 			MSG::add_error($vm['_acc_serv_name_error1']);
 			return false;
-		}
-		
-		if($test) {
-			return true;
 		}
 		
 		if(is_null($new_name)) {		// Check if the new name is the same than currently
