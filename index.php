@@ -1,7 +1,7 @@
 <?php
 
 if(file_exists('./install.php'))
-	exit('delete install.php before use acm');
+	echo('<div style="font-size: 20px; background-color: #FFF; color:#000;"><strong><center><br />Warning: The install file can be see. Please delete install.php before start ACM on your live server.<br /><br /></center></strong></div>');
 
 session_start();
 
