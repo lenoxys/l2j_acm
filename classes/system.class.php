@@ -114,7 +114,9 @@ class debug {
 		$d = DEBUG::singleton();
 		
 		if(!empty($d->debug_text)) {
-			$t->assign('debug', $d->debug_text);
+			echo '<div style="color: #000;background: #FFF;"><h1>DEBUG MODE ON</h1><br />'."\n\r"; 
+			echo $d->debug_text."\n\r"; 
+			echo '</div>'."\n\r";
 		}
 	}
 }

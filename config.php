@@ -2,7 +2,7 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
-define ('DEBUG', true);								// Enable debug mode ; for set on replace false by true
+define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 define ('LOG', false);									// Enable log mode ; for set off replace true by false
 
 //	#	Login Server Configuration
@@ -10,7 +10,7 @@ define ('LOG', false);									// Enable log mode ; for set off replace true by 
 $ls_host		= 'localhost';							// login host database DB
 $ls_user		= 'root';								// login user
 $ls_pass		= '';									// login password
-$ls_db			= 'l2jdb_login';								// login database name
+$ls_db			= 'l2jdb';								// login database name
 
 //	#	Game Server Configuration
 
@@ -21,15 +21,15 @@ $gs_pass[$id]	= '';									// game password
 $gs_db[$id]		= 'l2jdb';								// game database name
 
 
-
+/*
 //Copy line under this text for add a new world. The id need to be same as the id registred into gameservers table.
 
-$id = 6;												// Id of the game server
+$id = 2;												// Id of the game server
 $gs_host[$id]	= 'localhost';							// game host database DB
 $gs_user[$id]	= 'root';								// game user
 $gs_pass[$id]	= '';									// game password
 $gs_db[$id]		= 'l2jdb2';								// game database name
-
+*/
 
 
 //	#	Web Configuration
@@ -63,20 +63,20 @@ $interlude		= false;								// If you are using interlude database set to true
 
 // Don't use those settings for now keep to false please
 
-$accserv['allow_char_mod']				= true;							// Enable characters mod
+$accserv['allow_char_mod']				= false;						// Enable characters mod
 $accserv['time_account_services']		= 7;							// Need to wait 7 days after change gender before to change another time for the same or another character
 
-$accserv['allow_name']					= true;						// Enable Account services feature (change name) for offline character
+$accserv['allow_name']					= false;						// Enable Account services feature (change name) for offline character
 $accserv['name_regex']					= '`^[[:alnum:]]{3,16}$`';		// allow alphanumeric character in char name (3-16 char.)
 
 $accserv['allow_sex']					= false;						// Enable Account services feature (change gender) for offline character
 $accserv['item_female_only']			= array(8559,8913,8917);		// Check female-use only items before to change gender
 $accserv['item_male_only']				= array(8923);					// Check male-use only items before to change gender
 
-$accserv['allow_fix']					= false;							// Enable fixing feature for offline character
+$accserv['allow_fix']					= false;						// Enable fixing feature for offline character
 $accserv['time_fix']					= 24;							// Need to wait 24 hours before to use fix or unstuck against
 
-$accserv['allow_unstuck']				= false;							// Enable unstuck feature for offline character
+$accserv['allow_unstuck']				= false;						// Enable unstuck feature for offline character
 $accserv['coord_static']				= false;						// Use static coords when using unstuck and fix feature
 $accserv['coord_default']				= array(0,0,0);					// When coord static enable tp player to the coords (x,y,z)
 
