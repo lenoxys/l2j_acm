@@ -328,7 +328,7 @@ class character {
 	function can_change_gender ($test = null) {
 		global $accserv, $vm;
 		
-		if( !$accserv['allow_change_sex']) {	// Check if the admin allow account services
+		if( !$accserv['allow_sex']) {	// Check if the admin allow account services
 			MSG::add_error($vm['_acc_serv_off']);
 			return false;
 		}
