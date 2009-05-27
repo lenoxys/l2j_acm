@@ -33,7 +33,7 @@ class email{
 
 	function send_email ($title, $message)
 	{
-		global $email_from,$server_name,$error,$smtp;
+		global $email_from,$server_name,$smtp;
 
 		$email = $this->get_email();
 
@@ -47,7 +47,7 @@ class email{
 			$smtp->set_from($server_name, $email_from);
 			$smtp->Priority = 3;
 			if($smtp->smtp_mail($email, $title, $message)) {
-				$error = $smtp->erreur;
+				MSG::add_error($smtp->erreur);
 				return false;
 			}
 		}else{

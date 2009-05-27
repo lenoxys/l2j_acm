@@ -252,7 +252,6 @@ class core {
 	}
 
 	function show_chg_email() {
-		global $can_chg_email;
 		
 		if(!$this->account->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));

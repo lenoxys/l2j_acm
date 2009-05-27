@@ -19,7 +19,6 @@ class Smarty2 extends Smarty {
 	}
 	
 	function display($t) {
-		global $error;
 		DEBUG::publish($this);
 		MSG::display($this);
 		parent::display($t);

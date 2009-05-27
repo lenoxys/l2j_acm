@@ -41,7 +41,7 @@ class account{
 	}
 
 	function create ($login, $pwd, $repwd, $email, $img = null) {
-		global $error, $act_email, $accesslevel;
+		global $act_email, $accesslevel;
 
 		if(!$this->verif_limit_create()) {
 			MSG::add_error(LANG::i18n('_REGWARN_LIMIT_CREATING'));
@@ -249,7 +249,7 @@ class account{
 	}
 
 	function auth ($login, $password, $img = null) {
-		global $error, $accesslevel;
+		global $accesslevel;
 		
 		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;
 
@@ -318,7 +318,6 @@ class account{
 
 	function forgot_pwd($login, $email, $img = null)
 	{
-		global $error;
 
 		if(!$this->verif_img($img)) {
 			MSG::add_error(LANG::i18n('_image_control'));
@@ -347,7 +346,6 @@ class account{
 
 	function forgot_pwd2($login, $key)
 	{
-		global $error;
 
 		if(!$this->verif_tag($login, 'forget_pwd', $key)) {
 			MSG::add_error(LANG::i18n('_activation_control'));
@@ -382,7 +380,6 @@ class account{
 
 	function edit_password ($pass,$newpass,$renewpass)
 	{
-		global $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
 			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
@@ -479,7 +476,6 @@ class account{
 
 	function edit_email ($pass,$email,$reemail)
 	{
-		global $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
 			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
