@@ -98,6 +98,5 @@ $vm['_character_fix_no']        = 'Tu personaje no se ha arreglado.';
 
 $vm['_REGWARN_UNAME3'] = 'Por favor, elija un nombre de usuario diferente de su contraseña.';
 
-$vm = array_map('nl2br', $vm);
 
 ?>

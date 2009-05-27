@@ -32,10 +32,8 @@ $MYSQL_LS->connect();
 // Display
 //------------------------------------------------------------------
 
-$template = SmartyObject::getInstance();
-
-$template->assign('vm_title', LANG::i18n('_title'));
-$template->assign('vm_title_page', LANG::i18n('_title_page'));
+SmartyObject::getInstance()->assign('vm_title', LANG::i18n('_title'));
+SmartyObject::getInstance()->assign('vm_title_page', LANG::i18n('_title_page'));
 
 $core = new CORE();
 
@@ -45,5 +43,7 @@ else
 	$core->index();
 
 $MYSQL_LS->close();
+
+SmartyObject::getInstance()->display();
 
 ?>

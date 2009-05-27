@@ -41,8 +41,8 @@ class core {
 	}
 
 	function show_login() {
-		global $template, $id_limit, $pwd_limit, $act_img;
-		$template->assign('vm', array(
+		global $id_limit, $pwd_limit, $act_img;
+		SmartyObject::getInstance()->assign('vm', array(
 		    'exist_account'		=> LANG::i18n('_exist_account'),
 		    'account_length'		=> $id_limit,
 		    'password_length'	=> $pwd_limit,
@@ -55,15 +55,14 @@ class core {
 		    'create_button'		=> LANG::i18n('_create_button')
 		));
 		if($act_img) {
-			$template->assign('image', 'image');
+			SmartyObject::getInstance()->assign('image', 'image');
 		}
-		$template->display('form.tpl');
+		SmartyObject::getInstance()->setTemplate('form.tpl');
 	}
 
 	function show_account() {
-		global $template;
 		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 			'title_page'		=> LANG::i18n('_title_page'),
 		    'account_text'		=> LANG::i18n('_chg_pwd_text')
 		));
@@ -80,10 +79,10 @@ class core {
 		
 		$modules[] = array('name'=>LANG::i18n('_logout_link'), 'link'=>'?action=loggout');
 		
-		$template->assign('modules', $modules);
+		SmartyObject::getInstance()->assign('modules', $modules);
 		
-		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		$template->display('account.tpl');
+		SmartyObject::getInstance()->register_block('dynamic', 'smarty_block_dynamic', false);
+		SmartyObject::getInstance()->setTemplate('account.tpl');
 	}
 
 	function registration() {
@@ -96,17 +95,16 @@ class core {
 	}
 
 	function show_ack(){
-		global $template;
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 		    'terms_and_condition'		=> LANG::i18n('_TERMS_AND_CONDITION'),
 		    'return'					=> LANG::i18n('_return'),
 		    'accept_button'				=> LANG::i18n('_accept_button')
 		));
-		$template->display('ack.tpl');
+		SmartyObject::getInstance()->setTemplate('ack.tpl');
 	}
 
 	function show_create($acka = false) {
-		global $template, $act_img, $id_limit, $pwd_limit,$ack_cond;
+		global $act_img, $id_limit, $pwd_limit, $ack_cond;
 
 		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
@@ -116,7 +114,7 @@ class core {
 			return false;
 		}
 		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 		    'new_account'			=> LANG::i18n('_new_account'),
 		    'new_account_text'		=> LANG::i18n('_new_account_text2'),
 		    'account_length'		=> $id_limit,
@@ -132,14 +130,14 @@ class core {
 		    'post_email'			=> @$_POST['Lemail']
 		));
 		if($act_img) {
-			$template->assign('image', 'image');
+			SmartyObject::getInstance()->assign('image', 'image');
 		}
-		$template->display('create.tpl');
+		SmartyObject::getInstance()->setTemplate('create.tpl');
 	}
 
 	function show_forget() {
-		global $template, $act_img, $id_limit;
-		$template->assign('vm', array(
+		global $act_img, $id_limit;
+		SmartyObject::getInstance()->assign('vm', array(
 		    'forgot_pwd'			=> LANG::i18n('_forgot_pwd'),
 		    'forgot_pwd_text'		=> LANG::i18n('_forgot_pwd_text'),
 		    'account_length'		=> $id_limit,
@@ -152,9 +150,9 @@ class core {
 		    'post_email'			=> @$_POST['Lemail']
 		));
 		if($act_img) {
-			$template->assign('image', 'images');
+			SmartyObject::getInstance()->assign('image', 'images');
 		}
-		$template->display('forgot_pwd.tpl');
+		SmartyObject::getInstance()->setTemplate('forgot_pwd.tpl');
 	}
 
 	function forgot_pwd() {
@@ -210,9 +208,9 @@ class core {
 			return;
 		}
 
-		global $template, $pwd_limit;
+		global $pwd_limit;
 
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 		    'chg_pwd'				=> LANG::i18n('_chg_pwd'),
 		    'chg_pwd_text'			=> LANG::i18n('_chg_pwd_text'),
 		    'password_length'		=> $pwd_limit,
@@ -223,7 +221,7 @@ class core {
 		    'chg_button'			=> LANG::i18n('_chg_button')
 		));
 		
-		$template->display('chg_pwd.tpl');
+		SmartyObject::getInstance()->setTemplate('chg_pwd.tpl');
 	}
 
 	function chg_email_form() {
@@ -264,9 +262,9 @@ class core {
 			return;
 		}
 
-		global $template, $pwd_limit;
+		global $pwd_limit;
 		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 		    'chg_pwd'				=> LANG::i18n('_chg_email'),
 		    'chg_pwd_text'			=> LANG::i18n('_chg_email_text'),
 		    'password_length'		=> $pwd_limit,
@@ -277,7 +275,7 @@ class core {
 		    'chg_button'			=> LANG::i18n('_chg_button')
 		));
 		
-		$template->display('chg_email.tpl');
+		SmartyObject::getInstance()->setTemplate('chg_email.tpl');
 
 	}
 
@@ -301,9 +299,9 @@ class core {
 			return;
 		}
 				
-		global $template, $accserv;
+		global $accserv;
 		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 			'select_item'			=> LANG::i18n('_accounts_services'),
 			'return'				=> LANG::i18n('_return'),
 		));
@@ -322,11 +320,11 @@ class core {
 		if($accserv['allow_name'])
 			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_name'), 'link' => '?action=char_name_l');
 		
-		$template->assign('items', $items);
+		SmartyObject::getInstance()->assign('items', $items);
 		
-		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		SmartyObject::getInstance()->register_block('dynamic', 'smarty_block_dynamic', false);
 		
-		$template->display('select.tpl');
+		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
 	function char_ufl($mod = null){
@@ -341,12 +339,10 @@ class core {
 			return;
 		}
 		
-		global $template;
-		
 		unset($worlds);
 		$worlds = WORLD::load_worlds(); // charging world
 		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 			'select_item'			=> LANG::i18n('_character_'.$mod),
 			'select_desc'			=> LANG::i18n('_character_'.$mod.'_desc'),
 		    'return'				=> LANG::i18n('_return')
@@ -363,11 +359,11 @@ class core {
 		if(empty($items))
 			$items[] = array('id' => 0, 'name' => LANG::i18n('_any_character'), 'link' => '?action=acc_serv');
 		
-		$template->assign('items', $items);
+		SmartyObject::getInstance()->assign('items', $items);
 		
-		$template->register_block('dynamic', 'smarty_block_dynamic', false);
+		SmartyObject::getInstance()->register_block('dynamic', 'smarty_block_dynamic', false);
 		
-		$template->display('select.tpl');
+		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
 	function char_unstuck_l() {
@@ -412,9 +408,7 @@ class core {
 			return;
 		}
 		
-		global $template;
-		
-		$template->assign('vm', array(
+		SmartyObject::getInstance()->assign('vm', array(
 			'select_item'	=> LANG::i18n('_character_'.$mod),
 			'select_desc'	=> sprintf(LANG::i18n('_character_'.$mod.'_confirm'), $char->getName(), world::get_name_world($char->getWorldId()), LANG::i18n('_character_sex_'.$char->getGender()), LANG::i18n('_character_sex_'.((int)(!$char->getGender())))),
 		    'return'		=> LANG::i18n('_return')
@@ -423,10 +417,10 @@ class core {
 		$items = array();
 		$items[] = array('id' => 1, 'name' => LANG::i18n('_confirm'), 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId());
 		$items[] = array('id' => 1, 'name' => LANG::i18n('_back'), 'link' => '?action=char_'.$mod.'_l');
-		$template->assign('items', $items);
+		SmartyObject::getInstance()->assign('items', $items);
 		
-		$template->register_block('dynamic', 'smarty_block_dynamic', false);
-		$template->display('select.tpl');
+		SmartyObject::getInstance()->register_block('dynamic', 'smarty_block_dynamic', false);
+		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
 	function char_unstuck() {

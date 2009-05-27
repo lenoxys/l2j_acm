@@ -98,6 +98,5 @@ $vm['_character_fix_no']		= 'Votre personnage n\'a pas été réparé.';
 
 $vm['_REGWARN_UNAME3'] = 'Merci de choisir un pseudo différent de votre mot de passe.';
 
-$vm = array_map('nl2br', $vm);
 
 ?>

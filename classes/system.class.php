@@ -33,10 +33,18 @@ class SmartyObject extends Smarty {
 		return self::$instance;
 	}
 	
-	public function display($t) {
+	public function setTemplate($template) {
+		$this->template = $template;
+	}
+	
+	public function assign($m, $p) {
+		parent::assign($m, $p);
+	}
+	
+	public function display() {
 		DEBUG::publish($this);
 		MSG::display($this);
-		parent::display($t);
+		parent::display($this->template);
 	}
 }
 
