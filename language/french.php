@@ -87,16 +87,76 @@ $vm['_REGWARN_VEMAIL1']		= 'L\'email et sa confirmation ne concorde pas, merci d
 $vm['_TERMS_AND_CONDITION']	= "<h2>Règles et Conditions</h2><br /><br />1. Le Maître du Jeux a toujours raison.<br />2. Si le Maître du Jeux a tort ce référer à la règle numéro une.";
 $vm['_accept_button'] = 'Accepter';
 
-$vm['_select_worlds']			= 'Selectionner votre monde';
-$vm['_select_character']		= 'Selectionner votre personnage';
-$vm['_character_fix']			= 'Réparer votre personnage';
-$vm['_character_unstuck']		= 'Déplacer votre personnage à la ville la plus proche';
-$vm['_character_unstuck_yes']	= 'Votre personnage a été déplacé à la ville la plus proche.';
-$vm['_character_unstuck_no']	= 'Votre personnage n\'a pas été déplacé à la ville la plus proche.';
-$vm['_character_fix_yes']		= 'Votre personnage a été réparé.';
-$vm['_character_fix_no']		= 'Votre personnage n\'a pas été réparé.';
 
-$vm['_REGWARN_UNAME3'] = 'Merci de choisir un pseudo différent de votre mot de passe.';
+/*
+-----------------------------------------------------------------
+---------------------- Account Services -------------------------
+-----------------------------------------------------------------
+*/
 
+$vm['_accounts_services']				= 'Services pour votre compte utilisateur';
+$vm['_select_worlds']					= 'Selectionner votre monde';
+$vm['_select_character']				= 'Selectionner votre personnage';
+$vm['_any_character']					= 'Aucun Personnage Trouvé';
+
+$vm['_character_fix']					= 'Réparer votre personnage';
+$vm['_character_fix_desc']				= 'Réparer votre personnage';
+$vm['_character_fix_confirm']			= '"%s" sur "%s" va être réparé.';
+$vm['_character_fix_yes']				= 'Votre personnage a été réparé.';
+$vm['_character_fix_no']				= 'Votre personnage n\'a pas été réparé.';
+
+$vm['_character_unstuck']				= 'Déplacer votre personnage à la ville la plus proche';
+$vm['_character_unstuck_desc']			= 'Please try /unstuck command when a character is trapped in an immovable geographic location. If it is determined that the character really is confined in the map, the character is quickly moved to a nearby place. If it is determined otherwise, the five-minute escape function is activated and the character is moved to a nearby village after five minutes.
+
+If you are not able to run this command in game, select the character who will be moved to the nearest town.';
+$vm['_character_unstuck_confirm']		= '"%s" sur "%s" va être déplacé.';
+$vm['_character_unstuck_yes']			= 'Votre personnage a été déplacé à la ville la plus proche.';
+$vm['_character_unstuck_no']			= 'Votre personnage n\'a pas été déplacé à la ville la plus proche.';
+
+$vm['_allow_time']						= 'Vous devez attendre une période de %s heure(s) après le dernier %s.';
+
+$vm['_acc_serv_off']					= 'Les services pour compte utilisateur ne sont pas disponible.';
+$vm['_acc_serv_offline']				= 'Les services pour compte utilisateur sont disponible pour les personnages non connecté uniquement.';
+$vm['_acc_serv_ban']					= 'Les personnages bannis ne sont pas éligible aux services pour compte utilisateur.';
+
+$vm['_error_select_char']				= "Nous ne pouvons pas éxécuter le services pour votre personnage pour l'instant.";
+
+$vm['_character_sex']					= 'Changer le sexe d\'un personnage';
+$vm['_character_sex_desc']				= "Choose the character whose gender you would like to change.
+
+You may only select one character. The list below shows all eligible characters on all servers. Kamael characters are not eligible for gender change.
+
+After gender has been changed, hair style, hair color, and face type will be set to 'A-type'.
+
+<i>Please not that your selection is applied during a maintenance windows. It may take up ten business days before the change appears in game.</i>";
+$vm['_character_sex_confirm']			= 'Vous avez choisi "%s" sur "%s" pour changer le sexe de %s à %s.';
+$vm['_character_sex_yes']				= 'Le changement de sexe a été effectué.';
+$vm['_character_sex_no']				= 'Le changement de sexe n\'a pas été effectué.';
+$vm['_character_sex_0']					= 'masculin';
+$vm['_character_sex_1']					= 'femmin';
+$vm['_acc_serv_gender_kamael']			= 'Le changement de sexe n\'est pas disponible pour les personnages de race Kamael.';
+$vm['_acc_serv_gender_time']			= 'You may request to change a character\'s gender as often as once a week.';
+
+$vm['_character_name']					= 'Renommer un personnage';
+$vm['_character_name_desc']				= "Choose the character whose name you would like to change.
+
+In order to change character's name, you must create a new level 1 character in game with the new name you desire. This new character must remain at level 1 in order for the renaming to take place.
+
+Please be aware that this level 1 character and all ites associated items will be deleted after the name change is executed.
+
+<i>Please not that your selection is applied during a maintenance windows. It may take up ten business days before the change appears in game.</i>";
+$vm['_character_name_confirm']			= 'Change Name';
+$vm['_character_name_yes']				= 'Change Name';
+$vm['_character_name_no']				= 'Change Name';
+
+$vm['_character_world_t']				= 'Monde';
+$vm['_character_name_t']				= 'Nom';
+$vm['_character_gender_t']				= 'Sexe';
+
+
+$vm['_confirm']							= 'Confirmer';
+$vm['_back']							= 'Annuler';
+
+$vm['_REGWARN_UNAME3']					= 'Merci de choisir un pseudo différent de votre mot de passe.';
 
 ?>
