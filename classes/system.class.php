@@ -172,4 +172,74 @@ class logdaemon {
 	}
 }
 
+class lang {
+
+	private $defaultLanguage = 'english';
+	private $currentLanguage = 'english';
+	private $path = './language/';
+	private $item, $defItem;
+	
+	private static $instance;
+
+	private function __construct() {
+		global $language;
+		$this->currentLanguage = $language;
+		$this->loadFile();
+		$this->nl2();
+	}
+	
+	public function __clone() {
+		trigger_error('Clone is not allowed.', E_USER_ERROR);
+	}
+
+	public static function getInstance() {
+		if (!isset(self::$instance)) {
+			$c = __CLASS__;
+			self::$instance = new $c;
+		}
+		return self::$instance;
+	}
+	
+	public function nl2 () {
+		$this->item = array_map('nl2br', $this->item);
+	}
+
+	private function getCurrentLanguage($currentLanguage) {
+		return $this->currentLanguage;
+	}
+	
+	private function loadFile() {
+		$this->newFile = $this->path.$this->currentLanguage.'.php';
+		require ($this->newFile);
+		$this->item = $vm;
+	}
+	
+	private function loadDefaultFile() {
+		$this->newFile = $this->path.$this->defaultLanguage.'.php';
+		require ($this->newFile);
+		$this->defItem = $vm;
+	}
+	
+	private function itemExist($itemName) {
+		if(!empty($this->item[$itemName])) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	private function getItemValue($itemName) {
+		if($this->itemExist($itemName)) {
+			return $this->item[$itemName];
+		}else{
+			return $this->defItem[$itemName];
+		}
+	}
+
+	public function i18n($itemName) {
+		$l = LANG::getInstance();
+		return $l->getItemValue($itemName);
+	}
+}
+
 ?>

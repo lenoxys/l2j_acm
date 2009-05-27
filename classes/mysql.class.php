@@ -17,13 +17,12 @@ class mysql {
 	}
 
 	function connect () {
-		global $vm;
 		if(!$this->m = @mysql_connect ($this->host,$this->user,$this->pass)) {
-			ERROR::add($vm['_error_db_connect']);
+			ERROR::add(LANG::i18n('_error_db_connect'));
 			return false;
 		}
 		if(!@mysql_select_db ($this->db, $this->m)) {
-			ERROR::add($vm['_error_db_select']);
+			ERROR::add(LANG::i18n('_error_db_select'));
 			return false;
 		}
 		return true;

@@ -160,6 +160,4 @@ $vm['_back']							= 'Back';
 
 $vm['_REGWARN_UNAME3']					= 'Please choose an username different of your password.';
 
-$vm = array_map('nl2br', $vm);
-
 ?>

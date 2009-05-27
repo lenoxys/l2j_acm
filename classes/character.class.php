@@ -139,16 +139,16 @@ class character {
 	}
 	
 	function allow_fix($unstuck = false) {
-		global $vm, $accserv;
+		global $accserv;
 		
 		if($unstuck) {
 			if(!$accserv['allow_unstuck']) {
-				MSG::add_error($vm['_allow_unstuck']);
+				MSG::add_error(LANG::i18n('_allow_unstuck'));
 				return false;
 			}
 		} else {
 			if(!$accserv['allow_fix']) {
-				MSG::add_error($vm['_allow_fix']);
+				MSG::add_error(LANG::i18n('_allow_fix'));
 				return false;
 			}
 		}
@@ -160,14 +160,14 @@ class character {
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "last_'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($accserv['time_fix'] * 3600));
 		
 		if($this->MYSQL_GS->result($sql) > '0') {
-			MSG::add_error(sprintf($vm['_allow_time'], $accserv['time_fix'], $last));
+			MSG::add_error(sprintf(LANG::i18n('_allow_time'), $accserv['time_fix'], $last));
 			return false;
 		}
 		
 		DEBUG::add('Look if player is online');
 		
 		if($this->is_online()) {
-			MSG::add_error($vm['_char_online']);
+			MSG::add_error(LANG::i18n('_char_online'));
 			return false;
 		}
 		
@@ -222,7 +222,6 @@ class character {
 	}
 	
 	function name($new_name) {
-		global $vm;
 		
 		if( !$this->can_change_name($new_name) )
 			return false;
@@ -243,10 +242,10 @@ class character {
 	}
 	
 	function can_change_name ($new_name = null, $test = null) {
-		global $accserv, $vm;
+		global $accserv;
 		
 		if( !$accserv['allow_name']) {	// Check if the admin allow account services
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			return false;
 		}
 		
@@ -255,27 +254,27 @@ class character {
 							AND `account_name` = "'.$this->charId.'";';
 		
 		if($this->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
-			MSG::add_error($vm['_acc_serv_name_error1']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error1'));
 			return false;
 		}
 		
 		if(is_null($new_name)) {		// Check if the new name is the same than currently
-			MSG::add_error($vm['_acc_serv_name_error2']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error2'));
 			return false;
 		}
 		
 		if($new_name == $this->char_name) {		// Check if the new name is the same than currently
-			MSG::add_error($vm['_acc_serv_name_error3']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error3'));
 			return false;
 		}
 		
 		if( $this->is_ban() ) {				// Check if the character is banned
-			MSG::add_error($vm['_acc_serv_ban']);
+			MSG::add_error(LANG::i18n('_acc_serv_ban'));
 			return false;
 		}
 		
 		if (!preg_match($accserv['name_regex'] , $new_name)) {				// Check if new name is a valid name
-			MSG::add_error($vm['_acc_serv_name_error4']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error4'));
 			return false;
 		}
 		
@@ -284,12 +283,12 @@ class character {
 							AND `char_name` = "'.$new_name.'";';
 		
 		if($this->clanid != '0') {		// Check if character is in clan.
-			MSG::add_error($vm['_acc_serv_name_error5']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error5'));
 			return false;
 		}
 		
 		if(!$this->is_hero()) {		// Check if character is hero.
-			MSG::add_error($vm['_acc_serv_name_error6']);
+			MSG::add_error(LANG::i18n('_acc_serv_name_error6'));
 			return false;
 		}
 		
@@ -297,7 +296,7 @@ class character {
 	}
 	
 	function sex() {
-		global $vm, $accserv;
+		global $accserv;
 		
 		if(!$this->can_change_gender())
 			return false;
@@ -322,10 +321,10 @@ class character {
 	}
 	
 	function can_change_gender ($test = null) {
-		global $accserv, $vm;
+		global $accserv;
 		
 		if( !$accserv['allow_sex']) {	// Check if the admin allow account services
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			return false;
 		}
 		
@@ -335,22 +334,22 @@ class character {
 							AND `value` > "'.(time()-($accserv['time_account_services'] * 24 * 3600)).'";';
 		
 		if($this->MYSQL_GS->result($sql) > '0') {
-			MSG::add_error($vm['_acc_serv_gender_time']);
+			MSG::add_error(LANG::i18n('_acc_serv_gender_time'));
 			return false;
 		}
 		
 		if( $this->is_online() ) {				// Check if the character is online
-			MSG::add_error($vm['_acc_serv_offline']);
+			MSG::add_error(LANG::i18n('_acc_serv_offline'));
 			return false;
 		}
 		
 		if( $this->is_ban() ) {				// Check if the character is banned
-			MSG::add_error($vm['_acc_serv_ban']);
+			MSG::add_error(LANG::i18n('_acc_serv_ban'));
 			return false;
 		}
 		
 		if( 123 <= $this->base_class && $this->base_class >= 136 ) {		// Check if the character is kamael
-			MSG::add_error($vm['_acc_serv_gender_kamael']);
+			MSG::add_error(LANG::i18n('_acc_serv_gender_kamael'));
 			return false;
 		}
 		

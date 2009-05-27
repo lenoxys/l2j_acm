@@ -60,31 +60,30 @@ class email{
 	}
 
 	function operator($account, $mode) {
-		global $vm;
 		$this->account = $account;
 		switch($mode) {
 			default:
 			break;
 			case 'created_account_validation':
 				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=activation&amp;key=".$this->account->code;
-				$this->send_email($vm['_email_title_verif'], $vm['_email_message_verif']);
+				$this->send_email(LANG::i18n('_email_title_verif'), LANG::i18n('_email_message_verif'));
 			break;
 			case 'created_account_activation':
-				$this->send_email($vm['_email_title_ok'], $vm['_email_message_ok']);
+				$this->send_email(LANG::i18n('_email_title_ok'), LANG::i18n('_email_message_ok'));
 			break;
 			case 'forget_password_validation':
 				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=forgot_pwd_email&amp;login=".$this->account->login."&amp;key=".$this->account->code;
-				$this->send_email($vm['_email_title_change_pwd'], $vm['_email_message_change_pwd']);
+				$this->send_email(LANG::i18n('_email_title_change_pwd'), LANG::i18n('_email_message_change_pwd'));
 			break;
 			case 'password_reseted':
-				$this->send_email($vm['_email_title_change_pwd_ok'], $vm['_email_message_change_pwd_ok']);
+				$this->send_email(LANG::i18n('_email_title_change_pwd_ok'), LANG::i18n('_email_message_change_pwd_ok'));
 			break;
 			case 'email_validation':
 				$this->url = $url = "http://" . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\'). "/?action=email_validation&amp;login=".$this->account->login."&amp;key=".$this->account->code;
-				$this->send_email($vm['_email_title_verif'], $vm['_email_message_verif']);
+				$this->send_email(LANG::i18n('_email_title_verif'), LANG::i18n('_email_message_verif'));
 			break;
 			case 'modified_email_activation':
-				$this->send_email($vm['_email_title_change_email_ok'], $vm['_email_message_change_email_ok']);
+				$this->send_email(LANG::i18n('_email_title_change_email_ok'), LANG::i18n('_email_message_change_email_ok'));
 			break;
 		}
 	}

@@ -41,55 +41,55 @@ class account{
 	}
 
 	function create ($login, $pwd, $repwd, $email, $img = null) {
-		global $vm, $error, $act_email, $accesslevel;
+		global $error, $act_email, $accesslevel;
 
 		if(!$this->verif_limit_create()) {
-			MSG::add_error($vm['_REGWARN_LIMIT_CREATING']);
+			MSG::add_error(LANG::i18n('_REGWARN_LIMIT_CREATING'));
 			return false;
 		}
 
 		if($login == '') {
-			MSG::add_error($vm['_REGWARN_UNAME1']);
+			MSG::add_error(LANG::i18n('_REGWARN_UNAME1'));
 			return false;
 		}
 
 		if(!$this->verif_char($login, true)) {
-			MSG::add_error($vm['_REGWARN_UNAME2']);
+			MSG::add_error(LANG::i18n('_REGWARN_UNAME2'));
 			return false;
 		}
 
 		if($login == $pwd) {
-			MSG::add_error($vm['_REGWARN_UNAME3']);
+			MSG::add_error(LANG::i18n('_REGWARN_UNAME3'));
 			return false;
 		}
 
 		if($this->is_login_exist($login)) {
-			MSG::add_error($vm['_REGWARN_INUSE']);
+			MSG::add_error(LANG::i18n('_REGWARN_INUSE'));
 			return false;
 		}
 
 		if($pwd != $repwd) {
-			MSG::add_error($vm['_REGWARN_VPASS2']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS2'));
 			return false;
 		}
 
 		if(!$this->verif_char($pwd)) {
-			MSG::add_error($vm['_REGWARN_VPASS1']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
 			return false;
 		}
 
 		if(!$this->verif_email($email)) {
-			MSG::add_error($vm['_REGWARN_MAIL']);
+			MSG::add_error(LANG::i18n('_REGWARN_MAIL'));
 			return false;
 		}
 
 		if($this->is_email_exist($email)) {
-			MSG::add_error($vm['_REGWARN_EMAIL_INUSE']);
+			MSG::add_error(LANG::i18n('_REGWARN_EMAIL_INUSE'));
 			return false;
 		}
 
 		if(!$this->verif_img($img)) {
-			MSG::add_error($vm['_image_control']);
+			MSG::add_error(LANG::i18n('_image_control'));
 			return false;
 		}
 
@@ -104,7 +104,7 @@ class account{
 		$this->MYSQL->query($sql);
 
 		if(!$this->is_login_exist($login)) {
-			MSG::add_error($vm['_creating_acc_prob']);
+			MSG::add_error(LANG::i18n('_creating_acc_prob'));
 			return false;
 		}
 
@@ -114,9 +114,9 @@ class account{
 
 		if(!$act_email) {
 			$this->valid_account($this->code);
-			MSG::add_valid($vm['_account_created']);
+			MSG::add_valid(LANG::i18n('_account_created'));
 		}else{
-			MSG::add_valid($vm['_account_actived']);
+			MSG::add_valid(LANG::i18n('_account_actived'));
 			EMAIL::OP()->operator($this, 'created_account_validation');
 		}
 
@@ -249,7 +249,7 @@ class account{
 	}
 
 	function auth ($login, $password, $img = null) {
-		global $error, $vm, $accesslevel;
+		global $error, $accesslevel;
 		
 		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;
 
@@ -260,7 +260,7 @@ class account{
 		}
 		
 		if(!$this->verif_img($img)) {
-			MSG::add_error($vm['_image_control']. '<br />');
+			MSG::add_error(LANG::i18n('_image_control'));
 			return false;
 		}
 		
@@ -318,10 +318,10 @@ class account{
 
 	function forgot_pwd($login, $email, $img = null)
 	{
-		global $error, $vm;
+		global $error;
 
 		if(!$this->verif_img($img)) {
-			MSG::add_error($vm['_image_control']);
+			MSG::add_error(LANG::i18n('_image_control'));
 			return false;
 		}
 		
@@ -329,7 +329,7 @@ class account{
 		$sql = "SELECT COUNT(login) FROM `accounts` WHERE `login` = '".$login."' AND `email` = '".$email."'";
 		
 		if($this->MYSQL->result($sql) != 1) {
-			MSG::add_error($vm['_wrong_auth']);
+			MSG::add_error(LANG::i18n('_wrong_auth'));
 			return false;
 		}
 
@@ -347,10 +347,10 @@ class account{
 
 	function forgot_pwd2($login, $key)
 	{
-		global $vm, $error;
+		global $error;
 
 		if(!$this->verif_tag($login, 'forget_pwd', $key)) {
-			MSG::add_error($vm['_activation_control']);
+			MSG::add_error(LANG::i18n('_activation_control'));
 			return false;
 		}
 
@@ -382,25 +382,25 @@ class account{
 
 	function edit_password ($pass,$newpass,$renewpass)
 	{
-		global $vm, $error;
+		global $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
-			MSG::add_error($vm['_REGWARN_VPASS1']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
 			return false;
 		}
 
 		if($this->login == $newpass) {
-			MSG::add_error($vm['_REGWARN_UNAME3']);
+			MSG::add_error(LANG::i18n('_REGWARN_UNAME3'));
 			return false;
 		}
 
 		if(!$this->verif_char($newpass)) {
-			MSG::add_error($vm['_REGWARN_VPASS1']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
 			return false;
 		}
 
 		if ($newpass != $renewpass) {
-			MSG::add_error($vm['_REGWARN_VPASS2']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS2'));
 			return false;
 		}
 
@@ -479,25 +479,25 @@ class account{
 
 	function edit_email ($pass,$email,$reemail)
 	{
-		global $vm, $error;
+		global $error;
 
 		if($this->password != $this->l2j_encrypt($pass)) {
-			MSG::add_error($vm['_REGWARN_VPASS1']);
+			MSG::add_error(LANG::i18n('_REGWARN_VPASS1'));
 			return false;
 		}
 
 		if(!$this->verif_email($email)) {
-			MSG::add_error($vm['_REGWARN_MAIL']);
+			MSG::add_error(LANG::i18n('_REGWARN_MAIL'));
 			return false;
 		}
 
 		if($this->is_email_exist($email)) {
-			MSG::add_error($vm['_REGWARN_EMAIL_INUSE']);
+			MSG::add_error(LANG::i18n('_REGWARN_EMAIL_INUSE'));
 			return false;
 		}
 
 		if ($email != $reemail) {
-			MSG::add_error($vm['_REGWARN_VEMAIL1']);
+			MSG::add_error(LANG::i18n('_REGWARN_VEMAIL1'));
 			return false;
 		}
 		
@@ -542,7 +542,7 @@ class account{
 
 
 		if($this->MYSQL->result($sql) != 1)	{	// Check if user session data are right
-			MSG::add_error($vm['_logout']);
+			MSG::add_error(LANG::i18n('_logout'));
 			$this->loggout();
 			return false;
 		}

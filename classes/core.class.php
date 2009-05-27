@@ -19,42 +19,40 @@ class core {
 	}
 
 	function loggout() {
-		global $vm;
 		$this->account->loggout();
-		MSG::add_valid($vm['_logout']);
+		MSG::add_valid(LANG::i18n('_logout'));
 		$this->index();
 	}
 
 	function login() {
-		global $vm;
 
 		if(empty($_POST['Luser']) || empty($_POST['Lpwd']))
 		{
-			MSG::add_error($vm['_no_id_no_pwd']);
+			MSG::add_error(LANG::i18n('_no_id_no_pwd'));
 		}else{
 
 			$this->secure_post();
 
 			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], @$_POST['Limage']))
-				MSG::add_error($vm['_wrong_auth']);
+				MSG::add_error(LANG::i18n('_wrong_auth'));
 		}
 
 		$this->index();
 	}
 
 	function show_login() {
-		global $template, $vm, $id_limit, $pwd_limit, $act_img;
+		global $template, $id_limit, $pwd_limit, $act_img;
 		$template->assign('vm', array(
-		    'exist_account'		=> $vm['_exist_account'],
+		    'exist_account'		=> LANG::i18n('_exist_account'),
 		    'account_length'		=> $id_limit,
 		    'password_length'	=> $pwd_limit,
-		    'account'			=> $vm['_account'],
-		    'password'			=> $vm['_password'],
-		    'login_button'		=> $vm['_login_button'],
-		    'forgot_password'	=> $vm['_forgot_password'],
-		    'new_account'		=> $vm['_new_account'],
-		    'new_account_text'	=> $vm['_new_account_text'],
-		    'create_button'		=> $vm['_create_button']
+		    'account'			=> LANG::i18n('_account'),
+		    'password'			=> LANG::i18n('_password'),
+		    'login_button'		=> LANG::i18n('_login_button'),
+		    'forgot_password'	=> LANG::i18n('_forgot_password'),
+		    'new_account'		=> LANG::i18n('_new_account'),
+		    'new_account_text'	=> LANG::i18n('_new_account_text'),
+		    'create_button'		=> LANG::i18n('_create_button')
 		));
 		if($act_img) {
 			$template->assign('image', 'image');
@@ -63,24 +61,24 @@ class core {
 	}
 
 	function show_account() {
-		global $template, $vm;
+		global $template;
 		
 		$template->assign('vm', array(
-			'title_page'		=> $vm['_title_page'],
-		    'account_text'		=> $vm['_chg_pwd_text']
+			'title_page'		=> LANG::i18n('_title_page'),
+		    'account_text'		=> LANG::i18n('_chg_pwd_text')
 		));
 		
 		$modules = array();
 		
-		$modules[] = array('name'=>$vm['_chg_pwd'], 'link'=>'?action=show_chg_pwd');
+		$modules[] = array('name'=>LANG::i18n('_chg_pwd'), 'link'=>'?action=show_chg_pwd');
 		
 		if ($this->allow_char_mod())
-			$modules[] = array('name'=>$vm['_accounts_services'], 'link'=>'?action=acc_serv');
+			$modules[] = array('name'=>LANG::i18n('_accounts_services'), 'link'=>'?action=acc_serv');
 		
 		if ($this->account->can_chg_email())
-			$modules[] = array('name'=>$vm['_chg_email'], 'link'=>'?action=show_chg_email');
+			$modules[] = array('name'=>LANG::i18n('_chg_email'), 'link'=>'?action=show_chg_email');
 		
-		$modules[] = array('name'=>$vm['_logout_link'], 'link'=>'?action=loggout');
+		$modules[] = array('name'=>LANG::i18n('_logout_link'), 'link'=>'?action=loggout');
 		
 		$template->assign('modules', $modules);
 		
@@ -89,7 +87,6 @@ class core {
 	}
 
 	function registration() {
-		global $vm;
 
 		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
 			$this->show_login();
@@ -99,17 +96,17 @@ class core {
 	}
 
 	function show_ack(){
-		global $template,$vm;
+		global $template;
 		$template->assign('vm', array(
-		    'terms_and_condition'		=> $vm['_TERMS_AND_CONDITION'],
-		    'return'					=> $vm['_return'],
-		    'accept_button'				=> $vm['_accept_button']
+		    'terms_and_condition'		=> LANG::i18n('_TERMS_AND_CONDITION'),
+		    'return'					=> LANG::i18n('_return'),
+		    'accept_button'				=> LANG::i18n('_accept_button')
 		));
 		$template->display('ack.tpl');
 	}
 
 	function show_create($acka = false) {
-		global $template, $vm, $act_img, $id_limit, $pwd_limit,$ack_cond;
+		global $template, $act_img, $id_limit, $pwd_limit,$ack_cond;
 
 		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
@@ -120,17 +117,17 @@ class core {
 		}
 		
 		$template->assign('vm', array(
-		    'new_account'			=> $vm['_new_account'],
-		    'new_account_text'		=> $vm['_new_account_text2'],
+		    'new_account'			=> LANG::i18n('_new_account'),
+		    'new_account_text'		=> LANG::i18n('_new_account_text2'),
 		    'account_length'		=> $id_limit,
 		    'password_length'		=> $pwd_limit,
-		    'account'				=> $vm['_account'],
-		    'password'				=> $vm['_password'],
-		    'password2'				=> $vm['_password2'],
-		    'email'					=> $vm['_email'],
-		    'image_control_desc'	=> $vm['_image_control_desc'],
-		    'return'				=> $vm['_return'],
-		    'create_button'			=> $vm['_create_button'],
+		    'account'				=> LANG::i18n('_account'),
+		    'password'				=> LANG::i18n('_password'),
+		    'password2'				=> LANG::i18n('_password2'),
+		    'email'					=> LANG::i18n('_email'),
+		    'image_control_desc'	=> LANG::i18n('_image_control_desc'),
+		    'return'				=> LANG::i18n('_return'),
+		    'create_button'			=> LANG::i18n('_create_button'),
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
@@ -141,16 +138,16 @@ class core {
 	}
 
 	function show_forget() {
-		global $template, $vm, $act_img, $id_limit;
+		global $template, $act_img, $id_limit;
 		$template->assign('vm', array(
-		    'forgot_pwd'			=> $vm['_forgot_pwd'],
-		    'forgot_pwd_text'		=> $vm['_forgot_pwd_text'],
+		    'forgot_pwd'			=> LANG::i18n('_forgot_pwd'),
+		    'forgot_pwd_text'		=> LANG::i18n('_forgot_pwd_text'),
 		    'account_length'		=> $id_limit,
-		    'account'				=> $vm['_account'],
-		    'email'					=> $vm['_email'],
-		    'image_control_desc'	=> $vm['_image_control_desc'],
-		    'return'				=> $vm['_return'],
-		    'forgot_button'			=> $vm['_forgot_button'],
+		    'account'				=> LANG::i18n('_account'),
+		    'email'					=> LANG::i18n('_email'),
+		    'image_control_desc'	=> LANG::i18n('_image_control_desc'),
+		    'return'				=> LANG::i18n('_return'),
+		    'forgot_button'			=> LANG::i18n('_forgot_button'),
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
@@ -161,10 +158,9 @@ class core {
 	}
 
 	function forgot_pwd() {
-		global $vm;
 
 		if($this->account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
-			MSG::add_valid($vm['_password_request']);
+			MSG::add_valid(LANG::i18n('_password_request'));
 			$this->index();
 		}else{
 			$this->show_forget();
@@ -174,13 +170,12 @@ class core {
 	}
 
 	function forgot_pwd_email() {
-		global $vm;
 
 		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
-			MSG::add_valid($vm['_password_reseted']);
+			MSG::add_valid(LANG::i18n('_password_reseted'));
 			$this->index();
 		}else{
-			MSG::add_error($vm['_control']);
+			MSG::add_error(LANG::i18n('_control'));
 			$this->show_forget();
 		}
 
@@ -188,10 +183,9 @@ class core {
 	}
 
 	function chg_pwd_form() {
-		global $vm;
 
 		if(!$this->account->verif()) {
-			MSG::add_error($vm['_WARN_NOT_LOGGED']);
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
@@ -199,7 +193,7 @@ class core {
 		$account = unserialize($_SESSION['acm']);
 
 		if($this->account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
-			MSG::add_valid($vm['_change_pwd_valid']);
+			MSG::add_valid(LANG::i18n('_change_pwd_valid'));
 			$this->show_account();
 		}
 		else
@@ -209,10 +203,9 @@ class core {
 	}
 
 	function show_chg_pwd() {
-		global $vm;
 		
 		if(!$this->account->verif()) {
-			MSG::add_error($vm['_WARN_NOT_LOGGED']);
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
@@ -220,24 +213,23 @@ class core {
 		global $template, $pwd_limit;
 
 		$template->assign('vm', array(
-		    'chg_pwd'				=> $vm['_chg_pwd'],
-		    'chg_pwd_text'			=> $vm['_chg_pwd_text'],
+		    'chg_pwd'				=> LANG::i18n('_chg_pwd'),
+		    'chg_pwd_text'			=> LANG::i18n('_chg_pwd_text'),
 		    'password_length'		=> $pwd_limit,
-		    'passwordold'			=> $vm['_passwordold'],
-		    'password'				=> $vm['_password'],
-		    'password2'				=> $vm['_password2'],
-		    'return'				=> $vm['_return'],
-		    'chg_button'			=> $vm['_chg_button']
+		    'passwordold'			=> LANG::i18n('_passwordold'),
+		    'password'				=> LANG::i18n('_password'),
+		    'password2'				=> LANG::i18n('_password2'),
+		    'return'				=> LANG::i18n('_return'),
+		    'chg_button'			=> LANG::i18n('_chg_button')
 		));
 		
 		$template->display('chg_pwd.tpl');
 	}
 
 	function chg_email_form() {
-		global $vm;
 
 		if(!$this->account->verif()) {
-			MSG::add_error($vm['_WARN_NOT_LOGGED']);
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
@@ -250,7 +242,7 @@ class core {
 		$this->account = unserialize($_SESSION['acm']);
 
 		if($this->account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
-			MSG::add_valid($vm['_change_email_valid']);
+			MSG::add_valid(LANG::i18n('_change_email_valid'));
 			$this->show_account();
 		}
 		else
@@ -260,10 +252,10 @@ class core {
 	}
 
 	function show_chg_email() {
-		global $vm, $can_chg_email;
+		global $can_chg_email;
 		
 		if(!$this->account->verif()) {
-			MSG::add_error($vm['_WARN_NOT_LOGGED']);
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
@@ -276,14 +268,14 @@ class core {
 		global $template, $pwd_limit;
 		
 		$template->assign('vm', array(
-		    'chg_pwd'				=> $vm['_chg_email'],
-		    'chg_pwd_text'			=> $vm['_chg_email_text'],
+		    'chg_pwd'				=> LANG::i18n('_chg_email'),
+		    'chg_pwd_text'			=> LANG::i18n('_chg_email_text'),
 		    'password_length'		=> $pwd_limit,
-		    'password'				=> $vm['_password'],
-		    'email'					=> $vm['_email'],
-		    'email2'				=> $vm['_email2'],
-		    'return'				=> $vm['_return'],
-		    'chg_button'			=> $vm['_chg_button']
+		    'password'				=> LANG::i18n('_password'),
+		    'email'					=> LANG::i18n('_email'),
+		    'email2'				=> LANG::i18n('_email2'),
+		    'return'				=> LANG::i18n('_return'),
+		    'chg_button'			=> LANG::i18n('_chg_button')
 		));
 		
 		$template->display('chg_email.tpl');
@@ -291,12 +283,11 @@ class core {
 	}
 
 	function email_validation() {
-		global $vm;
 
 		if($this->account->email_validation($_GET['login'], $_GET['key'])) {
-			MSG::add_valid($vm['_email_activated']);
+			MSG::add_valid(LANG::i18n('_email_activated'));
 		}else{
-			MSG::add_error($vm['_control']);
+			MSG::add_error(LANG::i18n('_control'));
 		}
 		
 		$this->index();
@@ -305,9 +296,8 @@ class core {
 	}
 	
 	function acc_serv(){
-		global $vm;
 		if(!$this->allow_char_mod()) {
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
 		}
@@ -315,23 +305,23 @@ class core {
 		global $template, $accserv;
 		
 		$template->assign('vm', array(
-			'select_item'			=> $vm['_accounts_services'],
-			'return'				=> $vm['_return'],
+			'select_item'			=> LANG::i18n('_accounts_services'),
+			'return'				=> LANG::i18n('_return'),
 		));
 		
 		$items = array();
 		
 		if($accserv['allow_fix'])
-			$items[] = array('id' => 0, 'name' => $vm['_character_fix'], 'link' => '?action=char_fix_l');
+			$items[] = array('id' => 0, 'name' => LANG::i18n('_character_fix'), 'link' => '?action=char_fix_l');
 		
 		if($accserv['allow_unstuck'])
-			$items[] = array('id' => 1, 'name' => $vm['_character_unstuck'], 'link' => '?action=char_unstuck_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_unstuck'), 'link' => '?action=char_unstuck_l');
 		
 		if($accserv['allow_sex'])
-			$items[] = array('id' => 1, 'name' => $vm['_character_sex'], 'link' => '?action=char_sex_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_sex'), 'link' => '?action=char_sex_l');
 		
 		if($accserv['allow_name'])
-			$items[] = array('id' => 1, 'name' => $vm['_character_name'], 'link' => '?action=char_name_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_name'), 'link' => '?action=char_name_l');
 		
 		$template->assign('items', $items);
 		
@@ -342,12 +332,12 @@ class core {
 	
 	function char_ufl($mod = null){
 		
-		global $accserv, $vm;
+		global $accserv;
 		
 		if(is_null($mod)) {$this->index(); return;}
 		
 		if(!$this->allow_char_mod() || !$accserv['allow_'.$mod]) {
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
 		}
@@ -358,9 +348,9 @@ class core {
 		$worlds = WORLD::load_worlds(); // charging world
 		
 		$template->assign('vm', array(
-			'select_item'			=> $vm['_character_'.$mod],
-			'select_desc'			=> $vm['_character_'.$mod.'_desc'],
-		    'return'				=> $vm['_return']
+			'select_item'			=> LANG::i18n('_character_'.$mod),
+			'select_desc'			=> LANG::i18n('_character_'.$mod.'_desc'),
+		    'return'				=> LANG::i18n('_return')
 		));
 		
 		$items = array();
@@ -397,16 +387,16 @@ class core {
 		
 		if(is_null($mod)) {$this->index(); return;}
 
-		global $accserv, $vm;
+		global $accserv;
 		
 		if(!$this->allow_char_mod() and !$accserv['allow_'.$mod]) {
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
 		}
 		
 		if(empty($_GET['wid']) || empty($_GET['cid'])) {
-			MSG::add_error($vm['_error_select_char']);
+			MSG::add_error(LANG::i18n('_error_select_char'));
 			$this->index();
 			return;
 		}
@@ -414,22 +404,22 @@ class core {
 		$char = new character($_GET['cid'], $_GET['wid']);
 		
 		if(is_null($char->getId())) {
-			MSG::add_error($vm['_error_select_char']);
+			MSG::add_error(LANG::i18n('_error_select_char'));
 			$this->index();
 			return;
 		}
 		
-		global $template, $vm;
+		global $template;
 		
 		$template->assign('vm', array(
-			'select_item'	=> $vm['_character_'.$mod],
-			'select_desc'	=> sprintf($vm['_character_'.$mod.'_confirm'], $char->getName(), world::get_name_world($char->getWorldId()), $vm['_character_sex_'.$char->getGender()], $vm['_character_sex_'.((int)(!$char->getGender()))]),
-		    'return'		=> $vm['_return']
+			'select_item'	=> LANG::i18n('_character_'.$mod),
+			'select_desc'	=> sprintf(LANG::i18n('_character_'.$mod.'_confirm'), $char->getName(), world::get_name_world($char->getWorldId()), LANG::i18n('_character_sex_'.$char->getGender()), LANG::i18n('_character_sex_'.((int)(!$char->getGender())))),
+		    'return'		=> LANG::i18n('_return')
 		));
 		
 		$items = array();
-		$items[] = array('id' => 1, 'name' => $vm['_confirm'], 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId());
-		$items[] = array('id' => 1, 'name' => $vm['_back'], 'link' => '?action=char_'.$mod.'_l');
+		$items[] = array('id' => 1, 'name' => LANG::i18n('_confirm'), 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId());
+		$items[] = array('id' => 1, 'name' => LANG::i18n('_back'), 'link' => '?action=char_'.$mod.'_l');
 		$template->assign('items', $items);
 		
 		$template->register_block('dynamic', 'smarty_block_dynamic', false);
@@ -456,16 +446,16 @@ class core {
 		
 		if(is_null($mod)) {$this->index(); return;}
 		
-		global $accserv, $vm;
+		global $accserv;
 		
 		if(!$this->allow_char_mod() or !$accserv['allow_'.$mod]) {
-			MSG::add_error($vm['_acc_serv_off']);
+			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
 		}
 		
 		if(empty($_GET['wid']) || empty($_GET['cid'])) {
-			MSG::add_error($vm['_error_select_char']);
+			MSG::add_error(LANG::i18n('_error_select_char'));
 			$this->index();
 			return;
 		}
@@ -473,9 +463,9 @@ class core {
 		$char = new character($_GET['cid'], $_GET['wid']);
 
 		if(!$char->$mod())
-			MSG::add_error($vm['_character_'.$mod.'_no']);
+			MSG::add_error(LANG::i18n('_character_'.$mod.'_no'));
 		else
-			MSG::add_valid($vm['_character_'.$mod.'_yes']);
+			MSG::add_valid(LANG::i18n('_character_'.$mod.'_yes'));
 
 		$this->index();
 
@@ -499,12 +489,11 @@ class core {
 	}
 
 	function activation() {
-		global $vm;
 
 		if(!$this->account->valid_account(htmlentities($_GET['key'])))
-			MSG::add_error($vm['_activation_control']);
+			MSG::add_error(LANG::i18n('_activation_control'));
 		else
-			MSG::add_valid($vm['_account_actived']);
+			MSG::add_valid(LANG::i18n('_account_actived'));
 
 		$this->index();
 

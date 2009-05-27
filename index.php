@@ -19,11 +19,6 @@ require './classes/account.class.php';
 require './classes/world.class.php';
 require './classes/character.class.php';
 
-if(file_exists('./language/'.$language.'.php'))
-	require './language/'.$language.'.php';
-else
-	require './language/english.php';
-
 $action = (!empty($_GET['action'])) ? $_GET['action'] : 'index';
 $action = (!empty($_POST['action'])) ? $_POST['action'] : $action;
 
@@ -39,8 +34,8 @@ $MYSQL_LS->connect();
 
 $template = new Smarty2;
 
-$template->assign('vm_title', $vm['_title']);
-$template->assign('vm_title_page', $vm['_title_page']);
+$template->assign('vm_title', LANG::i18n('_title'));
+$template->assign('vm_title_page', LANG::i18n('_title_page'));
 
 $core = new CORE();
 
