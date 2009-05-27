@@ -40,8 +40,8 @@ $vm['_email_registered'] = 'Este e-mail j&aacute; est&aacute; registrado em noss
 $vm['_image_control'] = 'Problema no Controle de Imagem';
 $vm['_pwd_difference'] = 'Por favor repita a senha';
 $vm['_pwd_incorrect'] = 'Por favor utilize outra senha';
-$vm['_image_control_desc'] = 'Como medida de prevenção anti-spam é necessário que você entre com o código de confirmação.
-<p style="color: red">Se você não consegue ler a imagem ou está com problemas, <u>clique em cima da imagem para que ela seja recarregada</u>.</p> <p>Alguns usuários do Internet Explorer podem ter problemas com as configurações de segurança do navegador, acesse o Guia do Usuário clicando <a href=http://www.l2speed.org/pt/guiai.php>AQUI.</a></p><p><span style="color: red">Caso você ainda tenha problemas, faça o download do <u>Mozilla Firefox.</u></span></p>';
+$vm['_image_control_desc'] = 'Como medida de prevenÃ§Ã£o anti-spam Ã© necessÃ¡rio que vocÃª entre com o cÃ³digo de confirmaÃ§Ã£o.
+<p style="color: red">Se vocÃª nÃ£o consegue ler a imagem ou estÃ¡ com problemas, <u>clique em cima da imagem para que ela seja recarregada</u>.</p> <p>Alguns usuÃ¡rios do Internet Explorer podem ter problemas com as configuraÃ§Ãµes de seguranÃ§a do navegador, acesse o Guia do UsuÃ¡rio clicando <a href=http://www.l2speed.org/pt/guiai.php>AQUI.</a></p><p><span style="color: red">Caso vocÃª ainda tenha problemas, faÃ§a o download do <u>Mozilla Firefox.</u></span></p>';
 $vm['_account_created'] = 'Sua conta foi criada.';
 $vm['_account_actived'] = 'Sua conta foi ativada.';
 $vm['_REGWARN_UNAME1'] = 'Por favor insira um nome.';
@@ -64,7 +64,7 @@ $vm['_control'] = 'A Chave de Controle incorreta';
 $vm['_email_title_verif']			= 'Confirme seu Email - [SERVER]';
 $vm['_email_message_verif']			= "Seu c&oacute;digo de verifica&ccedil;&atilde;o &eacute;: [CODE].<br><br>Voc&ecirc; pode completar seu registro clicando <a href=\"[URL]\">AQUI</a>.<br><br>Se voc&ecirc; tem alguma d&uacute;vida sobre como se registrar, por favor entre em contato [EMAIL_SUPPORT].";
 $vm['_email_title_ok']				= 'Bem Vindo ao [SERVER]!';
-$vm['_email_message_ok']			= "Obrigado por se regisdtrar no [SERVER]!<br><br>Sua Conta no[SERVER] &eacute;: [ID]<br><br>Por &uacute;ltimo, se voc&ecirc; tem alguma d&uacute;vida e n&atilde;o consegue encontrar a resposta nossa equipe de suporte está sempre dispon&iacute;vel através do email [EMAIL].<br><br>Mais uma vez, obrigado por se juntar ao mundo do [SERVER]. Nos veremos dentro do Jogo, At&eacute; l&aacute;!<br><br>A Equipe [SERVER]";
+$vm['_email_message_ok']			= "Obrigado por se regisdtrar no [SERVER]!<br><br>Sua Conta no[SERVER] &eacute;: [ID]<br><br>Por &uacute;ltimo, se voc&ecirc; tem alguma d&uacute;vida e n&atilde;o consegue encontrar a resposta nossa equipe de suporte estÃ¡ sempre dispon&iacute;vel atravÃ©s do email [EMAIL].<br><br>Mais uma vez, obrigado por se juntar ao mundo do [SERVER]. Nos veremos dentro do Jogo, At&eacute; l&aacute;!<br><br>A Equipe [SERVER]";
 $vm['_email_title_change_pwd']		= 'Requerer nova senha';
 $vm['_email_message_change_pwd']	= "Algu&eacute;m com o IP: [IP] quer resetar a senha da sua conta [ID] do [SERVER].<br>Clique <a href=\"[URL]\">AQUI</a> para criar uma nova senha.<br>Se voc&ecirc; n&atilde;o solicitou esta mudan&ccedil;a, por favor desconsidere este email.'.<br><br>The [SERVER] Team";
 $vm['_email_title_change_pwd_ok']	= 'Senha resetada com sucesso';
