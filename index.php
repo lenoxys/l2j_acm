@@ -32,7 +32,7 @@ $MYSQL_LS->connect();
 // Display
 //------------------------------------------------------------------
 
-$template = new Smarty2;
+$template = SmartyObject::getInstance();
 
 $template->assign('vm_title', LANG::i18n('_title'));
 $template->assign('vm_title_page', LANG::i18n('_title_page'));

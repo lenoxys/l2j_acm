@@ -7,18 +7,33 @@ function smarty_block_dynamic($param, $content, &$smarty) {
 	return $content;
 }
 	
-class Smarty2 extends Smarty {
+class SmartyObject extends Smarty {
+	
+	private static $instance;
 
-	function Smarty2(){
+	private function __construct(){
 		global $template;
-		$this->Smarty();
+		parent::__construct();
+		
 		$this->template_dir = 'templates/'.$template;
 		$this->compile_dir = 'cache';
 		$this->caching = true;
 		$this->force_compile = true;
 	}
 	
-	function display($t) {
+	public function __clone() {
+		trigger_error('Clone is not allowed.', E_USER_ERROR);
+	}
+
+	public static function getInstance() {
+		if (!isset(self::$instance)) {
+			$c = __CLASS__;
+			self::$instance = new $c;
+		}
+		return self::$instance;
+	}
+	
+	public function display($t) {
 		DEBUG::publish($this);
 		MSG::display($this);
 		parent::display($t);
