@@ -75,7 +75,7 @@ class character {
 	function load() {
 		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = $this->MYSQL_GS->query($sql);
-		$row = mysql_fetch_object($rslt);
+		$row = @mysql_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
 		$this->base_class	= $row->base_class;
@@ -93,7 +93,7 @@ class character {
 	function reload($chp) {
 		$sql = 'SELECT `'.$chp.'` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = $this->MYSQL_GS->query($sql);
-		$row = mysql_fetch_object($rslt);
+		$row = @mysql_fetch_object($rslt);
 		
 		$this->$chp	= $row->$chp;
 		
@@ -367,7 +367,7 @@ class character {
 		
 		$rslt = $this->MYSQL_GS->query($sql);
 		
-		while ($row = mysql_fetch_row($rslt)) {
+		while ($row = @mysql_fetch_row($rslt)) {
 			$region = $row[1];
 			for ($j = 0; $j < 10; $j++)
 				$this->regions[$j][$region] = $row[($j + 2)];

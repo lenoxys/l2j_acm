@@ -70,11 +70,11 @@ class world {
 		global $MYSQL_LS, $gs_host;
 		
 		DEBUG::add('Getting Worlds list');
-		$sql = ' SELECT `server_id` FROM `gameservers`;';
+		$sql = 'SELECT `server_id` FROM `gameservers`;';
 		$rslt = $MYSQL_LS->query($sql);
 		
 		$worlds = array();
-		while ($row = mysql_fetch_object($rslt)) {
+		while ($row = @mysql_fetch_object($rslt)) {
 			if(!empty($gs_host[$row->server_id]))
 				$worlds[] = new world($row->server_id);
 			else
@@ -179,7 +179,7 @@ class world {
 		$this->MYSQL_GS->connect();
 		$rslt = $this->MYSQL_GS->query($sql);
 		
-		while ($row = mysql_fetch_object($rslt)) {
+		while ($row = @mysql_fetch_object($rslt)) {
 			$char = new character ($row->charId, $this->id);
 			$this->char_list[] = $char;
 		}

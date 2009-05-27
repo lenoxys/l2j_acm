@@ -191,7 +191,8 @@ class lang {
 	private $defaultLanguage = 'english';
 	private $currentLanguage = 'english';
 	private $path = './language/';
-	private $item, $defItem;
+	private $item = null;
+	private $defItem = null;
 	
 	private static $instance;
 
@@ -229,15 +230,18 @@ class lang {
 	}
 	
 	private function loadDefaultFile() {
-		$this->newFile = $this->path.$this->defaultLanguage.'.php';
-		require ($this->newFile);
-		$this->defItem = $vm;
+		if(is_null($this->defItem)) {
+			$this->newFile = $this->path.$this->defaultLanguage.'.php';
+			require ($this->newFile);
+			$this->defItem = $vm;
+		}
 	}
 	
 	private function itemExist($itemName) {
 		if(!empty($this->item[$itemName])) {
 			return true;
 		}else{
+			$this->loadDefaultFile();
 			return false;
 		}
 	}

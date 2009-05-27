@@ -31,7 +31,7 @@ class mysql {
 	function query ($q) {
 		DEBUG::add($this->db.'->'.$q);
 		$rslt = @mysql_query ($q, $this->m);
-		DEBUG::add('Records: '.mysql_affected_rows($this->m));
+		DEBUG::add('Records: '.@mysql_affected_rows($this->m));
 		return $rslt;
 	}
 
