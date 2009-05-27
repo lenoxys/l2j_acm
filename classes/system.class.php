@@ -108,7 +108,8 @@ class debug {
 	private static $instance;
 
 	private function __construct() {
-		
+		global $ACM_VERSION;
+		$this->debug_text = ('ACM VERSION : '.$ACM_VERSION.'<br />'."\n\r");
 	}
 	
 	public function __clone() {

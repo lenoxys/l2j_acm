@@ -5,6 +5,8 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 define ('LOG', false);									// Enable log mode ; for set off replace true by false
 
+$ACM_VERSION = '0.9.0';									// ACM Version
+
 //	#	Login Server Configuration
 
 $ls_host		= 'localhost';							// login host database DB
