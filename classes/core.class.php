@@ -12,7 +12,7 @@ class core {
 	}
 
 	function index() {
-		if($this->account->is_logged())
+		if($this->account->verif())
 			$this->show_account();
 		else
 			$this->show_login();

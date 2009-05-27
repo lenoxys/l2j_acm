@@ -4,7 +4,9 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class account{
 
-	public $login, $password;
+	private $login = null;
+	private $password = null;
+	private $ip = null;
 	
 	private static $instance;
 
@@ -30,6 +32,10 @@ class account{
 			return ACCOUNT::singleton();
 		
 		return unserialize($_SESSION['acm']);
+	}
+	
+	public function save() {
+		$_SESSION['acm'] = serialize($this);
 	}
 
 	function getLogin() {
@@ -284,12 +290,14 @@ class account{
 			$_SESSION['sp'] = (empty($_SESSION['sp'])) ? 1 : ($_SESSION['sp']+1);
 			return false;
 		}
+		
+		$this->ip = $_SERVER['REMOTE_ADDR'];
 			
 		$this->update_last_active();
 		
 		$this->email = $this->get_email();
 
-		$_SESSION['acm'] = serialize($this);
+		$this->save();
 		
 		return true;
 	}
@@ -525,8 +533,14 @@ class account{
 
 		if(!$this->is_logged())			// Check if user is logged
 			return false;
+		
+		if($this->ip != $_SERVER['REMOTE_ADDR']){	// Check if user ip is the same than the first time
+			MSG::add_error(LANG::i18n('_logout'));
+			$this->loggout();
+			return false;
+		}
 
-		$account = unserialize($_SESSION['acm']);
+		$account = $this->load();
 
 		$sql = 'SELECT COUNT(login) ' .
 				'FROM accounts ' .
