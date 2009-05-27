@@ -99,6 +99,7 @@ $vm['_accept_button']					= 'Accept';
 $vm['_accounts_services']				= 'Accounts Services';
 $vm['_select_worlds']					= 'Select your Lineage 2 World';
 $vm['_select_character']				= 'Select your character';
+$vm['_any_character']					= 'Any Character Found';
 
 $vm['_character_fix']					= 'Fix your character';
 $vm['_character_fix_desc']				= 'Fix your character';

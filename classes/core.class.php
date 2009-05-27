@@ -353,11 +353,15 @@ class core {
 		));
 		
 		$items = array();
+		
 		foreach  ($worlds as $world) {
 			foreach  ($world->get_chars() as $char) {
 				$items[] = array('id' => $world->get_id(), 'name' => $world->get_name() . ' : ' .$char->getName(), 'link' => '?action=char_'.$mod.'&wid='.$world->get_id().'&cid='.$char->getId());
 			}
 		}
+		
+		if(empty($items))
+			$items[] = array('id' => 0, 'name' => LANG::i18n('_any_character'), 'link' => '?action=acc_serv');
 		
 		$template->assign('items', $items);
 		
