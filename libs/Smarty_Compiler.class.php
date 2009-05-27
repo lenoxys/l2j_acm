@@ -21,12 +21,12 @@
  * @link http://smarty.php.net/
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
- * @version 2.6.19
+ * @version 2.6.25
  * @copyright 2001-2005 New Digital Group, Inc.
  * @package Smarty
  */
 
-/* $Id: Smarty_Compiler.class.php 2736 2007-09-16 14:47:53Z mohrt $ */
+/* $Id: Smarty_Compiler.class.php 3149 2009-05-23 20:59:25Z monte.ohrt $ */
 
 /**
  * Template compiling class
@@ -1363,9 +1363,14 @@ class Smarty_Compiler extends Smarty {
                     /* If last token was a ')', we operate on the parenthesized
                        expression. The start of the expression is on the stack.
                        Otherwise, we operate on the last encountered token. */
-                    if ($tokens[$i-1] == ')')
+                    if ($tokens[$i-1] == ')') {
                         $is_arg_start = array_pop($is_arg_stack);
-                    else
+                        if ($is_arg_start != 0) {
+                            if (preg_match('~^' . $this->_func_regexp . '$~', $tokens[$is_arg_start-1])) {
+                                $is_arg_start--;
+                            } 
+                        } 
+                    } else
                         $is_arg_start = $i-1;
                     /* Construct the argument for 'is' expression, so it knows
                        what to operate on. */
@@ -2042,27 +2047,27 @@ class Smarty_Compiler extends Smarty {
                 break;
 
             case 'get':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_GET' : "\$GLOBALS['HTTP_GET_VARS']";
+                $compiled_ref = "\$this->_supers['get']";
                 break;
 
             case 'post':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_POST' : "\$GLOBALS['HTTP_POST_VARS']";
+                $compiled_ref = "\$this->_supers['post']";
                 break;
 
             case 'cookies':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_COOKIE' : "\$GLOBALS['HTTP_COOKIE_VARS']";
+                $compiled_ref = "\$this->_supers['cookies']";
                 break;
 
             case 'env':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_ENV' : "\$GLOBALS['HTTP_ENV_VARS']";
+                $compiled_ref = "\$this->_supers['env']";
                 break;
 
             case 'server':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_SERVER' : "\$GLOBALS['HTTP_SERVER_VARS']";
+                $compiled_ref = "\$this->_supers['server']";
                 break;
 
             case 'session':
-                $compiled_ref = ($this->request_use_auto_globals) ? '$_SESSION' : "\$GLOBALS['HTTP_SESSION_VARS']";
+                $compiled_ref = "\$this->_supers['session']";
                 break;
 
             /*
@@ -2071,7 +2076,7 @@ class Smarty_Compiler extends Smarty {
              */
             case 'request':
                 if ($this->request_use_auto_globals) {
-                    $compiled_ref = '$_REQUEST';
+                    $compiled_ref = "\$this->_supers['request']";
                     break;
                 } else {
                     $this->_init_smarty_vars = true;
