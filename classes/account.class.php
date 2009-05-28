@@ -7,6 +7,7 @@ class account{
 	private $login = null;
 	private $password = null;
 	private $ip = null;
+	private $email = null;
 	
 	private static $instance;
 
