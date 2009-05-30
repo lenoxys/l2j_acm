@@ -15,7 +15,6 @@ require './classes/mysql.class.php';
 require './classes/smtp.class.php';
 require './classes/email.class.php';
 require './classes/core.class.php';
-require './classes/login.class.php';
 require './classes/account.class.php';
 require './classes/world.class.php';
 require './classes/character.class.php';
