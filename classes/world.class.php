@@ -15,18 +15,16 @@ class world {
  *	@param $id
  *			ID of the world selected
  */
-	function world($id) {
-		global $MYSQL_LS, $accserv, $interlude;
+	public function __construct($id) {
 		
-		if(!$accserv['allow_char_mod'])
+		if(!CONFIG::g()->service_allow)
 			exit('Access to this private class have been restricted by the admin');
 		
-		if($interlude)
+		if(CONFIG::g()->core_interlude)
 			exit('Accounts Services can\'t be used with interlude server');
 		
 		$this->id = $id;
 		$this->set_name();
-		$this->MYSQL_GS = new MYSQL_GS($this->id);
 		$this->load_chars();
 	}
 
@@ -66,16 +64,16 @@ class world {
  *	Get worlds list registred into login server
  *		return world list
  */
-	function load_worlds () {
-		global $MYSQL_LS, $gs_host;
+	public function load_worlds () {
 		
 		DEBUG::add('Getting Worlds list');
 		$sql = 'SELECT `server_id` FROM `gameservers`;';
-		$rslt = $MYSQL_LS->query($sql);
+		$rslt = MYSQL::g()->query($sql);
 		
 		$worlds = array();
 		while ($row = @mysql_fetch_object($rslt)) {
-			if(!empty($gs_host[$row->server_id]))
+			$w = (CONFIG::g()->select_game_server($row->server_id));
+			if(!empty($w))
 				$worlds[] = new world($row->server_id);
 			else
 				DEBUG::add('World n°'.$row->server_id.' had not configuration !');
@@ -176,14 +174,12 @@ class world {
 		
 		$sql = 'SELECT `charId`, `char_name` FROM `characters` WHERE `account_name` = "'.(ACCOUNT::load()->getLogin()).'";';
 		
-		$this->MYSQL_GS->connect();
-		$rslt = $this->MYSQL_GS->query($sql);
+		$rslt = MYSQL::g($this->id)->query($sql);
 		
 		while ($row = @mysql_fetch_object($rslt)) {
 			$char = new character ($row->charId, $this->id);
 			$this->char_list[] = $char;
 		}
-		$this->MYSQL_GS->close();
 	}
 
 }

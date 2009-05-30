@@ -7,19 +7,15 @@ class character {
 	private $charId, $char_name, $worldId, $base_class, $sex, $accesslevel, $x, $y, $region, $online, $clanid, $level;
 
 	function __construct($charId, $worldId) {
-		global $accserv, $interlude;
 		
-		if(!$accserv['allow_char_mod'])
+		if(!CONFIG::g()->service_allow)
 			exit('Access to this private class have been restricted by the admin');
 		
-		if($interlude)
+		if(CONFIG::g()->core_interlude)
 			exit('Accounts Services can\'t be used with interlude server');
 		
 		$this->charId = $charId;
 		$this->worldId = $worldId;
-		$this->MYSQL_GS = new MYSQL_GS($this->worldId);
-		
-		$this->MYSQL_GS->connect();
 		
 		if(!$this->is_owner()) {
 			$this->charId = null;
@@ -30,11 +26,6 @@ class character {
 		$this->load();
 
 		return true;
-	}
-	
-	function __destruct() {
-		$this->MYSQL_GS->close();
-		$this->MYSQL_GS = null;
 	}
 	
 	function getId() {
@@ -66,7 +57,7 @@ class character {
 		$sql = 'SELECT COUNT(charId) FROM `characters` 
 						WHERE `account_name` = "'.(ACCOUNT::load()->getLogin()).'" AND `charId` = "'.$this->charId.'";';
 		
-		if($this->MYSQL_GS->result($sql) == '0')
+		if(MYSQL::g($this->worldId)->result($sql) == '0')
 			return false;
 		
 		return true;
@@ -74,7 +65,7 @@ class character {
 	
 	function load() {
 		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
-		$rslt = $this->MYSQL_GS->query($sql);
+		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$row = @mysql_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
@@ -92,7 +83,7 @@ class character {
 	
 	function reload($chp) {
 		$sql = 'SELECT `'.$chp.'` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
-		$rslt = $this->MYSQL_GS->query($sql);
+		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$row = @mysql_fetch_object($rslt);
 		
 		$this->$chp	= $row->$chp;
@@ -123,7 +114,7 @@ class character {
 		$sql = 'SELECT COUNT(charId) FROM `heroes` 
 						WHERE `charId` = "'.$this->charId.'";';
 		
-		if($this->MYSQL_GS->result($sql) == '0')
+		if(MYSQL::g($this->worldId)->result($sql) == '0')
 			return false;
 		
 		return true;
@@ -139,15 +130,14 @@ class character {
 	}
 	
 	function allow_fix($unstuck = false) {
-		global $accserv;
 		
 		if($unstuck) {
-			if(!$accserv['allow_unstuck']) {
+			if(!CONFIG::g()->service_unstuck) {
 				MSG::add_error(LANG::i18n('_allow_unstuck'));
 				return false;
 			}
 		} else {
-			if(!$accserv['allow_fix']) {
+			if(!CONFIG::g()->service_fix) {
 				MSG::add_error(LANG::i18n('_allow_fix'));
 				return false;
 			}
@@ -157,10 +147,10 @@ class character {
 		
 		$last = ($unstuck) ? 'unstuck' : 'fix';
 		
-		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "last_'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-($accserv['time_fix'] * 3600));
+		$sql = 'SELECT COUNT(account_name) FROM `account_data` WHERE `var` = "last_'.$last.'" AND `account_name` = '.$this->charId.' AND `value` > '.(time()-(CONFIG::g()->service_fix_time * 3600));
 		
-		if($this->MYSQL_GS->result($sql) > '0') {
-			MSG::add_error(sprintf(LANG::i18n('_allow_time'), $accserv['time_fix'], $last));
+		if(MYSQL::g($this->worldId)->result($sql) > '0') {
+			MSG::add_error(sprintf(LANG::i18n('_allow_time'), CONFIG::g()->service_fix_time, $last));
 			return false;
 		}
 		
@@ -184,19 +174,19 @@ class character {
 		
 		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Fix shortcuts of character');
 		$sql = 'DELETE FROM `character_shortcuts` WHERE `charId`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Fix inventory of character');
 		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_fix', '".time()."');";
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		return true;
 	}
@@ -210,11 +200,11 @@ class character {
 		
 		DEBUG::add('Fix position of character');
 		$sql = 'UPDATE `characters` SET `x`='.$t[0].', `y`='.$t[1].', `z`='.$t[2].' WHERE `charId`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		LOGDAEMON::l()->add($sql);
 		
@@ -228,11 +218,11 @@ class character {
 		
 		DEBUG::add('Change name of the character');
 		$sql = 'UPDATE `characters` SET `char_name` = '.$new_name.' WHERE `charId`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		LOGDAEMON::l()->add($sql);
 		
@@ -242,9 +232,8 @@ class character {
 	}
 	
 	function can_change_name ($new_name = null, $test = null) {
-		global $accserv;
 		
-		if( !$accserv['allow_name']) {	// Check if the admin allow account services
+		if( !CONFIG::g()->service_name) {	// Check if the admin allow account services
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			return false;
 		}
@@ -253,7 +242,7 @@ class character {
 						WHERE `var` = "previous_name" 
 							AND `account_name` = "'.$this->charId.'";';
 		
-		if($this->MYSQL_GS->result($sql) > '0') {		// Check if character has already changed him name.
+		if(MYSQL::g($this->worldId)->result($sql) > '0') {		// Check if character has already changed him name.
 			MSG::add_error(LANG::i18n('_acc_serv_name_error1'));
 			return false;
 		}
@@ -273,7 +262,7 @@ class character {
 			return false;
 		}
 		
-		if (!preg_match($accserv['name_regex'] , $new_name)) {				// Check if new name is a valid name
+		if (!preg_match(CONFIG::g()->service_name_regex , $new_name)) {				// Check if new name is a valid name
 			MSG::add_error(LANG::i18n('_acc_serv_name_error4'));
 			return false;
 		}
@@ -301,29 +290,28 @@ class character {
 		if(!$this->can_change_gender())
 			return false;
 		
-		$items = ($this->sex == 0) ? $accserv['item_male_only'] : $accserv['item_female_only'];		// Check which items list by gender
+		$items = ($this->sex == 0) ? CONFIG::g()->service_sex_item_male : CONFIG::g()->service_sex_item_female;		// Check which items list by gender
 		foreach ($items as $id) {												// Foreach items listed set in inventory if they exist.
 			$sql = 'UPDATE `items` SET `loc` = "INVENTORY" WHERE `owner_id` = '.$this->charId.' AND `item_id` = '.$id.';';
-			$this->MYSQL_GS->query($sql);
+			MYSQL::g($this->worldId)->query($sql);
 		}
 		
 		$this->sex = ($this->sex == 1) ? 0 : 1;
 		
 		DEBUG::add('Change gender of the character');
 		$sql = 'UPDATE `characters` SET `sex` = '.$this->sex.', `face` = 0, `hairStyle` = 0,`hairColor` = 0 WHERE `charId`='.$this->charId.';';
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_gender_change', '".time()."');";
-		$this->MYSQL_GS->query($sql);
+		MYSQL::g($this->worldId)->query($sql);
 		
 		return true;
 	}
 	
 	function can_change_gender ($test = null) {
-		global $accserv;
 		
-		if( !$accserv['allow_sex']) {	// Check if the admin allow account services
+		if( !CONFIG::g()->service_sex) {	// Check if the admin allow account services
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			return false;
 		}
@@ -331,9 +319,9 @@ class character {
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` 
 						WHERE `var` = "last_gender_change" 
 							AND `account_name` = "'.$this->charId.'" 
-							AND `value` > "'.(time()-($accserv['time_account_services'] * 24 * 3600)).'";';
+							AND `value` > "'.(time()-(CONFIG::g()->service_sex_time * 24 * 3600)).'";';
 		
-		if($this->MYSQL_GS->result($sql) > '0') {
+		if(MYSQL::g($this->worldId)->result($sql) > '0') {
 			MSG::add_error(LANG::i18n('_acc_serv_gender_time'));
 			return false;
 		}
@@ -365,7 +353,7 @@ class character {
 	function mapRegionTable() {
 		$sql = 'SELECT "plop", region, sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10 FROM mapregion;';
 		
-		$rslt = $this->MYSQL_GS->query($sql);
+		$rslt = MYSQL::g($this->worldId)->query($sql);
 		
 		while ($row = @mysql_fetch_row($rslt)) {
 			$region = $row[1];
@@ -387,10 +375,9 @@ class character {
 	}
 	
 	function get_spawn_town($townId) {
-		global $accserv;
 		
-		if($accserv['coord_static'])
-			return $accserv['coord_default'];
+		if(CONFIG::g()->service_unstuck_static)
+			return CONFIG::g()->service_unstuck_default;
 		
 		switch($townId) {
 			case 0:

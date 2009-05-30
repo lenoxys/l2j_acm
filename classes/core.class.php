@@ -6,25 +6,25 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 
 class core {
 
-	function core() {
+	public function __construct() {
 		$this->account = ACCOUNT::load();
 		$this->secure_post();
 	}
 
-	function index() {
+	public function index() {
 		if($this->account->verif())
 			$this->show_account();
 		else
 			$this->show_login();
 	}
 
-	function loggout() {
+	public function loggout() {
 		$this->account->loggout();
 		MSG::add_valid(LANG::i18n('_logout'));
 		$this->index();
 	}
 
-	function login() {
+	public function login() {
 
 		if(empty($_POST['Luser']) || empty($_POST['Lpwd']))
 		{
@@ -40,12 +40,11 @@ class core {
 		$this->index();
 	}
 
-	function show_login() {
-		global $id_limit, $pwd_limit, $act_img;
+	public function show_login() {
 		SmartyObject::getInstance()->assign('vm', array(
 		    'exist_account'		=> LANG::i18n('_exist_account'),
-		    'account_length'		=> $id_limit,
-		    'password_length'	=> $pwd_limit,
+		    'account_length'	=> CONFIG::g()->core_id_limit,
+		    'password_length'	=> CONFIG::g()->core_pwd_limit,
 		    'account'			=> LANG::i18n('_account'),
 		    'password'			=> LANG::i18n('_password'),
 		    'login_button'		=> LANG::i18n('_login_button'),
@@ -54,13 +53,13 @@ class core {
 		    'new_account_text'	=> LANG::i18n('_new_account_text'),
 		    'create_button'		=> LANG::i18n('_create_button')
 		));
-		if($act_img) {
+		if(CONFIG::g()->core_act_img) {
 			SmartyObject::getInstance()->assign('image', 'image');
 		}
 		SmartyObject::getInstance()->setTemplate('form.tpl');
 	}
 
-	function show_account() {
+	public function show_account() {
 		
 		SmartyObject::getInstance()->assign('vm', array(
 			'title_page'		=> LANG::i18n('_title_page'),
@@ -85,7 +84,7 @@ class core {
 		SmartyObject::getInstance()->setTemplate('account.tpl');
 	}
 
-	function registration() {
+	public function registration() {
 
 		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
 			$this->show_login();
@@ -94,7 +93,7 @@ class core {
 		}
 	}
 
-	function show_ack(){
+	public function show_ack(){
 		SmartyObject::getInstance()->assign('vm', array(
 		    'terms_and_condition'		=> LANG::i18n('_TERMS_AND_CONDITION'),
 		    'return'					=> LANG::i18n('_return'),
@@ -103,13 +102,12 @@ class core {
 		SmartyObject::getInstance()->setTemplate('ack.tpl');
 	}
 
-	function show_create($acka = false) {
-		global $act_img, $id_limit, $pwd_limit, $ack_cond;
+	public function show_create($acka = false) {
 
 		$ack = (@$_POST['ack'] == 'ack') ? true : false;
 		$ack = ($acka) ? true : $ack;
 
-		if($ack_cond && !$ack) {
+		if(CONFIG::g()->core_ack_cond && !$ack) {
 			$this->show_ack();
 			return false;
 		}
@@ -117,8 +115,8 @@ class core {
 		SmartyObject::getInstance()->assign('vm', array(
 		    'new_account'			=> LANG::i18n('_new_account'),
 		    'new_account_text'		=> LANG::i18n('_new_account_text2'),
-		    'account_length'		=> $id_limit,
-		    'password_length'		=> $pwd_limit,
+		    'account_length'		=> CONFIG::g()->core_id_limit,
+		    'password_length'		=> CONFIG::g()->core_pwd_limit,
 		    'account'				=> LANG::i18n('_account'),
 		    'password'				=> LANG::i18n('_password'),
 		    'password2'				=> LANG::i18n('_password2'),
@@ -129,18 +127,17 @@ class core {
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
-		if($act_img) {
+		if(CONFIG::g()->core_act_img) {
 			SmartyObject::getInstance()->assign('image', 'image');
 		}
 		SmartyObject::getInstance()->setTemplate('create.tpl');
 	}
 
-	function show_forget() {
-		global $act_img, $id_limit;
+	public function show_forget() {
 		SmartyObject::getInstance()->assign('vm', array(
 		    'forgot_pwd'			=> LANG::i18n('_forgot_pwd'),
 		    'forgot_pwd_text'		=> LANG::i18n('_forgot_pwd_text'),
-		    'account_length'		=> $id_limit,
+		    'account_length'		=> CONFIG::g()->core_id_limit,
 		    'account'				=> LANG::i18n('_account'),
 		    'email'					=> LANG::i18n('_email'),
 		    'image_control_desc'	=> LANG::i18n('_image_control_desc'),
@@ -149,13 +146,13 @@ class core {
 		    'post_id'				=> @$_POST['Luser'],
 		    'post_email'			=> @$_POST['Lemail']
 		));
-		if($act_img) {
+		if(CONFIG::g()->core_act_img) {
 			SmartyObject::getInstance()->assign('image', 'images');
 		}
 		SmartyObject::getInstance()->setTemplate('forgot_pwd.tpl');
 	}
 
-	function forgot_pwd() {
+	public function forgot_pwd() {
 
 		if($this->account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
 			MSG::add_valid(LANG::i18n('_password_request'));
@@ -167,7 +164,7 @@ class core {
 		return true;
 	}
 
-	function forgot_pwd_email() {
+	public function forgot_pwd_email() {
 
 		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
 			MSG::add_valid(LANG::i18n('_password_reseted'));
@@ -180,7 +177,7 @@ class core {
 		return true;
 	}
 
-	function chg_pwd_form() {
+	public function chg_pwd_form() {
 
 		if(!$this->account->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
@@ -200,7 +197,7 @@ class core {
 		}
 	}
 
-	function show_chg_pwd() {
+	public function show_chg_pwd() {
 		
 		if(!$this->account->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
@@ -208,12 +205,10 @@ class core {
 			return;
 		}
 
-		global $pwd_limit;
-
 		SmartyObject::getInstance()->assign('vm', array(
 		    'chg_pwd'				=> LANG::i18n('_chg_pwd'),
 		    'chg_pwd_text'			=> LANG::i18n('_chg_pwd_text'),
-		    'password_length'		=> $pwd_limit,
+		    'password_length'		=> CONFIG::g()->core_pwd_limit,
 		    'passwordold'			=> LANG::i18n('_passwordold'),
 		    'password'				=> LANG::i18n('_password'),
 		    'password2'				=> LANG::i18n('_password2'),
@@ -224,7 +219,7 @@ class core {
 		SmartyObject::getInstance()->setTemplate('chg_pwd.tpl');
 	}
 
-	function chg_email_form() {
+	public function chg_email_form() {
 
 		if(!$this->account->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
@@ -249,7 +244,7 @@ class core {
 		}
 	}
 
-	function show_chg_email() {
+	public function show_chg_email() {
 		
 		if(!$this->account->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
@@ -261,13 +256,11 @@ class core {
 			$this->index();
 			return;
 		}
-
-		global $pwd_limit;
 		
 		SmartyObject::getInstance()->assign('vm', array(
 		    'chg_pwd'				=> LANG::i18n('_chg_email'),
 		    'chg_pwd_text'			=> LANG::i18n('_chg_email_text'),
-		    'password_length'		=> $pwd_limit,
+		    'password_length'		=> CONFIG::g()->core_pwd_limit,
 		    'password'				=> LANG::i18n('_password'),
 		    'email'					=> LANG::i18n('_email'),
 		    'email2'				=> LANG::i18n('_email2'),
@@ -279,7 +272,7 @@ class core {
 
 	}
 
-	function email_validation() {
+	public function email_validation() {
 
 		if($this->account->email_validation($_GET['login'], $_GET['key'])) {
 			MSG::add_valid(LANG::i18n('_email_activated'));
@@ -292,14 +285,19 @@ class core {
 		return true;
 	}
 	
-	function acc_serv(){
+	public function acc_serv(){
+		
+		if(!$this->account->verif()) {
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
+			$this->index();
+			return;
+		}
+		
 		if(!$this->allow_char_mod()) {
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
 		}
-				
-		global $accserv;
 		
 		SmartyObject::getInstance()->assign('vm', array(
 			'select_item'			=> LANG::i18n('_accounts_services'),
@@ -308,16 +306,16 @@ class core {
 		
 		$items = array();
 		
-		if($accserv['allow_fix'])
+		if(CONFIG::g()->service_fix)
 			$items[] = array('id' => 0, 'name' => LANG::i18n('_character_fix'), 'link' => '?action=char_fix_l');
 		
-		if($accserv['allow_unstuck'])
+		if(CONFIG::g()->service_unstuck)
 			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_unstuck'), 'link' => '?action=char_unstuck_l');
 		
-		if($accserv['allow_sex'])
+		if(CONFIG::g()->service_sex)
 			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_sex'), 'link' => '?action=char_sex_l');
 		
-		if($accserv['allow_name'])
+		if(CONFIG::g()->service_name)
 			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_name'), 'link' => '?action=char_name_l');
 		
 		SmartyObject::getInstance()->assign('items', $items);
@@ -327,13 +325,19 @@ class core {
 		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
-	function char_ufl($mod = null){
+	private function char_ufl($mod = null){
 		
-		global $accserv;
+		if(!$this->account->verif()) {
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
+			$this->index();
+			return;
+		}
 		
-		if(is_null($mod)) {$this->index(); return;}
+		if(is_null($mod)) {$this->index(); return;} // shouldn't happend
 		
-		if(!$this->allow_char_mod() || !$accserv['allow_'.$mod]) {
+		$mode = 'service_'.$mod;
+		
+		if(!$this->allow_char_mod() || !CONFIG::g()->$mode) {
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
@@ -366,29 +370,35 @@ class core {
 		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
-	function char_unstuck_l() {
+	public function char_unstuck_l() {
 		$this->char_ufl('unstuck');
 	}
 	
-	function char_fix_l() {
+	public function char_fix_l() {
 		$this->char_ufl('fix');
 	}
 	
-	function char_sex_l() {
+	public function char_sex_l() {
 		$this->char_ufl('sex');
 	}
 	
-	function char_name_l() {
+	public function char_name_l() {
 		$this->char_ufl('name');
 	}
 	
-	function char_uf($mod = null) {
+	private function char_uf($mod = null) {
+		
+		if(!$this->account->verif()) {
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
+			$this->index();
+			return;
+		}
 		
 		if(is_null($mod)) {$this->index(); return;}
 
-		global $accserv;
+		$mode = 'service_'.$mod;
 		
-		if(!$this->allow_char_mod() and !$accserv['allow_'.$mod]) {
+		if(!$this->allow_char_mod() || !CONFIG::g()->$mode) {
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
@@ -423,29 +433,35 @@ class core {
 		SmartyObject::getInstance()->setTemplate('select.tpl');
 	}
 	
-	function char_unstuck() {
+	public function char_unstuck() {
 		$this->char_uf('unstuck');
 	}
 	
-	function char_fix() {
+	public function char_fix() {
 		$this->char_uf('fix');
 	}
 	
-	function char_sex() {
+	public function char_sex() {
 		$this->char_uf('sex');
 	}
 	
-	function char_name() {
+	public function char_name() {
 		$this->char_uf('name');
 	}
 
-	function char_ufc($mod = null) {
+	private function char_ufc($mod = null) {
+		
+		if(!$this->account->verif()) {
+			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
+			$this->index();
+			return;
+		}
 		
 		if(is_null($mod)) {$this->index(); return;}
 		
-		global $accserv;
+		$mode = 'service_'.$mod;
 		
-		if(!$this->allow_char_mod() or !$accserv['allow_'.$mod]) {
+		if(!$this->allow_char_mod() || !CONFIG::g()->$mode) {
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			$this->index();
 			return;
@@ -469,23 +485,23 @@ class core {
 		return;
 	}
 	
-	function char_unstuck_confirm() {
+	public function char_unstuck_confirm() {
 		$this->char_ufc('unstuck');
 	}
 	
-	function char_fix_confirm() {
+	public function char_fix_confirm() {
 		$this->char_ufc('fix');
 	}
 	
-	function char_sex_confirm() {
+	public function char_sex_confirm() {
 		$this->char_ufc('sex');
 	}
 	
-	function char_name_confirm() {
+	public function char_name_confirm() {
 		$this->char_ufc('name');
 	}
 
-	function activation() {
+	public function activation() {
 
 		if(!$this->account->valid_account(htmlentities($_GET['key'])))
 			MSG::add_error(LANG::i18n('_activation_control'));
@@ -497,22 +513,18 @@ class core {
 		return;
 	}
 	
-	function allow_char_mod() {
-		global $accserv;
+	private function allow_char_mod() {
 		
-		$accserv['allow_name'] = false;
-		
-		if(!$accserv['allow_char_mod'])
+		if(!CONFIG::g()->service_allow)
 			return false;
 		
-		if(!$accserv['allow_fix'] && !$accserv['allow_unstuck'] && !$accserv['allow_name'] && !$accserv['allow_sex'])
+		if(!CONFIG::g()->service_fix && !CONFIG::g()->service_unstuck && !CONFIG::g()->service_name && !CONFIG::g()->service_sex)
 			return false;
 		
 		return true;
 	}
 
-	protected function secure_post() {
-		global $id_limit, $pwd_limit;
+	private function secure_post() {
 
 		if (!$_POST) return;
 
@@ -521,16 +533,19 @@ class core {
 
 		foreach($_POST as $key => $value) {
 			if ($key == 'Luser')
-				$_POST[$key] = substr($value, 0, $id_limit);
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_id_limit);
 
 			if ($key == 'Lpwd')
-				$_POST[$key] = substr($value, 0, $id_limit);
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_id_limit);
+
+			if ($key == 'Limage')
+				$_POST[$key] = substr($value, 0, 5);
 		}
 		
 		return;
 	}
 
-	function gen_img_cle($num = 5) {
+	public function gen_img_cle($num = 5) {
 		$key = '';
 		$chaine = "ABCDEF123456789";
 		for ($i=0;$i<$num;$i++) $key.= $chaine[rand()%strlen($chaine)];

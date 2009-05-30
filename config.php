@@ -5,96 +5,97 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 define ('DEBUG', false);								// Enable debug mode ; for set on replace false by true
 define ('LOG', false);									// Enable log mode ; for set off replace true by false
 
-$ACM_VERSION = '0.9.0';									// ACM Version
+//##########################################################################################
+//############################### Login Server Configuration ###############################
+//##########################################################################################
 
-//	#	Login Server Configuration
+CONFIG::g()->ca('login_server', array(
+									'hostname' => 'localhost',					// login host database DB
+									'user' => 'root',							// login user
+									'password' => '',							// login password
+									'database' => 'l2jdb_login'						// login database name
+								));
 
-$ls_host		= 'localhost';							// login host database DB
-$ls_user		= 'root';								// login user
-$ls_pass		= '';									// login password
-$ls_db			= 'l2jdb';								// login database name
+//##########################################################################################
+//############################### Game Server Configuration ################################
+//##########################################################################################
 
-//	#	Game Server Configuration
-
-$id = 1;												// Id of the game server
-$gs_host[$id]	= 'localhost';							// game host database DB
-$gs_user[$id]	= 'root';								// game user
-$gs_pass[$id]	= '';									// game password
-$gs_db[$id]		= 'l2jdb';								// game database name
-
+CONFIG::g()->add_game_server(array(
+								'id' => 1,										// game id
+								'hostname' => 'localhost',						// game host database DB
+								'user' => 'root',								// game user
+								'password' => '',								// game password
+								'database' => 'l2jdb'							// game database name
+							));
 
 /*
-//Copy line under this text for add a new world. The id need to be same as the id registred into gameservers table.
-
-$id = 2;												// Id of the game server
-$gs_host[$id]	= 'localhost';							// game host database DB
-$gs_user[$id]	= 'root';								// game user
-$gs_pass[$id]	= '';									// game password
-$gs_db[$id]		= 'l2jdb2';								// game database name
+CONFIG::g()->add_game_server(array(
+								'id' => 2,										// game id (must be same as registred in gameservers table)
+								'hostname' => 'localhost',						// game host database DB
+								'user' => 'root',								// game user
+								'password' => '',								// game password
+								'database' => 'l2jdb'							// game database name
+							));
 */
 
+//##########################################################################################
+//################################### Web Configuration ####################################
+//##########################################################################################
 
-//	#	Web Configuration
+CONFIG::g()->cs('core_server_name', 'Private Server');							// server name
 
-$server_name	= 'Private Server';						// server name
-$email_from		= 'support@host.com';					// Specify an adress email source
+CONFIG::g()->cb('core_act_img', true);											// Activate image verification ; set false if you want desactivate
 
-$act_img		= true;									// Activate image verification ; set false if you want desactivate
-$act_email		= true;									// Activate email verification ; set false if you want desactivate
+CONFIG::g()->cb('core_act_email', true);										// Activate email verification ; set false if you want desactivate
+CONFIG::g()->cb('core_same_email', false);										// Activate email verification ; set false if you want desactivate
+CONFIG::g()->cb('core_can_chg_email', false);									// User can change email ; set false if you want prohibit
 
-$acc_limit		= false;								// How many account can be registered ; set false for unlimited
+CONFIG::g()->cbi('core_acc_limit', false);										// How many account can be registered ; set false for unlimited
 
-$same_email		= false;								// Allowed same email for different account ; set false if you want prohibit
+CONFIG::g()->cs('core_language', 'english');									// language use by Account Manager ; name of language file in language folder
 
-$id_limit		= 15;									// Limit id characters
-$pwd_limit		= 15;									// Limit pwd characters
+CONFIG::g()->cb('core_ack_cond', false);										// User must accept before register ; conditions can be edited on the language file
 
-$language		= 'english';							// language use by Account Manager :: name of language file in language folder
+CONFIG::g()->cs('core_template', 'kamael');										// template directory
 
-$can_chg_email	= false;								// User can change email ; set false if you want prohibit (If there are no email registered. Option is avaible same if you have set prohibited)
+CONFIG::g()->cb('core_interlude', false);										// If you are using interlude database set to true
 
-$ack_cond		= false;								// User must accept before register :: conditions can be edited on language file
+//##########################################################################################
+//################################### Characters Config ####################################
+//##########################################################################################
 
-$template		= 'kamael';								// template directory
+CONFIG::g()->cb('service_allow', true);										// Enable Account Services
 
-$interlude		= false;								// If you are using interlude database set to true
+CONFIG::g()->cb('service_name', false);											// Enable Account services feature (change name)
+CONFIG::g()->cs('service_name_regex', '`^[[:alnum:]]{3,16}$`');					// allow alphanumeric character in char name (3-16 char.)
 
-//#####################
-//# Characters Config #
-//#####################
+CONFIG::g()->cb('service_sex', true);											// Enable Account services feature (change gender)
+CONFIG::g()->ci('service_sex_time', 7);											// Need to wait 7 days after change gender before to change another time
+CONFIG::g()->ca('service_sex_item_female', array(8559,8913,8917));				// Check female-use only items before to change gender
+CONFIG::g()->ca('service_sex_item_male', array(8923));							// Check male-use only items before to change gender
 
-// Don't use those settings for now keep to false please
+CONFIG::g()->cb('service_fix', false);											// Enable fixing feature for offline character
+CONFIG::g()->ci('service_fix_time', 24);										// Need to wait 24 hours before to use fix or unstuck against
 
-$accserv['allow_char_mod']				= false;						// Enable characters mod
-$accserv['time_account_services']		= 7;							// Need to wait 7 days after change gender before to change another time for the same or another character
+CONFIG::g()->cb('service_unstuck', false);										// Enable unstuck feature for offline character
+CONFIG::g()->cb('service_unstuck_static', false);								// Use static coords when using unstuck and fix feature
+CONFIG::g()->ca('service_unstuck_default', array(0,0,0));						// When coord static enable tp player to the coords (x,y,z)
 
-$accserv['allow_name']					= false;						// Enable Account services feature (change name) for offline character
-$accserv['name_regex']					= '`^[[:alnum:]]{3,16}$`';		// allow alphanumeric character in char name (3-16 char.)
+//##########################################################################################
+//######################################### Email ##########################################
+//##########################################################################################
 
-$accserv['allow_sex']					= false;						// Enable Account services feature (change gender) for offline character
-$accserv['item_female_only']			= array(8559,8913,8917);		// Check female-use only items before to change gender
-$accserv['item_male_only']				= array(8923);					// Check male-use only items before to change gender
+CONFIG::g()->ce('email_from', 'support@host.com');								// Specify an adress email source
 
-$accserv['allow_fix']					= false;						// Enable fixing feature for offline character
-$accserv['time_fix']					= 24;							// Need to wait 24 hours before to use fix or unstuck against
+CONFIG::g()->cb('email_smtp_use', false);										// Set to true if you want use an smtp server
+CONFIG::g()->cs('email_smtp_address', 'smtp.server.com');						// Address of the smtp server
+CONFIG::g()->ci('email_smtp_port', 25);											// Port of the smtp server
+CONFIG::g()->cs('email_smtp_login', '');										// login of the smtp server if you need authentication
+CONFIG::g()->cs('email_smtp_passwor', '');										// password of the smtp server if you need authentication
+CONFIG::g()->cs('email_smtp_domain', '');										// domain of your host
 
-$accserv['allow_unstuck']				= false;						// Enable unstuck feature for offline character
-$accserv['coord_static']				= false;						// Use static coords when using unstuck and fix feature
-$accserv['coord_default']				= array(0,0,0);					// When coord static enable tp player to the coords (x,y,z)
-
-//###################
-//# Advanced Config #
-//###################
-
-$smtp['use']		= false;							// Set to true if you want use an smtp server
-$smtp['address']	= 'smtp.server.com';				// Address of the smtp server
-$smtp['port']		= 25;								// Port of the smtp server
-$smtp['login']		= '';								// login of the smtp server if you need authentication
-$smtp['password']	= '';								// password of the smtp server if you need authentication
-$smtp['domain']		= '';								// domain of your host
-
-$id_regex	= '`^[[:alnum:]]{4,'.$id_limit.'}$`';		// allow alphanumeric character in login name and login character min needed is 4
-$pwd_regex	= '`^[[:alnum:]@\\\/]{4,'.$pwd_limit.'}$`';	//allow alphanumeric character and \ / @ in password and pwd character min needed is 4
-$accesslevel = ($interlude) ? 'access_level' : 'accessLevel';
+//##########################################################################################
+//####################################### End Config #######################################
+//##########################################################################################
 
 ?>

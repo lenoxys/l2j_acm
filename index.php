@@ -7,6 +7,7 @@ session_start();
 
 define ('_ACM_VALID', 1);
 
+require './classes/config.class.php';
 require './config.php';
 require './libs/Smarty.class.php';
 require './classes/system.class.php';
@@ -25,9 +26,6 @@ $action = (!empty($_POST['action'])) ? $_POST['action'] : $action;
 $action = htmlentities($action);
 $action = htmlspecialchars($action);
 
-$MYSQL_LS = new MYSQL_LS;
-$MYSQL_LS->connect();
-
 //------------------------------------------------------------------
 // Display
 //------------------------------------------------------------------
@@ -41,8 +39,6 @@ if(method_exists($core, $action))
 	$core->$action();
 else
 	$core->index();
-
-$MYSQL_LS->close();
 
 SmartyObject::getInstance()->display();
 

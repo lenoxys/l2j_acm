@@ -2,23 +2,22 @@
 
 defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.' );
 
+
 	
 function smarty_block_dynamic($param, $content, &$smarty) {
 	return $content;
 }
-	
+
 class SmartyObject extends Smarty {
 	
 	private static $instance;
 
 	private function __construct(){
-		global $template;
-		parent::__construct();
-		
-		$this->template_dir = 'templates/'.$template;
+		$this->template_dir = 'templates/'.CONFIG::g()->core_template;
 		$this->compile_dir = 'cache';
 		$this->caching = true;
 		$this->force_compile = true;
+		parent::__construct();
 	}
 	
 	public function __clone() {
@@ -108,8 +107,7 @@ class debug {
 	private static $instance;
 
 	private function __construct() {
-		global $ACM_VERSION;
-		$this->debug_text = ('ACM VERSION : '.$ACM_VERSION.'<br />'."\n\r");
+		$this->debug_text = ('ACM VERSION : '.CONFIG::g()->acm_version.'<br />'."\n\r");
 	}
 	
 	public function __clone() {
@@ -206,8 +204,7 @@ class lang {
 	private static $instance;
 
 	private function __construct() {
-		global $language;
-		$this->currentLanguage = $language;
+		$this->currentLanguage = CONFIG::g()->core_language;
 		$this->loadFile();
 		$this->nl2();
 	}
