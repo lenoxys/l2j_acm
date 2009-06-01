@@ -93,6 +93,7 @@ span.field input {margin-left: 7px; position:relative;*top:-1px;border:none;padd
 hr.clear {clear:both;border:none;visibility:hidden;}
 
 em {position:relative;float:left;display:block;color:#f00;width:14px;height:12px;background:url('./images/required.gif') top left no-repeat;text-indent:-2000px;font-size:0;top:7px;margin:0 0 0 10px;}
+em.me {position: inherit;float: none;display: inline-block;color:#f00;width:14px;height:14px;background:url('./images/required.gif') top left no-repeat;text-indent: inherit;font-size:0;margin:0 0 0 0;}
 
 .button {
 	position:relative;

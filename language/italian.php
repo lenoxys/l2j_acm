@@ -19,7 +19,7 @@ $vm['_new_account_text2'] = 'Avrai bisogno di un account per giocare a Lineage I
 
 			<span style="color: red">Non credere a chi dice di essere un GM/admin. NON ABBIAMO BISOGNO DEL TUO <u>ACCOUNT</u> E/O DELLA TUA <u>PASSWORD</u>! NON FORNIRLE MAI A NESSUNO!</span>
 
-			Tutti i campi marcati con <img src="./images/required.gif" width="14" height="14" alt="" /> sono richiesti e devono essere inseriti per comletare la procedura di registrazione con successo.
+			Tutti i campi marcati con <em class="me"></em> sono richiesti e devono essere inseriti per comletare la procedura di registrazione con successo.
 ';
 $vm['_chg_pwd'] = 'Cambia Password';
 $vm['_chg_pwd_text'] = '<span style="color: red">Non credere a chi dice di essere un GM/admin. NON ABBIAMO BISOGNO DEL TUO <u>ACCOUNT</u> E/O DELLA TUA <u>PASSWORD</u>! NON FORNIRLE MAI A NESSUNO!</span>';

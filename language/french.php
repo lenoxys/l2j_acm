@@ -19,7 +19,7 @@ $vm['_new_account_text2'] = 'Vous devez avoir un Compte PlayNC pour ajouter un c
 
 			<span style="color: red">Ne croyer pas les personnes qui se disent GM/Admin. Nous n\'avons pas besoin de votre <u>compte utilisateur</u> et/ou de votre <u>mot de passe</u>! Ne jamais donner ses informations!</span>
 
-			Tous les champs marqués d\'un <img src="./images/required.gif" width="14" height="14" alt="" /> sont obligatoires et doivent être complêtés avant de procéder à l\'enregistrement.
+			Tous les champs marqués d\'un <em class="me"></em> sont obligatoires et doivent être complêtés avant de procéder à l\'enregistrement.
 ';
 $vm['_chg_pwd'] = 'Changer votre mot de passe';
 $vm['_chg_pwd_text'] = '<span style="color: red">Ne croyer pas les personnes qui se disent GM/Admin. Nous n\'avons pas besoin de votre <u>compte utilisateur</u> et/ou de votre <u>mot de passe</u>! Ne jamais donner ses informations!</span>';

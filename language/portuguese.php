@@ -17,7 +17,7 @@ $vm['_new_account_text2'] = 'Sua conta &eacute; instransfer&iacute;vel, seu logi
 
 			<span style="color: red">N&atilde;o confie em quem se diz ser Admin/GM. N&Oacute;S N&Atilde;O PRECISAMOS DA SUA CONTA E/OU SENHA! NUNCA INFORME ESSES DADOS! </span>
 
-			Todos campos marcado com um <img src="./images/required.gif" width="14" height="14" alt="" /> s&atilde;o requeridos e precisam ser preenchidos para completar o formul&aacute;rio de registro.
+			Todos campos marcado com um <em class="me"></em> s&atilde;o requeridos e precisam ser preenchidos para completar o formul&aacute;rio de registro.
 ';
 $vm['_chg_pwd'] = 'Mude sua senha';
 $vm['_chg_pwd_text'] = '<span style="color: red">N&atilde;o confie em quem se diz ser Admin/GM. N&Oacute;S N&Atilde;O PRECISAMOS DA SUA CONTA E/OU SENHA! NUNCA INFORME ESSES DADOS! </span>';
