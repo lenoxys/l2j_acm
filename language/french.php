@@ -159,4 +159,6 @@ $vm['_back']							= 'Annuler';
 
 $vm['_REGWARN_UNAME3']					= 'Merci de choisir un pseudo différent de votre mot de passe.';
 
+$vm['_cookie_prob']						= 'Vous devez autoriser les cookies de votre navigateur internet avant de pouvoir vous connectez ou creez un nouveau compte utilisateur.';
+
 ?>
