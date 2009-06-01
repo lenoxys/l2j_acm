@@ -22,6 +22,6 @@
 			<hr class="clear" />
 			<h2>{$vm.new_account}</h2>
 			<p>{$vm.new_account_text}</p>
-			<input type="button" onClick="document.location='./{$session_id}&action=show_create'" class="button" value="{$vm.create_button}" />
+			<input type="button" onClick="document.location='./?{$session_id}&action=show_create'" class="button" value="{$vm.create_button}" />
             
 {include file="footer.tpl"}
