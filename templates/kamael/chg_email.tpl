@@ -8,7 +8,7 @@
 		</div>
 
 		<div class="reg_form">
-			<form name="create" method="POST" action="./">
+			<form name="create" method="POST" action="./{$session_id}">
 				<h1>&nbsp;</h1>
 {if isset($error)}
 				<div class="error"><div class="error_container">{$error}</div></div>
@@ -18,7 +18,7 @@
 				<div class="field"><label>{$vm.email2}</label><span class="field"><input type="text" id="Lemail2" name="Lemail2" autocomplete="off"></span></div>
 				<input type="hidden" name="action" value="chg_email_form">
 				<hr class="clear">
-				<input type="button" onClick="document.location='./'" class="button" value="{$vm.return}" />
+				<input type="button" onClick="document.location='./{$session_id}'" class="button" value="{$vm.return}" />
 				<input type="submit" class="button" value="{$vm.chg_button}">
 			</form>
 		</div>

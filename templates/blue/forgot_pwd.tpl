@@ -8,7 +8,7 @@
 		</div>
 
 		<div class="reg_form">
-			<form name="create" method="POST" action="./">
+			<form name="create" method="POST" action="./{$session_id}">
 				<h1>&nbsp;</h1>
 {if isset($error)}
 				<div class="error"><div class="error_container">{$error}</div></div>
@@ -16,11 +16,11 @@
 				<div class="field"><label>{$vm.account}</label><span class="field"><input type="text" id="Luser" name="Luser" value="{$vm.post_id}" autocomplete="off" maxlength="{$vm.account_length}" /></span></div>
 				<div class="field"><label>{$vm.email}</label><span class="field"><input type="text" id="Lemail" name="Lemail" value="{$vm.post_email}" autocomplete="off"></span></div>
 {if isset($image)}
-				<div class="field"><label><img src="./img.php" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span></div>
+				<div class="field"><label><img src="./img.php{$session_id}" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span></div>
 {/if}
 				<input type="hidden" name="action" value="forgot_pwd">
 				<hr class="clear">
-				<input type="button" onClick="document.location='./'" class="button" value="{$vm.return}" />
+				<input type="button" onClick="document.location='./{$session_id}'" class="button" value="{$vm.return}" />
 				<input type="submit" class="button" value="{$vm.forgot_button}">
 			</form>
 		</div>

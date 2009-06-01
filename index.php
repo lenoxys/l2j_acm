@@ -19,8 +19,10 @@ require './classes/account.class.php';
 require './classes/world.class.php';
 require './classes/character.class.php';
 
-if(SID != '')
-	MSG::add_error(LANG::i18n('_cookie_prob'));
+if(SID != '') {
+	SmartyObject::getInstance()->assign('session_id', '?'.SID);
+	DEBUG::add(LANG::i18n('_cookie_prob'));
+}
 
 $action = (!empty($_GET['action'])) ? $_GET['action'] : 'index';
 $action = (!empty($_POST['action'])) ? $_POST['action'] : $action;

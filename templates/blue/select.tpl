@@ -15,7 +15,7 @@
 {/section}{/dynamic}
 					</ul>
                     <hr class="clear">
-                    <input type="button" onClick="document.location='./'" class="button" value="{$vm.return}" />
+                    <input type="button" onClick="document.location='./{$session_id}'" class="button" value="{$vm.return}" />
 				</p>
 
 {include file="footer.tpl"}

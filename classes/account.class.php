@@ -500,7 +500,11 @@ class account{
 		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$this->login."' , '".$email."', '".$code."');";
 		MYSQL::g()->query($sql);
 		
-		EMAIL::OP()->operator($this->login, 'email_validation', $code, $email);
+		if(!CONFIG::g()->core_act_email) {
+			$this->email_validation($this->login, $code);
+		}else{
+			EMAIL::OP()->operator($this->login, 'email_validation', $code, $email);
+		}
 
 		return true;
 	}

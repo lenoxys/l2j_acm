@@ -68,15 +68,15 @@ class core {
 		
 		$modules = array();
 		
-		$modules[] = array('name'=>LANG::i18n('_chg_pwd'), 'link'=>'?action=show_chg_pwd');
+		$modules[] = array('name'=>LANG::i18n('_chg_pwd'), 'link'=>'?action=show_chg_pwd'.$this->session_url());
 		
 		if ($this->allow_char_mod())
-			$modules[] = array('name'=>LANG::i18n('_accounts_services'), 'link'=>'?action=acc_serv');
+			$modules[] = array('name'=>LANG::i18n('_accounts_services'), 'link'=>'?action=acc_serv'.$this->session_url());
 		
 		if ($this->account->can_chg_email())
-			$modules[] = array('name'=>LANG::i18n('_chg_email'), 'link'=>'?action=show_chg_email');
+			$modules[] = array('name'=>LANG::i18n('_chg_email'), 'link'=>'?action=show_chg_email'.$this->session_url());
 		
-		$modules[] = array('name'=>LANG::i18n('_logout_link'), 'link'=>'?action=loggout');
+		$modules[] = array('name'=>LANG::i18n('_logout_link'), 'link'=>'?action=loggout'.$this->session_url());
 		
 		SmartyObject::getInstance()->assign('modules', $modules);
 		
@@ -307,16 +307,16 @@ class core {
 		$items = array();
 		
 		if(CONFIG::g()->service_fix)
-			$items[] = array('id' => 0, 'name' => LANG::i18n('_character_fix'), 'link' => '?action=char_fix_l');
+			$items[] = array('id' => 0, 'name' => LANG::i18n('_character_fix'), 'link' => '?action=char_fix_l'.$this->session_url());
 		
 		if(CONFIG::g()->service_unstuck)
-			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_unstuck'), 'link' => '?action=char_unstuck_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_unstuck'), 'link' => '?action=char_unstuck_l'.$this->session_url());
 		
 		if(CONFIG::g()->service_sex)
-			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_sex'), 'link' => '?action=char_sex_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_sex'), 'link' => '?action=char_sex_l'.$this->session_url());
 		
 		if(CONFIG::g()->service_name)
-			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_name'), 'link' => '?action=char_name_l');
+			$items[] = array('id' => 1, 'name' => LANG::i18n('_character_name'), 'link' => '?action=char_name_l'.$this->session_url());
 		
 		SmartyObject::getInstance()->assign('items', $items);
 		
@@ -356,12 +356,12 @@ class core {
 		
 		foreach  ($worlds as $world) {
 			foreach  ($world->get_chars() as $char) {
-				$items[] = array('id' => $world->get_id(), 'name' => $world->get_name() . ' : ' .$char->getName(), 'link' => '?action=char_'.$mod.'&wid='.$world->get_id().'&cid='.$char->getId());
+				$items[] = array('id' => $world->get_id(), 'name' => $world->get_name() . ' : ' .$char->getName(), 'link' => '?action=char_'.$mod.'&wid='.$world->get_id().'&cid='.$char->getId().$this->session_url());
 			}
 		}
 		
 		if(empty($items))
-			$items[] = array('id' => 0, 'name' => LANG::i18n('_any_character'), 'link' => '?action=acc_serv');
+			$items[] = array('id' => 0, 'name' => LANG::i18n('_any_character'), 'link' => '?action=acc_serv'.$this->session_url());
 		
 		SmartyObject::getInstance()->assign('items', $items);
 		
@@ -425,8 +425,8 @@ class core {
 		));
 		
 		$items = array();
-		$items[] = array('id' => 1, 'name' => LANG::i18n('_confirm'), 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId());
-		$items[] = array('id' => 1, 'name' => LANG::i18n('_back'), 'link' => '?action=char_'.$mod.'_l');
+		$items[] = array('id' => 1, 'name' => LANG::i18n('_confirm'), 'link' => '?action=char_'.$mod.'_confirm&wid='.$char->getWorldId().'&cid='.$char->getId().$this->session_url());
+		$items[] = array('id' => 1, 'name' => LANG::i18n('_back'), 'link' => '?action=char_'.$mod.'_l'.$this->session_url());
 		SmartyObject::getInstance()->assign('items', $items);
 		
 		SmartyObject::getInstance()->register_block('dynamic', 'smarty_block_dynamic', false);
@@ -514,6 +514,9 @@ class core {
 	}
 	
 	private function allow_char_mod() {
+	
+		if(SID != '')					// SID by URL aren't safe we prohibit accounts services when we can't use cookies
+			return false;
 		
 		if(!CONFIG::g()->service_allow)
 			return false;
@@ -522,6 +525,13 @@ class core {
 			return false;
 		
 		return true;
+	}
+	
+	private function session_url() {
+		if(SID != '')
+			return '&'.(SID);
+		
+		return '';
 	}
 
 	private function secure_post() {

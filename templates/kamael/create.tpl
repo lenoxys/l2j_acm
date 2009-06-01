@@ -10,7 +10,7 @@
 {/if}
 			</div>
 
-			<form name="create" method="POST" action="./">
+			<form name="create" method="POST" action="./{$session_id}">
 				<h1>&nbsp;</h1>
 {if isset($error)}
 				<div class="error"><div class="error_container">{$error}</div></div>
@@ -20,11 +20,11 @@
 				<div class="field"><label>{$vm.password2}</label><span class="field"><input type="password" id="Lpwd2" name="Lpwd2" autocomplete="off" /></span><em>&#8226;</em></div>
 				<div class="field"><label>{$vm.email}</label><span class="field"><input type="text" id="Lemail" name="Lemail" value="{$vm.post_email}" autocomplete="off"></span><em>&#8226;</em></div>
 {if isset($image)}
-				<div class="field"><label><img src="./img.php" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span><em>&#8226;</em></div>
+				<div class="field"><label><img src="./img.php{$session_id}" id="L_image" onclick="reloadImage(this);"></label><span class="field"><input type="text" id="Limage" name="Limage" autocomplete="off"></span><em>&#8226;</em></div>
 {/if}
 				<input type="hidden" name="action" value="registration">
 				<hr class="clear">
-				<input type="button" onClick="document.location='./'" class="button" value="{$vm.return}" />
+				<input type="button" onClick="document.location='./{$session_id}'" class="button" value="{$vm.return}" />
 				<input class="button" type="submit" value="{$vm.create_button}">
 			</form>
 
