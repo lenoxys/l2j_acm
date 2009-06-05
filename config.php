@@ -64,12 +64,12 @@ CONFIG::g()->cb('core_interlude', false);										// If you are using interlude
 //################################### Characters Config ####################################
 //##########################################################################################
 
-CONFIG::g()->cb('service_allow', true);										// Enable Account Services
+CONFIG::g()->cb('service_allow', false);										// Enable Account Services
 
 CONFIG::g()->cb('service_name', false);											// Enable Account services feature (change name)
 CONFIG::g()->cs('service_name_regex', '`^[[:alnum:]]{3,16}$`');					// allow alphanumeric character in char name (3-16 char.)
 
-CONFIG::g()->cb('service_sex', true);											// Enable Account services feature (change gender)
+CONFIG::g()->cb('service_sex', false);											// Enable Account services feature (change gender)
 CONFIG::g()->ci('service_sex_time', 7);											// Need to wait 7 days after change gender before to change another time
 CONFIG::g()->ca('service_sex_item_female', array(8559,8913,8917));				// Check female-use only items before to change gender
 CONFIG::g()->ca('service_sex_item_male', array(8923));							// Check male-use only items before to change gender
