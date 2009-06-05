@@ -124,9 +124,9 @@ class account{
 
 		if(!CONFIG::g()->core_act_email) {
 			$this->valid_account($code);
-			MSG::add_valid(LANG::i18n('_account_created'));
+			MSG::add_valid(LANG::i18n('_account_created_act'));
 		}else{
-			MSG::add_valid(LANG::i18n('_account_actived'));
+			MSG::add_valid(LANG::i18n('_account_created_noact'));
 			EMAIL::OP()->operator($login, 'created_account_validation', $code);
 		}
 
