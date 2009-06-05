@@ -69,7 +69,7 @@ class character {
 		$row = @mysql_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
-		$this->base_class	= $row->base_class;
+		$this->base_class	= (int)$row->base_class;
 		$this->sex			= $row->sex;
 		$this->accesslevel	= $row->accesslevel;
 		$this->x			= $row->x;
@@ -336,7 +336,7 @@ class character {
 			return false;
 		}
 		
-		if( 123 <= $this->base_class && $this->base_class >= 136 ) {		// Check if the character is kamael
+		if( 123 >= $this->base_class && $this->base_class <= 136 ) {		// Check if the character is kamael
 			MSG::add_error(LANG::i18n('_acc_serv_gender_kamael'));
 			return false;
 		}
