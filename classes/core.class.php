@@ -7,19 +7,18 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 class core {
 
 	public function __construct() {
-		$this->account = ACCOUNT::load();
 		$this->secure_post();
 	}
 
 	public function index() {
-		if($this->account->verif())
+		if(ACCOUNT::load()->verif())
 			$this->show_account();
 		else
 			$this->show_login();
 	}
 
 	public function loggout() {
-		$this->account->loggout();
+		ACCOUNT::load()->loggout();
 		MSG::add_valid(LANG::i18n('_logout'));
 		$this->index();
 	}
@@ -33,7 +32,7 @@ class core {
 
 			$this->secure_post();
 
-			if(!$this->account->auth($_POST['Luser'], $_POST['Lpwd'], @$_POST['Limage']))
+			if(!ACCOUNT::load()->auth($_POST['Luser'], $_POST['Lpwd'], @$_POST['Limage']))
 				MSG::add_error(LANG::i18n('_wrong_auth'));
 		}
 
@@ -73,7 +72,7 @@ class core {
 		if ($this->allow_char_mod())
 			$modules[] = array('name'=>LANG::i18n('_accounts_services'), 'link'=>'?action=acc_serv'.$this->session_url());
 		
-		if ($this->account->can_chg_email())
+		if (ACCOUNT::load()->can_chg_email())
 			$modules[] = array('name'=>LANG::i18n('_chg_email'), 'link'=>'?action=show_chg_email'.$this->session_url());
 		
 		$modules[] = array('name'=>LANG::i18n('_logout_link'), 'link'=>'?action=loggout'.$this->session_url());
@@ -86,7 +85,7 @@ class core {
 
 	public function registration() {
 
-		if($this->account->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
+		if(ACCOUNT::load()->create($_POST['Luser'], $_POST['Lpwd'], $_POST['Lpwd2'], $_POST['Lemail'], @$_POST['Limage'])) {
 			$this->show_login();
 		}else{
 			$this->show_create(true);
@@ -154,7 +153,7 @@ class core {
 
 	public function forgot_pwd() {
 
-		if($this->account->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
+		if(ACCOUNT::load()->forgot_pwd($_POST['Luser'], $_POST['Lemail'], @$_POST['Limage'])) {
 			MSG::add_valid(LANG::i18n('_password_request'));
 			$this->index();
 		}else{
@@ -166,7 +165,7 @@ class core {
 
 	public function forgot_pwd_email() {
 
-		if($this->account->forgot_pwd2($_GET['login'], $_GET['key'])) {
+		if(ACCOUNT::load()->forgot_pwd2($_GET['login'], $_GET['key'])) {
 			MSG::add_valid(LANG::i18n('_password_reseted'));
 			$this->index();
 		}else{
@@ -179,7 +178,7 @@ class core {
 
 	public function chg_pwd_form() {
 
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -187,7 +186,7 @@ class core {
 
 		$account = unserialize($_SESSION['acm']);
 
-		if($this->account->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
+		if(ACCOUNT::load()->edit_password($_POST['Lpwdold'], $_POST['Lpwd'], $_POST['Lpwd2'])) {
 			MSG::add_valid(LANG::i18n('_change_pwd_valid'));
 			$this->show_account();
 		}
@@ -199,7 +198,7 @@ class core {
 
 	public function show_chg_pwd() {
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -221,20 +220,18 @@ class core {
 
 	public function chg_email_form() {
 
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
 
-		if(!$this->account->can_chg_email()) {
+		if(!ACCOUNT::load()->can_chg_email()) {
 			$this->index();
 			return;
 		}
 
-		$this->account = unserialize($_SESSION['acm']);
-
-		if($this->account->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
+		if(ACCOUNT::load()->edit_email($_POST['Lpwd'], $_POST['Lemail'], $_POST['Lemail2'])) {
 			MSG::add_valid(LANG::i18n('_change_email_valid'));
 			$this->show_account();
 		}
@@ -246,13 +243,13 @@ class core {
 
 	public function show_chg_email() {
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
 		}
 
-		if(!$this->account->can_chg_email()) {
+		if(!ACCOUNT::load()->can_chg_email()) {
 			$this->index();
 			return;
 		}
@@ -274,7 +271,7 @@ class core {
 
 	public function email_validation() {
 
-		if($this->account->email_validation($_GET['login'], $_GET['key'])) {
+		if(ACCOUNT::load()->email_validation($_GET['login'], $_GET['key'])) {
 			MSG::add_valid(LANG::i18n('_email_activated'));
 		}else{
 			MSG::add_error(LANG::i18n('_control'));
@@ -287,7 +284,7 @@ class core {
 	
 	public function acc_serv(){
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -327,7 +324,7 @@ class core {
 	
 	private function char_ufl($mod = null){
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -388,7 +385,7 @@ class core {
 	
 	private function char_uf($mod = null) {
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -451,7 +448,7 @@ class core {
 
 	private function char_ufc($mod = null) {
 		
-		if(!$this->account->verif()) {
+		if(!ACCOUNT::load()->verif()) {
 			MSG::add_error(LANG::i18n('_WARN_NOT_LOGGED'));
 			$this->index();
 			return;
@@ -503,7 +500,7 @@ class core {
 
 	public function activation() {
 
-		if(!$this->account->valid_account(htmlentities($_GET['key'])))
+		if(!ACCOUNT::load()->valid_account(htmlentities($_GET['key'])))
 			MSG::add_error(LANG::i18n('_activation_control'));
 		else
 			MSG::add_valid(LANG::i18n('_account_actived'));
