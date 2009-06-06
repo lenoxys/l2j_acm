@@ -91,7 +91,7 @@ CONFIG::g()->cb('email_smtp_use', false);										// Set to true if you want us
 CONFIG::g()->cs('email_smtp_address', 'smtp.server.com');						// Address of the smtp server
 CONFIG::g()->ci('email_smtp_port', 25);											// Port of the smtp server
 CONFIG::g()->cs('email_smtp_login', '');										// login of the smtp server if you need authentication
-CONFIG::g()->cs('email_smtp_passwor', '');										// password of the smtp server if you need authentication
+CONFIG::g()->cs('email_smtp_password', '');										// password of the smtp server if you need authentication
 CONFIG::g()->cs('email_smtp_domain', '');										// domain of your host
 
 //##########################################################################################

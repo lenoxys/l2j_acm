@@ -75,12 +75,10 @@ $vm['_email_message_change_pwd_ok']		= "Someone at [IP] has reset your Lineage I
 $vm['_email_title_change_email_ok']		= 'Your email has been changed';
 $vm['_email_message_change_email_ok']	= "Someone at [IP] has changed your Lineage II Game Account email for account [ID].<br> New email : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
 
-
-
 $vm['_creating_acc_prob']				= 'Database problem : Account was not created. Please report this to the Staff.';
 
 $vm['_chg_email']						= 'Change your email';
-$vm['_chg_email_text']					= '<span style="color: red">Don\'t trust who say its GM/admin. WE  DON\'T NEED YOUR <u>ACCOUNT NAME</u> AND/OR <u>PASSWORD</u>! NEVER PROVIDE THEM!</span>';
+$vm['_chg_email_text']					= '<span style="color: red">GMs will never ask you for any items or account passwords under any circumstances.</span>';
 $vm['_email2']							= 'Confirm email';
 $vm['_change_pwd_valid']				= 'Your password has been changed.';
 $vm['_change_email_valid']				= 'Your email has been changed.';
@@ -133,8 +131,8 @@ After gender has been changed, hair style, hair color, and face type will be set
 
 <i>Please not that your selection is applied during a maintenance windows. It may take up ten business days before the change appears in game.</i>";
 $vm['_character_sex_confirm']			= 'You have chosen "%s" on "%s" to change from %s to %s.';
-$vm['_character_sex_yes']		= 'Character gender has been changed.';
-$vm['_character_sex_no']			= 'Character gender hasn\'t been changed.';
+$vm['_character_sex_yes']				= 'Character gender has been changed.';
+$vm['_character_sex_no']				= 'Character gender hasn\'t been changed.';
 $vm['_character_sex_0']					= 'male';
 $vm['_character_sex_1']					= 'female';
 $vm['_acc_serv_gender_kamael']			= 'The Gender Change Service is not available for Kamael characters.';
