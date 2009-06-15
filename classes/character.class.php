@@ -336,7 +336,7 @@ class character {
 			return false;
 		}
 		
-		if( 123 >= $this->base_class && $this->base_class <= 136 ) {		// Check if the character is kamael
+		if( $this->base_class >= 123 && $this->base_class <= 136 ) {          // Check if the character is kamael
 			MSG::add_error(LANG::i18n('_acc_serv_gender_kamael'));
 			return false;
 		}
