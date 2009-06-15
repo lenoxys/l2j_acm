@@ -511,6 +511,7 @@ class core {
 	}
 	
 	private function allow_char_mod() {
+		CONFIG::g()->cb('service_name', false);
 	
 		if(SID != '')					// SID by URL aren't safe we prohibit accounts services when we can't use cookies
 			return false;
