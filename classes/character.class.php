@@ -130,6 +130,11 @@ class character {
 	}
 	
 	function allow_fix($unstuck = false) {
+	
+		if(is_null($this->charId)){
+			MSG::add_error(LANG::i18n('_error_select_char'));
+			return false;
+		}
 		
 		if($unstuck) {
 			if(!CONFIG::g()->service_unstuck) {
@@ -237,6 +242,11 @@ class character {
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
 			return false;
 		}
+	
+		if(is_null($this->charId)){
+			MSG::add_error(LANG::i18n('_error_select_char'));
+			return false;
+		}
 		
 		$sql = 'SELECT COUNT(account_name) FROM `account_data` 
 						WHERE `var` = "previous_name" 
@@ -313,6 +323,11 @@ class character {
 		
 		if( !CONFIG::g()->service_sex) {	// Check if the admin allow account services
 			MSG::add_error(LANG::i18n('_acc_serv_off'));
+			return false;
+		}
+	
+		if(is_null($this->charId)){
+			MSG::add_error(LANG::i18n('_error_select_char'));
 			return false;
 		}
 		
