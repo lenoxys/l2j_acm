@@ -13,7 +13,7 @@ CONFIG::g()->ca('login_server', array(
 									'hostname' => 'localhost',					// login host database DB
 									'user' => 'root',							// login user
 									'password' => '',							// login password
-									'database' => 'l2jdb_login'						// login database name
+									'database' => 'l2jdb'						// login database name
 								));
 
 //##########################################################################################
