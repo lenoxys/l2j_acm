@@ -1,6 +1,6 @@
 <?php
 
-
+// Thanks Tiago Tenório de Albuquerque
 
 $vm['_error_db_connect'] = 'N&atilde;o foi poss&iacute;vel conectar-se ao servidor do banco de dados';
 $vm['_error_db_select'] = 'N&atilde;o foi poss&iacute;vel conectar-se ao banco de dados';
@@ -12,7 +12,7 @@ $vm['_password'] = 'Senha';
 $vm['_login_button'] = 'Logar';
 $vm['_return'] = 'Voltar';
 $vm['_new_account'] = 'Nova Conta';
-$vm['_new_account_text'] = 'Para jogar no Lineage II Private Server voc&ecirc; precisa criar uma conta.';
+$vm['_new_account_text'] = 'Para jogar no [SERVER] voc&ecirc; precisa criar uma conta.';
 $vm['_new_account_text2'] = 'Sua conta &eacute; instransfer&iacute;vel, seu login e sua senha s&atilde;o secretos e nunca devem ser revelados a ningu&eacute;m, em hip&oacute;tese alguma!
 
 			<span style="color: red">N&atilde;o confie em quem se diz ser Admin/GM. N&Oacute;S N&Atilde;O PRECISAMOS DA SUA CONTA E/OU SENHA! NUNCA INFORME ESSES DADOS! </span>
@@ -40,8 +40,8 @@ $vm['_email_registered'] = 'Este e-mail j&aacute; est&aacute; registrado em noss
 $vm['_image_control'] = 'Problema no Controle de Imagem';
 $vm['_pwd_difference'] = 'Por favor repita a senha';
 $vm['_pwd_incorrect'] = 'Por favor utilize outra senha';
-$vm['_image_control_desc'] = 'Como medida de preven√ß√£o anti-spam √© necess√°rio que voc√™ entre com o c√≥digo de confirma√ß√£o.
-<p style="color: red">Se voc√™ n√£o consegue ler a imagem ou est√° com problemas, <u>clique em cima da imagem para que ela seja recarregada</u>.</p> <p>Alguns usu√°rios do Internet Explorer podem ter problemas com as configura√ß√µes de seguran√ßa do navegador, acesse o Guia do Usu√°rio clicando <a href=http://www.l2speed.org/pt/guiai.php>AQUI.</a></p><p><span style="color: red">Caso voc√™ ainda tenha problemas, fa√ßa o download do <u>Mozilla Firefox.</u></span></p>';
+$vm['_image_control_desc'] = 'Como medida de prevenção anti-spam é necessário que você entre com o código de confirmação.
+<p style="color: red">Se você não consegue ler a imagem ou está com problemas, <u>clique em cima da imagem para que ela seja recarregada</u>.</p>';
 $vm['_account_created'] = 'Sua conta foi criada.';
 $vm['_account_actived'] = 'Sua conta foi ativada.';
 $vm['_REGWARN_UNAME1'] = 'Por favor insira um nome.';
@@ -64,14 +64,14 @@ $vm['_control'] = 'A Chave de Controle incorreta';
 $vm['_email_title_verif']			= 'Confirme seu Email - [SERVER]';
 $vm['_email_message_verif']			= "Seu c&oacute;digo de verifica&ccedil;&atilde;o &eacute;: [CODE].<br><br>Voc&ecirc; pode completar seu registro clicando <a href=\"[URL]\">AQUI</a>.<br><br>Se voc&ecirc; tem alguma d&uacute;vida sobre como se registrar, por favor entre em contato [EMAIL_SUPPORT].";
 $vm['_email_title_ok']				= 'Bem Vindo ao [SERVER]!';
-$vm['_email_message_ok']			= "Obrigado por se regisdtrar no [SERVER]!<br><br>Sua Conta no[SERVER] &eacute;: [ID]<br><br>Por &uacute;ltimo, se voc&ecirc; tem alguma d&uacute;vida e n&atilde;o consegue encontrar a resposta nossa equipe de suporte est√° sempre dispon&iacute;vel atrav√©s do email [EMAIL].<br><br>Mais uma vez, obrigado por se juntar ao mundo do [SERVER]. Nos veremos dentro do Jogo, At&eacute; l&aacute;!<br><br>A Equipe [SERVER]";
+$vm['_email_message_ok']			= "Obrigado por se regisdtrar no [SERVER]!<br><br>Sua Conta no[SERVER] &eacute;: [ID]<br><br>Por &uacute;ltimo, se voc&ecirc; tem alguma d&uacute;vida e n&atilde;o consegue encontrar a resposta nossa equipe de suporte está sempre dispon&iacute;vel através do email [EMAIL].<br><br>Mais uma vez, obrigado por se juntar ao mundo do [SERVER]. Nos veremos dentro do Jogo, At&eacute; l&aacute;!<br><br>A Equipe [SERVER]";
 $vm['_email_title_change_pwd']		= 'Requerer nova senha';
 $vm['_email_message_change_pwd']	= "Algu&eacute;m com o IP: [IP] quer resetar a senha da sua conta [ID] do [SERVER].<br>Clique <a href=\"[URL]\">AQUI</a> para criar uma nova senha.<br>Se voc&ecirc; n&atilde;o solicitou esta mudan&ccedil;a, por favor desconsidere este email.'.<br><br>The [SERVER] Team";
 $vm['_email_title_change_pwd_ok']	= 'Senha resetada com sucesso';
 $vm['_email_message_change_pwd_ok']	= "Algu&eacute;m com o IP: [IP] quer resetar a senha da sua conta [ID] do [SERVER].<br> Nova Senha : [CODE]<br> Se voc&ecirc; n&atilde;o solicitou esta mudan&ccedil;a, entre em contato com nosso suporte o quanto antes.";
 
-$vm['_email_title_change_email_ok']	= 'Your email has been changed';
-$vm['_email_message_change_email_ok']	= "Someone at [IP] has changed your Lineage II Game Account email for account [ID].<br> New email : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
+$vm['_email_title_change_email_ok']	= 'Seu email foi mudado';
+$vm['_email_message_change_email_ok']	= "Alguem no endere&ccedil;o [IP] mudou o email da sua Conta Lineage II [ID].<br> Novo email : [CODE]<br> Se voc&ecirc; n&atilde;o fez esta mudan&ecirc;a, por favor entre em contato imediatamente no [EMAIL_SUPPORT].";
 
 $vm['_creating_acc_prob'] = 'Falha no Banco de Dados : Conta n&atilde;o criada. Por favor, comunique este erro para a Staff.';
 
@@ -85,15 +85,15 @@ $vm['_REGWARN_VEMAIL1']		= 'Email e verifica&ccedil;&atilde;o n&atilde;o confere
 $vm['_TERMS_AND_CONDITION']	= "<h2>Termos e Condi&ccedil;&otilde;es</h2><br /><br />1. O GameMaster est&aacute; sempre certo.<br />2. Se o GameMaster est&aacute; errado, leia a primeira regra.";
 $vm['_accept_button'] = 'Aceito';
 
-$vm['_select_worlds']			= 'Select your Lineage 2 World';
-$vm['_select_character']		= 'Select your character';
-$vm['_character_fix']			= 'Fix your character';
-$vm['_character_unstuck']		= 'Move your character to the nearest town';
-$vm['_character_unstuck_yes']	= 'Your character has been moved to the nearest town.';
-$vm['_character_unstuck_no']	= 'Your character hasn\'t been moved to the nearest town.';
-$vm['_character_fix_yes']		= 'Your character has been fixed.';
-$vm['_character_fix_no']		= 'Your character hasn\'t been fixed.';
+$vm['_select_worlds']			= 'Selecione seu Mundo Lineage 2';
+$vm['_select_character']		= 'Selecione seu personagem';
+$vm['_character_fix']			= 'Corrigir seu personagem';
+$vm['_character_unstuck']		= 'Mover seu personagem para a cidade mais proxima.';
+$vm['_character_unstuck_yes']	= 'Seu personagem foi movido para a cidade mais proxima.';
+$vm['_character_unstuck_no']	= 'Seu personagem não foi movido para a cidade mais proxima.';
+$vm['_character_fix_yes']		= 'Seu personagem foi corrigido.';
+$vm['_character_fix_no']		= 'Seu personagem não foi corrigido.';
 
-$vm['_REGWARN_UNAME3'] = 'Please choose an username different of your password.';
+$vm['_REGWARN_UNAME3'] = 'Por favor escolha um nome de usuario diferente da sua senha.';
 
 ?>
