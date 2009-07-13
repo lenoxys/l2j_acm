@@ -162,4 +162,6 @@ $vm['_REGWARN_UNAME3']					= 'Please choose an username different of your passwo
 
 $vm['_cookie_prob']						= 'You will need to activate the cookies in your web browser before log in or create a new account.';
 
+$vm['_allow_with_karma']				= 'Account services are avaible only for non-karmed player.';
+
 ?>

@@ -35,6 +35,7 @@ class CONFIG {
 	private $core_interlude = false;
 
 	private $service_allow = false;
+	private $service_allow_with_karma = false;
 	private $service_name = false;
 	private $service_name_regex = '`^[[:alnum:]]{3,16}$`';
 	private $service_sex = false;

@@ -64,7 +64,7 @@ class character {
 	}
 	
 	function load() {
-		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
+		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level`, `karma` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$row = @mysql_fetch_object($rslt);
 		
@@ -77,6 +77,7 @@ class character {
 		$this->online		= $row->online;
 		$this->clanid		= $row->clanid;
 		$this->level		= $row->level;
+		$this->karma		= $row->karma;
 		
 		return true;
 	}
@@ -129,10 +130,25 @@ class character {
 		return true;
 	}
 	
+	function allow_with_karma() {
+		if(CONFIG::g()->service_allow_with_karma)
+			return true;
+		
+		if($this->karma != 0)
+			return false;
+		
+		return true;
+	}
+	
 	function allow_fix($unstuck = false) {
 	
 		if(is_null($this->charId)){
 			MSG::add_error(LANG::i18n('_error_select_char'));
+			return false;
+		}
+		
+		if(!$this->allow_with_karma()){
+			MSG::add_error(LANG::i18n('_allow_with_karma'));
 			return false;
 		}
 		
