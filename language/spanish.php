@@ -15,7 +15,7 @@ $vm['_new_account'] = 'Nueva Cuenta';
 $vm['_new_account_text'] = 'Para jugar a Lineage II, servidor privado, usted debe crear una cuenta.';
 $vm['_new_account_text2'] = 'Usted necesitará una cuenta para jugar Lineage II. Si usted ya tiene una cuenta, por favor identifique se.
 
-            ¡Su cuenta no es transferible, y por tanto su nombre de cuenta como la contraseña deben ser confidenciales y no puede ser prestadas o dadas nadie!
+            Su cuenta no es transferible, y por tanto su nombre de cuenta como la contraseña deben ser confidenciales y no puede ser prestadas o dadas nadie!
 
             <span style="color: red">No confíe en el GM/Admin, que pida su cuenta. No necesitamos la cuenta <u>Nombre de cuenta</u> o  su <u>Contraseña</u>! ¡Nunca la revele o suministre!</span>
 
