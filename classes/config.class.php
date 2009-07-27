@@ -137,7 +137,7 @@ class CONFIG {
 	// Test if config value is an email
 	public function ce($var, $val) {
 		try {
-			if(!eregi('^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$', $val))
+			if(!preg_match('/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])' . '(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', $val))
 				throw new MyException('('.gettype($val).')'.var_export($val, 1).' set on '.$var.' must be an email');
 			$this->$var = $val;
 		} catch (MyException $e) {
