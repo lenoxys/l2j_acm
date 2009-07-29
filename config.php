@@ -56,7 +56,7 @@ CONFIG::g()->cs('core_language', 'english');									// language use by Account 
 
 CONFIG::g()->cb('core_ack_cond', false);										// User must accept before register ; conditions can be edited on the language file
 
-CONFIG::g()->cs('core_template', 'kamael');										// template directory
+CONFIG::g()->cs('core_template', 'gracia');										// template directory
 
 CONFIG::g()->cb('core_interlude', false);										// If you are using interlude database set to true
 
