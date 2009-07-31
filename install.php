@@ -21,26 +21,26 @@ include ('./classes/config.class.php');
 include ('./config.php');
 
 function check_mysql() {
-	global $ls_host, $ls_user, $ls_pass;
+	$ls = CONFIG::g()->login_server;
 	echo '<li> connected ? <font ';
-	echo (@mysql_connect($ls_host, $ls_user, $ls_pass)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+	echo (@mysql_connect($ls['hostname'], $ls['user'], $ls['password'])) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>'."\n\r";
 }
 
 function check_db() {
-	global $ls_db;
+	$ls = CONFIG::g()->login_server;
 	echo '<li> connected ? <font ';
-	echo (@mysql_select_db($ls_db)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+	echo (@mysql_select_db($ls['database'])) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>'."\n\r";
 
 }
 
 function check_tables() {
-	global $ls_db;
+	$ls = CONFIG::g()->login_server;
 	
 	$tables_req = array('accounts', 'account_data');
 	
-	$sql = 'SHOW TABLES FROM ' . $ls_db;
+	$sql = 'SHOW TABLES FROM ' . $ls['database'];
 	$result = @mysql_query($sql);
 	
 	$tables = array();
@@ -50,13 +50,12 @@ function check_tables() {
 	
 	foreach ($tables_req as $tab) {
 		echo '<li>' . $tab . ' exist ? <font ';
-		echo (array_search($tab, $tables)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+		echo (in_array($tab, $tables)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 		echo '</font></li>'."\n\r";
 	}
 }
 
 function check_fields() {
-	global $ls_db;
 	
 	$table = 'accounts';
 	$fields_req = array('email', 'created_time');
