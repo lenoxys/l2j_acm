@@ -87,6 +87,12 @@ function check_lib($lib_name) {
 	echo '</font></li>'."\n\r";
 }
 
+function check_folder(){
+	$d = substr(sprintf('%o', fileperms('./cache')), -4);
+	echo '<li>cache folder : <font ';
+	echo ((($d == '0755' or $d == '0777')) ? 'color="#00FF00">OK' : 'color="#FF0000">KO');
+	echo '</font></li>';
+}
 
 switch(htmlentities(@$_GET['m'])) {
 	case 'check':
@@ -115,6 +121,11 @@ switch(htmlentities(@$_GET['m'])) {
 	echo '<br />Checking sql parsing on accounts table :'."\n\r";
 	echo '<ul>'."\n\r";
 	check_fields();
+	echo '</ul>'."\n\r";
+	
+	echo '<br />Checking rights of the cache folder :'."\n\r";
+	echo '<ul>'."\n\r";
+	check_folder();
 	echo '</ul>'."\n\r";
 ?>
 	
