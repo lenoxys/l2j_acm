@@ -94,8 +94,20 @@ function check_folder(){
 	echo '</font></li>';
 }
 
+function check_version() {
+	echo '<li>PHP version : '.phpversion().' <font ';
+	echo ((phpversion() >= 5) ? 'color="#00FF00">OK' : 'color="#FF0000">KO');
+	echo '</font></li>';
+}
+
 switch(htmlentities(@$_GET['m'])) {
 	case 'check':
+	
+	echo '<br />Checking php version :'."\n\r";
+	
+	echo '<ul>'."\n\r";
+	check_version();
+	echo '</ul>'."\n\r";
 	
 	echo '<br />Checking extensions loaded :'."\n\r";
 	
