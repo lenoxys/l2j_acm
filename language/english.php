@@ -68,7 +68,7 @@ $vm['_email_message_verif']				= "Your email verification code is : [CODE].<br><
 $vm['_email_title_ok']					= 'Welcome To [SERVER]!';
 $vm['_email_message_ok']				= "Thank you for registering on [SERVER]!<br><br>Your [SERVER] account name is: [ID]<br><br>Lastly, if you have a question and just can't find an answer, our customer support team is always available as near as your email box.<br><br>Once again, thank you for joining the world of [SERVER]. We look forward to seeing you in-game!<br><br>The [SERVER] Team";
 $vm['_email_title_change_pwd']			= 'Password Reset Request';
-$vm['_email_message_change_pwd']		= "Someone at [IP] want reset your Lineage II Game Account password for account [ID].<br>Click <a href=\"[URL]\">here</a> for reset your passord.<br>If you did not make this change, please don't care this mail'.<br><br>The [SERVER] Team";
+$vm['_email_message_change_pwd']		= "Someone at [IP] wants to reset your Lineage II Game Account password for the account [ID].<br>Click <a href=\"[URL]\">here</a> in order to reset your password.<br>If you did not carry out such an order, then please simply ignore this email.<br><br>The [SERVER] Team";
 $vm['_email_title_change_pwd_ok']		= 'Password Reset Success';
 $vm['_email_message_change_pwd_ok']		= "Someone at [IP] has reset your Lineage II Game Account password for account [ID].<br> New password : [CODE]<br> If you did not make this change, please contact support immediately at [EMAIL_SUPPORT].";
 
