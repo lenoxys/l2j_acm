@@ -44,15 +44,15 @@ CONFIG::g()->add_game_server(array(
 
 CONFIG::g()->cs('core_server_name', 'Private Server');							// server name
 
-CONFIG::g()->cb('core_act_img', true);											// Activate image verification ; set false if you want desactivate
+CONFIG::g()->cb('core_act_img', true);											// Activate image verification ; set false if you want deactivate
 
-CONFIG::g()->cb('core_act_email', true);										// Activate email verification ; set false if you want desactivate
-CONFIG::g()->cb('core_same_email', false);										// Allow to have same email with different account ; set false if you want desactivate
+CONFIG::g()->cb('core_act_email', true);										// Activate email verification ; set false if you want deactivate
+CONFIG::g()->cb('core_same_email', false);										// Allow to have same email with different account ; set false if you want deactivate
 CONFIG::g()->cb('core_can_chg_email', false);									// User can change email ; set false if you want prohibit
 
 CONFIG::g()->cbi('core_acc_limit', false);										// How many account can be registered ; set false for unlimited
 
-CONFIG::g()->cs('core_language', 'english');									// language use by Account Manager ; name of language file in language folder
+CONFIG::g()->cs('core_language', 'english');									// language use by the Account Manager ; name of language file in language folder
 
 CONFIG::g()->cb('core_ack_cond', false);										// User must accept before register ; conditions can be edited on the language file
 

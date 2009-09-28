@@ -45,7 +45,7 @@ $vm['_pwd_incorrect']					= 'Please use another password';
 $vm['_image_control_desc']				= 'To prevent automated registrations creation account requires you to enter a confirmation code. If you can\'t read the image control, click on it for reload. ';
 $vm['_account_created_act']				= 'Your account has been created.';
 $vm['_account_created_noact']			= 'Your account has been created but you need to activate by email before log in.';
-$vm['_account_actived']					= 'Your account has been actived.';
+$vm['_account_actived']					= 'Your account has been activated.';
 $vm['_REGWARN_UNAME1']					= 'Please enter a username.';
 $vm['_REGWARN_UNAME2']					= 'Please enter a valid username.';
 $vm['_REGWARN_MAIL']					= 'Please enter a valid e-mail address.';
@@ -84,7 +84,7 @@ $vm['_change_pwd_valid']				= 'Your password has been changed.';
 $vm['_change_email_valid']				= 'Your email has been changed.';
 $vm['_REGWARN_VEMAIL1']					= 'Email and verification do not match, please try again.';
 
-$vm['_TERMS_AND_CONDITION']				= "<h2>Terms and conditions</h2><br /><br />1. GameMaster is always right.<br />2. If GameMaster is wrong refer to the first rule.";
+$vm['_TERMS_AND_CONDITION']				= "<h2>Terms and conditions</h2><br /><br />1. The GameMaster is always right.<br />2. If the GameMaster is wrong, please refer to the first rule.";
 $vm['_accept_button']					= 'Accept';
 
 
