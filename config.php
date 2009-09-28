@@ -44,6 +44,8 @@ CONFIG::g()->add_game_server(array(
 
 CONFIG::g()->cs('core_server_name', 'Private Server');							// server name
 
+CONFIG::g()->cs('core_iso_type', 'BIG-5');										// set the charset type
+
 CONFIG::g()->cb('core_act_img', true);											// Activate image verification ; set false if you want deactivate
 
 CONFIG::g()->cb('core_act_email', true);										// Activate email verification ; set false if you want deactivate

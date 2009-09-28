@@ -58,13 +58,14 @@ class email{
 			$smtp = new SMTP($this->email_smtp_address, $this->email_smtp_login, $this->email_smtp_password, $this->email_smtp_port, $this->email_smtp_domain, 0);
 			$smtp->set_from($this->server_name, $this->email_from);
 			$smtp->Priority = 3;
+			$smtp->ISO = CONFIG::g()->core_iso_type;
 			if($smtp->smtp_mail($this->email, $title, $message)) {
 				if(!empty($smtp->erreur))
 					MSG::add_error($smtp->erreur);
 				return false;
 			}
 		}else{
-			$from  = 'From:'.$this->email_from."\n"."MIME-version: 1.0\n"."Content-type: text/html; charset= iso-8859-1\n";
+			$from  = 'From:'.$this->email_from."\n"."MIME-version: 1.0\n"."Content-type: text/html; charset= ".CONFIG::g()->core_iso_type."\n";
 			if(!@mail($this->email, $title, $message, $from))
 				return false;
 		}

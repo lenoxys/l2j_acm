@@ -2,7 +2,7 @@
 session_start();
 
 if(file_exists('./install.php'))
-	echo('<div style="font-size: 20px; background-color: #FFF; color:#000;"><strong><center><br />Warning: The install file can be see. Please delete install.php before start ACM on your live server.<br /><br /></center></strong></div>');
+//	echo('<div style="font-size: 20px; background-color: #FFF; color:#000;"><strong><center><br />Warning: The install file can be see. Please delete install.php before start ACM on your live server.<br /><br /></center></strong></div>');
 
 
 define ('_ACM_VALID', 1);
@@ -36,6 +36,8 @@ $action = htmlspecialchars($action);
 
 SmartyObject::getInstance()->assign('vm_title', LANG::i18n('_title'));
 SmartyObject::getInstance()->assign('vm_title_page', LANG::i18n('_title_page'));
+
+SmartyObject::getInstance()->assign('vm_charset_type', CONFIG::g()->core_iso_type);
 
 $core = new CORE();
 

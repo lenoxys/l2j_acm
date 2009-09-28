@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>{$vm_title}</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset="{$vm_charset_type}" />
 	<link href="./templates/blue/style.css" rel="stylesheet" type="text/css" />
 	{if isset($image)}{literal}<SCRIPT language="JavaScript" type="text/javascript">
 	function reloadImage(img) {
