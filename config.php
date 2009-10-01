@@ -69,6 +69,8 @@ CONFIG::g()->cb('core_interlude', false);										// If you are using interlude
 CONFIG::g()->cb('service_allow', false);										// Enable Account Services
 CONFIG::g()->cb('service_allow_with_karma', true);								// Enable Account Services for player who have karma
 
+CONFIG::g()->cs('service_server_name', './servername.xml');						// ServerName list (refer to the l2j xml list on datapack)
+
 CONFIG::g()->cb('service_name', false);											// Enable Account services feature (change name)
 CONFIG::g()->cs('service_name_regex', '`^[[:alnum:]]{3,16}$`');					// allow alphanumeric character in char name (3-16 char.)
 
