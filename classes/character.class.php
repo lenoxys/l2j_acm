@@ -64,6 +64,8 @@ class character {
 	}
 	
 	function load() {
+		$sql = "SET NAMES '".CONFIG::g()->core_iso_type."'";
+		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level`, `karma` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$row = @mysql_fetch_object($rslt);
