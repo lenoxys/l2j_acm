@@ -87,9 +87,9 @@ class world {
  *		return name world
  */	
 	public function get_name_world ($id) {
-		$dom = new DomDocument;
+		$dom = new DOMDocument;
 		$dom->load(CONFIG::g()->service_server_name);
-		return $dom->getElementsByTagName('server')->item(($id-1))->getAttribute("name");
+		return iconv('utf-8',CONFIG::g()->core_iso_type,$dom->getElementsByTagName('server')->item(($id-1))->getAttribute("name"));
 	}
 
 /**
