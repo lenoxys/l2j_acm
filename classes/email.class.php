@@ -44,7 +44,8 @@ class email{
 	private function send_email ($title, $message)
 	{
 	
-		$this->email = $this->get_email();
+		if(is_null($this->email))
+			$this->email = $this->get_email();
 	
 		// Create the content of email
 		$entity_b = array ('[\[IP\]]','[\[ID\]]','[\[EMAIL_SUPPORT\]]','[\[URL\]]','[\[CODE\]]','[\[SERVER\]]');
@@ -83,8 +84,10 @@ class email{
 		if(!is_null($code))
 			$this->code = $code;
 		
-		if(!is_null($email))
+		if(!is_null($email)) {
+			DEBUG::add('Use specific mail');
 			$this->email = $email;
+		}
 			
 		switch($mode) {
 			default:

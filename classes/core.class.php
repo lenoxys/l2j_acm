@@ -272,7 +272,7 @@ class core {
 	public function email_validation() {
 
 		if(ACCOUNT::load()->email_validation($_GET['login'], $_GET['key'])) {
-			MSG::add_valid(LANG::i18n('_email_activated'));
+			MSG::add_valid(LANG::i18n('_change_email_valid'));
 		}else{
 			MSG::add_error(LANG::i18n('_control'));
 		}
@@ -544,10 +544,32 @@ class core {
 				$_POST[$key] = substr($value, 0, CONFIG::g()->core_id_limit);
 
 			if ($key == 'Lpwd')
-				$_POST[$key] = substr($value, 0, CONFIG::g()->core_id_limit);
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_pwd_limit);
+
+			if ($key == 'Lpwd2')
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_pwd_limit);
+
+			if ($key == 'Lpwdold')
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_pwd_limit);
+
+			if ($key == 'Lemail')
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_email_limit);
+
+			if ($key == 'Lemail2')
+				$_POST[$key] = substr($value, 0, CONFIG::g()->core_email_limit);
 
 			if ($key == 'Limage')
 				$_POST[$key] = substr($value, 0, 5);
+
+			if ($key == 'key')
+				$_GET[$key] = substr($value, 0, 10);
+
+			if (!($key == 'wid' && is_int($value)))
+				$_GET[$key] = NULL;
+
+			if (!($key == 'cid' && is_int($value)))
+				$_GET[$key] = NULL;
+				
 		}
 		
 		return;

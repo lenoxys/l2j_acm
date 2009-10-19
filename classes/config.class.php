@@ -28,6 +28,7 @@ class CONFIG {
 	private $core_same_email = false;
 	private $core_id_limit = 15;
 	private $core_pwd_limit = 15;
+	private $core_email_limit = 255;
 	private $core_language = 'english';
 	private $core_can_chg_email = false;
 	private $core_ack_cond = false;

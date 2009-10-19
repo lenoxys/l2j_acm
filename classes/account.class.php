@@ -441,11 +441,11 @@ class account{
 	}
 
 	private function valid_email($login, $key) {
-		$sql = "SELECT COUNT(var) FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		$sql = "SELECT COUNT(var) FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = '".$key."' LIMIT 1;";
 		DEBUG::add('Check if there are an activation key on account_data');
 		if (MYSQL::g()->result($sql) === '0')
 			return false;
-		$sql = "SELECT var FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		$sql = "SELECT value FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = '".$key."' LIMIT 1;";
 		DEBUG::add('Get the account name linked with the activation key');
 		return MYSQL::g()->result($sql);
 	}
@@ -455,18 +455,18 @@ class account{
 		if (!($email = $this->valid_email($login, $key)))
 			return false;
 
-		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `value` = '".$key."' LIMIT 1;";
+		$sql = "DELETE FROM `account_data` WHERE `account_name` = '".$login."' AND `var` = '".$key."' LIMIT 1;";
 		DEBUG::add('Delete activation key from account_data table');
 		MYSQL::g()->query($sql);
 
 		if ($this->valid_key($login, $key))
 			return false;
 		
-		EMAIL::OP()->operator($login, 'modified_email_activation',$email);		// warn the old email box
+		EMAIL::OP()->operator($login, 'modified_email_activation', NULL, NULL);		// warn the old email box
 			
 		$this->change_email($email);
 		
-		EMAIL::OP()->operator($login, 'modified_email_activation',$email);		// warn the new email box
+		EMAIL::OP()->operator($login, 'modified_email_activation', NULL, $email);		// warn the new email box
 
 		return true;
 	}
@@ -497,7 +497,7 @@ class account{
 		$code = $this->gen_img_cle(10);
 
 		DEBUG::add('Insert the activation key on account_data for checking email');
-		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$this->login."' , '".$email."', '".$code."');";
+		$sql = "REPLACE INTO account_data (account_name, var, value) VALUES ('".$this->login."' , '".$code."', '".$email."');";
 		MYSQL::g()->query($sql);
 		
 		if(!CONFIG::g()->core_act_email) {
