@@ -229,8 +229,6 @@ class character {
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_unstuck', '".time()."');";
 		MYSQL::g($this->worldId)->query($sql);
 		
-		LOGDAEMON::l()->add($sql);
-		
 		return true;
 	}
 	
@@ -246,8 +244,6 @@ class character {
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'previous_name', '".$this->char_name."');";
 		MYSQL::g($this->worldId)->query($sql);
-		
-		LOGDAEMON::l()->add($sql);
 		
 		$this->char_name = $new_name;
 			

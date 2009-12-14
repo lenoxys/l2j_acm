@@ -279,8 +279,6 @@ class account{
 						'AND password = "'.$this->password.'" ' .
 						'AND '.CONFIG::g()->accessLevel().' >= 0 LIMIT 1;';
 		DEBUG::add('Check if login and password match on account table');
-		
-		LOGDAEMON::l()->add($sql);
 
 		if(MYSQL::g()->result($sql) != 1) {
 			$_SESSION['sp'] = (empty($_SESSION['sp'])) ? 1 : ($_SESSION['sp']+1);
@@ -301,9 +299,9 @@ class account{
 	private function update_last_active() {
 	
 		DEBUG::add('Update last connexion of the account');
-		$sql = "UPDATE `accounts` SET `lastactive` = '" . time() . "',
-				 `lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'
-				 WHERE `login` = '" . $this->login . "' LIMIT 1;";
+		$sql = "UPDATE `accounts` SET `lastactive` = '" . time() . "',".
+				 "`lastIP` = '" . $_SERVER['REMOTE_ADDR'] . "'".
+				 "WHERE `login` = '" . $this->login . "' LIMIT 1;";
 		MYSQL::g()->query($sql);
 		
 	}

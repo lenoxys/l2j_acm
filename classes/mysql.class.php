@@ -53,6 +53,7 @@ class mysql {
 
 	public function query ($q) {
 		DEBUG::add($this->_db.'->'.$q);
+		LOGDAEMON::add($this->_db.'->'.$q);
 		$rslt = @mysql_query ($q);
 		DEBUG::add('Records: '.@mysql_affected_rows());
 		return $rslt;
@@ -60,6 +61,7 @@ class mysql {
 
 	public function result ($q) {
 		DEBUG::add($this->_db.'->'.$q);
+		LOGDAEMON::add($this->_db.'->'.$q);
 		$rslt = @mysql_result (@mysql_query ($q), 0);
 		DEBUG::add('Result: '.gettype($rslt).'('.var_export($rslt, true).')');
 		return $rslt;
