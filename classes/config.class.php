@@ -57,7 +57,7 @@ class CONFIG {
 	private $email_smtp_password = '';
 	private $email_smtp_domain = '';
 	
-	private $adv_id_regex	= '`^[[:alnum:]]{4,15}$`';		// allow alphanumeric character in login name and login character min needed is 4 and max 15
+	private $adv_id_regex	= '`^[a-z0-9]{4,15}$`';		// allow alphanumeric character in login name and login character min needed is 4 and max 15
 	private $adv_pwd_regex	= '`^[[:alnum:]@\\\/]{4,15}$`';	//allow alphanumeric character and \ / @ in password and pwd character min needed is 4 and max 15
 
 
