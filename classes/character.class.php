@@ -380,13 +380,13 @@ class character {
 	}
 	
 	function mapRegionTable() {
-		$sql = 'SELECT "plop", region, sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10 FROM mapregion;';
+		$sql = 'SELECT region, sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, sec8, sec9, sec10,sec11,sec12,sec13,sec14,sec15 FROM mapregion;';
 		
 		$rslt = MYSQL::g($this->worldId)->query($sql);
 		
 		while ($row = @mysql_fetch_row($rslt)) {
-			$region = $row[1];
-			for ($j = 0; $j < 10; $j++)
+			$region = $row[0];
+			for ($j = 0; $j < 16; $j++)
 				$this->regions[$j][$region] = $row[($j + 2)];
 		}
 	}
@@ -396,7 +396,7 @@ class character {
 	}
 	
 	function getMapRegionX($posX) {
-		return ($posX >> 15) + 4;
+		return ($posX >> 15) + 9;
 	}
 	
 	function getMapRegionY($posY) {
@@ -465,9 +465,12 @@ class character {
 			break;
 			case 19:
 				$town_coord = array(-118092, 46955, 360);		// Kamael Village
-			case 21:
 			break;
+			case 21:
 				$town_coord = array(-58752, -56898, -2032);		// Fantasy Isle
+			break;
+			case 24:
+				$town_coord = array(-114462, -249619, -2986);	// GM Consultation service
 			break;
 			default:
 				$town_coord = array(18823, 145048, -3126);		// Floran Village
