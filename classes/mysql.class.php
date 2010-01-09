@@ -32,7 +32,7 @@ class mysql {
 			$this->_db		= $gs['database'];
 		}
 		
-		if(empty($this->pass))
+		if(empty($this->_pass))
 			DEBUG::add('Your configuration file contains settings ('.$this->_user.' with no password) that correspond to the default MySQL privileged account.'.
 			'Your MySQL server is running with this default, is open to intrusion, and you really should fix this security hole.', 'red');
 			
