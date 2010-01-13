@@ -536,9 +536,6 @@ class core {
 
 		if (!$_POST) return;
 
-		$_POST = array_map('htmlentities', $_POST);
-		$_POST = array_map('htmlspecialchars', $_POST);
-
 		foreach($_POST as $key => $value) {
 			if ($key == 'Luser')
 				$_POST[$key] = substr($value, 0, CONFIG::g()->core_id_limit);
@@ -571,6 +568,9 @@ class core {
 				$_GET[$key] = NULL;
 				
 		}
+
+		$_POST = array_map('htmlentities', $_POST);
+		$_POST = array_map('htmlspecialchars', $_POST);
 		
 		return;
 	}
