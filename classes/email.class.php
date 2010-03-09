@@ -37,7 +37,10 @@ class email{
 	
 	private function get_email ()
 	{
-		$sql = "SELECT email FROM accounts WHERE login = '" . $this->login . "' LIMIT 1;";
+		$sql = sprintf("SELECT `email` FROM `accounts` WHERE `login` = '%s' LIMIT 1;",
+				mysql_real_escape_string($this->login)
+			);
+		
 		return MYSQL::g()->result($sql);
 	}
 
