@@ -87,7 +87,7 @@ class world {
  *		return name world
  */	
 	public function get_name_world ($id) {
-		$id = mysql_real_escape_string($id);
+		$id = MYSQL::g()->escape_string($id);
 		$dom = new DOMDocument;
 		$dom->load(CONFIG::g()->service_server_name);
 		return iconv('utf-8',CONFIG::g()->core_iso_type,$dom->getElementsByTagName('server')->item(($id-1))->getAttribute("name"));
@@ -104,7 +104,7 @@ class world {
 		$this->char_list = array();
 		
 		$sql = sprintf("SELECT `charId`, `char_name` FROM `characters` WHERE `account_name` = '%s';",
-				mysql_real_escape_string(ACCOUNT::load()->getLogin())
+				MYSQL::g()->escape_string(ACCOUNT::load()->getLogin())
 			);
 		
 		$rslt = MYSQL::g($this->id)->query($sql);

@@ -66,6 +66,10 @@ class mysql {
 		DEBUG::add('Result: '.gettype($rslt).'('.var_export($rslt, true).')');
 		return $rslt;
 	}
+	
+	public function escape_string($q) {
+		return mysql_real_escape_string($q);
+	}
 
 	public function __destruct () {
 		@mysql_close ();

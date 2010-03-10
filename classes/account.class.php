@@ -107,11 +107,11 @@ class account{
 		$code = $this->gen_img_cle(10);
 		
 		$sql = sprintf("INSERT INTO `accounts` (`login`,`password`,`lastactive`,`".CONFIG::g()->accessLevel()."`,`lastIP`,`email`) VALUES ('%s', '%s', '%s', '-1', '%s', '%s');",
-				mysql_real_escape_string($login),
+				MYSQL::g()->escape_string($login),
 				$this->l2j_encrypt($pwd),
 				time(),
 				$_SERVER['REMOTE_ADDR'],
-				mysql_real_escape_string($email)
+				MYSQL::g()->escape_string($email)
 			);
 
 		DEBUG::add('Create a new user on the accounts table with -1 on accesslevel');
@@ -126,8 +126,8 @@ class account{
 		DEBUG::add('Insert the activation key on account_data for checking email');
 
 		$sql = sprintf("REPLACE INTO account_data (account_name, var, value) VALUES ('%s' , 'activation_key', '%s');",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($code)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($code)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -200,7 +200,7 @@ class account{
 	private function is_login_exist($login) {
 		
 		$sql = sprintf("SELECT COUNT(`login`) FROM `accounts` WHERE `login` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login)
+				MYSQL::g()->escape_string($login)
 			);
 
 		DEBUG::add('Check if the login still exist');
@@ -217,7 +217,7 @@ class account{
 			return false;
 
 		$sql = sprintf("SELECT COUNT(`login`) FROM `accounts` WHERE `email` = '%s' LIMIT 1;",
-				mysql_real_escape_string($email)
+				MYSQL::g()->escape_string($email)
 			);
 
 		DEBUG::add('Check if the email still exist');
@@ -232,7 +232,7 @@ class account{
 		DEBUG::add('Check if there are an activation key on account_data');
 		
 		$sql = sprintf("SELECT COUNT(`account_data`) FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '%s' LIMIT 1;",
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($key)
 			);
 		
 		if (MYSQL::g()->result($sql) === '0')
@@ -241,7 +241,7 @@ class account{
 		DEBUG::add('Get the account name linked with the activation key');
 
 		$sql = sprintf("SELECT `account_name` FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '%s' LIMIT 1;",
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($key)
 			);
 		
 		return MYSQL::g()->result($sql);
@@ -255,7 +255,7 @@ class account{
 		DEBUG::add('Update accesslevel to 0');
 		
 		$sql = sprintf("UPDATE `accounts` SET `".CONFIG::g()->accessLevel()."` = '0' WHERE `login` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login)
+				MYSQL::g()->escape_string($login)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -263,8 +263,8 @@ class account{
 		DEBUG::add('Delete activation key from account_data table');
 		
 		$sql = sprintf("DELETE FROM `account_data` WHERE `account_name` = '%s' AND `var` = 'activation_key' AND `value` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($key)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -300,8 +300,8 @@ class account{
 		$this->password = $this->l2j_encrypt($this->password);
 
 		$sql = sprintf("SELECT COUNT(`login`) FROM `accounts` WHERE `login` = '%s' AND `password` = '%s' AND `".CONFIG::g()->accessLevel()."` >= 0 LIMIT 1;",
-				mysql_real_escape_string($this->login),
-				mysql_real_escape_string($this->password)
+				MYSQL::g()->escape_string($this->login),
+				MYSQL::g()->escape_string($this->password)
 			);
 		
 		DEBUG::add('Check if login and password match on account table');
@@ -336,8 +336,8 @@ class account{
 		$account = $this->load();
 
 		$sql = sprintf("SELECT COUNT(`login`) FROM `accounts` WHERE `login` = '%s' AND `password` = '%s' AND `".CONFIG::g()->accessLevel()."` >= 0 LIMIT 1;",
-				mysql_real_escape_string($account->login),
-				mysql_real_escape_string($account->password)
+				MYSQL::g()->escape_string($account->login),
+				MYSQL::g()->escape_string($account->password)
 			);
 
 		DEBUG::add('Verify if the user is correctly logged');
@@ -358,7 +358,7 @@ class account{
 		$sql = sprintf("UPDATE `accounts` SET `lastactive` = '%s', `lastIP` = '%s' WHERE `login` = '%s' LIMIT 1;",
 				time(),
 				$_SERVER['REMOTE_ADDR'],
-				mysql_real_escape_string($this->login)
+				MYSQL::g()->escape_string($this->login)
 			);
 		MYSQL::g()->query($sql);
 		
@@ -370,7 +370,7 @@ class account{
 		$sql = sprintf("UPDATE `accounts` SET `password` = '%s', `lastIP` = '%s' WHERE `login` = '%s' LIMIT 1;",
 				$this->l2j_encrypt($pwd),
 				$_SERVER['REMOTE_ADDR'],
-				mysql_real_escape_string($this->login)
+				MYSQL::g()->escape_string($this->login)
 			);
 		MYSQL::g()->query($sql);
 
@@ -388,8 +388,8 @@ class account{
 		DEBUG::add('Check if there are a login name match with an email');
 		
 		$sql = sprintf("SELECT COUNT(`login`) FROM `accounts` WHERE `login` = '%s' AND `email` = '%s';",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($email)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($email)
 			);
 		
 		if(MYSQL::g()->result($sql) != 1) {
@@ -402,8 +402,8 @@ class account{
 		DEBUG::add('Insert a random key and send it to the email for authenticate user');
 		
 		$sql = sprintf("REPLACE INTO `account_data` (`account_name`, `var`, `value`) VALUES('%s' , 'forget_pwd', '%s');",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($code)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($code)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -424,8 +424,8 @@ class account{
 		DEBUG::add('User has been authenticated. Delete the ask');
 		
 		$sql = sprintf("DELETE FROM `account_data` WHERE `account_name` = '%s' AND `var` = 'forget_pwd' AND `value` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($key)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -442,9 +442,9 @@ class account{
 		DEBUG::add('Check the tag on account_data');
 		
 		$sql = sprintf("SELECT COUNT(`account_name`) FROM `account_data` WHERE `account_name` = '%s' AND `var` = '%s' AND `value` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($tag),
-				mysql_real_escape_string($value)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($tag),
+				MYSQL::g()->escape_string($value)
 			);
 
 		if(MYSQL::g()->result($sql) != 1)
@@ -499,9 +499,9 @@ class account{
 		DEBUG::add('Update the email on accounts table');
 		
 		$sql = sprintf("UPDATE `accounts` SET `email` = '%s', `lastIP` = '%s' WHERE `login` = '%s' LIMIT 1;",
-				mysql_real_escape_string($email),
+				MYSQL::g()->escape_string($email),
 				$_SERVER['REMOTE_ADDR'],
-				mysql_real_escape_string($this->login)
+				MYSQL::g()->escape_string($this->login)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -516,7 +516,7 @@ class account{
 		DEBUG::add('Get the email of the user');
 		
 		$sql = sprintf("SELECT `email` FROM `accounts` WHERE `login` = '%s' LIMIT 1;",
-				mysql_real_escape_string($this->login)
+				MYSQL::g()->escape_string($this->login)
 			);
 		
 		return MYSQL::g()->result($sql);
@@ -526,8 +526,8 @@ class account{
 		DEBUG::add('Check if there are an activation key on account_data');
 
 		$sql = sprintf("SELECT COUNT(`var`) FROM `account_data` WHERE `account_name` = '%s' AND `var` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($key)
 			);
 		
 		if (MYSQL::g()->result($sql) === '0')
@@ -536,8 +536,8 @@ class account{
 		DEBUG::add('Get the account name linked with the activation key');
 		
 		$sql = sprintf("SELECT value FROM `account_data` WHERE `account_name` = '%s' AND `var` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($key)
 			);
 		
 		return MYSQL::g()->result($sql);
@@ -551,8 +551,8 @@ class account{
 		DEBUG::add('Delete activation key from account_data table');
 		
 		$sql = sprintf("DELETE FROM `account_data` WHERE `account_name` = '%s' AND `var` = '%s' LIMIT 1;",
-				mysql_real_escape_string($login),
-				mysql_real_escape_string($key)
+				MYSQL::g()->escape_string($login),
+				MYSQL::g()->escape_string($key)
 			);
 		
 		MYSQL::g()->query($sql);
@@ -597,9 +597,9 @@ class account{
 		DEBUG::add('Insert the activation key on account_data for checking email');
 		
 		$sql = sprintf("REPLACE INTO account_data (`account_name`, `var`, `value`) VALUES ('%s' , '%s', '%s');",
-				mysql_real_escape_string($this->login),
-				mysql_real_escape_string($code),
-				mysql_real_escape_string($email)
+				MYSQL::g()->escape_string($this->login),
+				MYSQL::g()->escape_string($code),
+				MYSQL::g()->escape_string($email)
 			);
 		
 		MYSQL::g()->query($sql);
