@@ -312,8 +312,10 @@ class account{
 				'try_0',
 				time()
 			);
+			
 			MYSQL::g()->query($sql);
-			$nb_try = 0;
+			
+			return true;
 		}
 			
 		$nb_try++;
