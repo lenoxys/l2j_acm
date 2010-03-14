@@ -276,23 +276,79 @@ class account{
 
 		return true;
 	}
+	
+	private function get_logtry() {
+		DEBUG::add('Get how many unsuccessfull loggin user have do');
+		
+		$sql = sprintf("SELECT `var` FROM `account_data` WHERE `account_name` = '%s' AND `var` LIKE '%s' LIMIT 1;",
+				$_SERVER['REMOTE_ADDR'],
+				'try_%'
+			);
+		
+		$nb_try = MYSQL::g()->result($sql);
+		return substr($nb_try, -1);
+	}
+	
+	private function get_latestlogtry() {
+		DEBUG::add('Get how many unsuccessfull loggin user have do');
+		
+		$sql = sprintf("SELECT `value` FROM `account_data` WHERE `account_name` = '%s' AND `var` LIKE '%s' LIMIT 1;",
+				$_SERVER['REMOTE_ADDR'],
+				'try_%'
+			);
+		
+		return MYSQL::g()->result($sql);;
+	}
+	
+	private function set_logtry($del = false) {
+		
+		$nb_try = $this->get_logtry();
+		
+		if ($nb_try === false) {
+			DEBUG::add('Set the first time how many unsuccessfull loggin user have do');
+			
+			$sql = sprintf("INSERT INTO `account_data` (`account_name`, `var`, `value`) VALUES ('%s' , '%s', '%s');",
+				$_SERVER['REMOTE_ADDR'],
+				'try_0',
+				time()
+			);
+			MYSQL::g()->query($sql);
+			$nb_try = 0;
+		}
+			
+		$nb_try++;
+		
+		DEBUG::add('Set how many unsuccessfull loggin user have do');
+		
+		if ($del)
+			$nb_try = 0;
+		
+		$sql = sprintf("UPDATE `account_data` SET  `var` =  '%s', `value` =  '%s' WHERE `account_name` =  '%s';",
+				'try_'.$nb_try,
+				time(),
+				$_SERVER['REMOTE_ADDR']
+			);
+		
+		MYSQL::g()->query($sql);
+				
+		return true;
+	}
 
 	public function auth ($login, $password, $img = null) {
-		
-		$_SESSION['sp'] = (!empty($_SESSION['sp'])) ? $_SESSION['sp'] : 0;
-
-		if($_SESSION['sp'] > 5) {
-			LOGDAEMON::l()->add('Warning : SPAMMING AUTHENTICATION');
-			MSG::add_error('Warning : SPAMMING AUTHENTICATION'.'<br />');
-			return false;
-		}
 		
 		if(!$this->verif_img($img)) {
 			MSG::add_error(LANG::i18n('_image_control'));
 			return false;
 		}
 		
-		DEBUG::add('sp='.$_SESSION['sp']);
+		if($this->get_latestlogtry() <= (time()-(60*CONFIG::g()->core_spam_time)))
+			$this->set_logtry(true);
+
+		if($this->get_logtry() >= CONFIG::g()->core_spam_try) {
+			LOGDAEMON::l()->add('Warning : SPAMMING AUTHENTICATION');
+			MSG::add_error('Warning : SPAMMING AUTHENTICATION'.'<br />');
+			return false;
+		}
 
 		$this->login = htmlentities($login);
 		$this->password = htmlentities($password);
@@ -307,7 +363,7 @@ class account{
 		DEBUG::add('Check if login and password match on account table');
 
 		if(MYSQL::g()->result($sql) != 1) {
-			$_SESSION['sp'] = (empty($_SESSION['sp'])) ? 1 : ($_SESSION['sp']+1);
+			$this->set_logtry();
 			return false;
 		}
 		

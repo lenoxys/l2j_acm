@@ -23,6 +23,8 @@ class CONFIG {
 
 	private $core_server_name = 'Private Server';
 	private $core_act_img = true;
+	private $core_spam_try = 5;
+	private $core_spam_time = 30;
 	private $core_act_email = true;
 	private $core_acc_limit = false;
 	private $core_same_email = false;

@@ -48,6 +48,9 @@ CONFIG::g()->cs('core_iso_type', 'utf-8');										// set the charset type
 
 CONFIG::g()->cb('core_act_img', true);											// Activate image verification ; set false if you want deactivate
 
+CONFIG::g()->ci('core_spam_try', 5);											// We allow to the user 5 times unsuccessfull login after that system block him IP.
+CONFIG::g()->ci('core_spam_time', 30);											// Need to wait 30 minutes after been blocked by anti spam system
+
 CONFIG::g()->cb('core_act_email', true);										// Activate email verification ; set false if you want deactivate
 CONFIG::g()->cb('core_same_email', false);										// Allow to have same email with different account ; set false if you want deactivate
 CONFIG::g()->cb('core_can_chg_email', false);									// User can change email ; set false if you want prohibit
