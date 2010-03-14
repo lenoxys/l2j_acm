@@ -16,6 +16,7 @@ body {
 #header h1 {
 	padding: 5px;
 	color: #06335F;
+	text-shadow: 0 1px 0 #6FB1FF;
 }
 
 #footer {
@@ -50,6 +51,7 @@ h2 {
 	border-bottom:1px solid #0D529C;
 	color: #06335F;
 	text-align: right;
+	text-shadow: 0 1px 0 #6FB1FF;
 }
 
 a {margin:0px;padding:0px;}
