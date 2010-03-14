@@ -16,7 +16,7 @@ class SmartyObject extends Smarty {
 		$this->template_dir = 'templates/'.CONFIG::g()->core_template;
 		$this->compile_dir = 'cache';
 		$this->caching = false;
-		$this->force_compile = false;
+		$this->force_compile = true;
 		parent::__construct();
 	}
 	

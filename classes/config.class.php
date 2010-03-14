@@ -15,7 +15,7 @@ class MyException extends Exception {
 
 class CONFIG {
 
-	private $acm_version = '0.9.5';
+	private $acm_version = '0.9.7';
 
 	private $login_server = array('hostname'=>'localhost','user'=>'root','password'=>'','database'=>'l2jdb');
 
