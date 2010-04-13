@@ -72,7 +72,7 @@ class mysql {
 	}
 
 	public function __destruct () {
-		@mysql_close ();
+		@mysql_close ($this->_db);
 	}
 }
 
