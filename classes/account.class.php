@@ -171,8 +171,10 @@ class account{
 	}
 
 	private function verif_email($email) {
+		
+		$regex = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
 
-		if (!ereg("^[^@ ]+@[^@ ]+\.[^@ \.]+$", $email))
+		if (!preg_match($regex, $email))
 			return false;
 
 		return true;
