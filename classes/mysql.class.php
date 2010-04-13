@@ -6,7 +6,7 @@ class mysql {
 
 	private static $_instances = array();
 	
-	private $_m, $_host, $_user, $_pass, $_db;
+	private $_m, $_host, $_user, $_pass, $_db, $db_inst;
 
 	public static function g($id = NULL) {
 		if (!isset(self::$_instances[$id])) {
@@ -40,11 +40,12 @@ class mysql {
 	}
 
 	private function connect () {
-		if(!@mysql_connect ($this->_host,$this->_user,$this->_pass)) {
+		$this->db_inst = @mysql_connect ($this->_host,$this->_user,$this->_pass);
+		if(!$this->db_inst) {
 			MSG::add_error(LANG::i18n('_error_db_connect'));
 			return false;
 		}
-		if(!@mysql_select_db ($this->_db)) {
+		if(!@mysql_select_db ($this->_db, $this->db_inst)) {
 			MSG::add_error(LANG::i18n('_error_db_select'));
 			return false;
 		}
@@ -54,7 +55,7 @@ class mysql {
 	public function query ($q) {
 		DEBUG::add($this->_db.'->'.$q);
 		LOGDAEMON::add($this->_db.'->'.$q);
-		$rslt = @mysql_query ($q);
+		$rslt = @mysql_query ($q, $this->db_inst);
 		DEBUG::add('Records: '.@mysql_affected_rows());
 		return $rslt;
 	}
@@ -62,17 +63,17 @@ class mysql {
 	public function result ($q) {
 		DEBUG::add($this->_db.'->'.$q);
 		LOGDAEMON::add($this->_db.'->'.$q);
-		$rslt = @mysql_result (@mysql_query ($q), 0);
+		$rslt = @mysql_result (@mysql_query ($q, $this->db_inst), 0);
 		DEBUG::add('Result: '.gettype($rslt).'('.var_export($rslt, true).')');
 		return $rslt;
 	}
 	
 	public function escape_string($q) {
-		return mysql_real_escape_string($q);
+		return mysql_real_escape_string($q, $this->db_inst);
 	}
 
 	public function __destruct () {
-		@mysql_close ($this->_db);
+		@mysql_close ($this->db_inst);
 	}
 }
 
