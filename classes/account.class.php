@@ -620,11 +620,11 @@ class account{
 		if ($this->valid_key($login, $key))
 			return false;
 		
-		EMAIL::OP()->operator($login, 'modified_email_activation', NULL, NULL);		// warn the old email box
+		EMAIL::OP()->operator($login, 'modified_email_activation', $email, NULL);		// warn the old email box
 			
 		$this->change_email($email);
 		
-		EMAIL::OP()->operator($login, 'modified_email_activation', NULL, $email);		// warn the new email box
+		EMAIL::OP()->operator($login, 'modified_email_activation', $email, $email);		// warn the new email box
 
 		return true;
 	}
