@@ -109,7 +109,7 @@ class account{
 		$sql = sprintf("INSERT INTO `accounts` (`login`,`password`,`lastactive`,`".CONFIG::g()->accessLevel()."`,`lastIP`,`email`) VALUES ('%s', '%s', '%s', '-1', '%s', '%s');",
 				MYSQL::g()->escape_string($login),
 				$this->l2j_encrypt($pwd),
-				time(),
+				(time()*1000),
 				$_SERVER['REMOTE_ADDR'],
 				MYSQL::g()->escape_string($email)
 			);
@@ -416,7 +416,7 @@ class account{
 		DEBUG::add('Update last connexion of the account');
 
 		$sql = sprintf("UPDATE `accounts` SET `lastactive` = '%s', `lastIP` = '%s' WHERE `login` = '%s' LIMIT 1;",
-				time(),
+				(time()*1000),
 				$_SERVER['REMOTE_ADDR'],
 				MYSQL::g()->escape_string($this->login)
 			);
