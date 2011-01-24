@@ -207,6 +207,10 @@ class character {
 		$sql = 'UPDATE `items` SET `loc`="INVENTORY" WHERE `owner_id`='.$this->charId.';';
 		MYSQL::g($this->worldId)->query($sql);
 		
+		DEBUG::add('Fix buffs of character');
+		$sql = 'DELETE FROM character_skills_save WHERE charId = '.$this->charId.';';
+		MYSQL::g($this->worldId)->query($sql);
+		
 		DEBUG::add('Add a tag for prevent abus');
 		$sql = "REPLACE INTO `account_data` (account_name, var, value) VALUES ('".$this->charId."' , 'last_fix', '".time()."');";
 		MYSQL::g($this->worldId)->query($sql);
