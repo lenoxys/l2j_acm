@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>L2j acm by lenoxys</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>L2j acm</h1>
+        <p>Account Manager use PHP and javascript technology to manage your l2j server user registration</p>
+
+        <p class="view"><a href="https://github.com/lenoxys/l2j_acm">View the Project on GitHub <small>lenoxys/l2j_acm</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/lenoxys/l2j_acm/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lenoxys/l2j_acm/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lenoxys/l2j_acm">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a id="welcome-to-acm-for-l2j-server" class="anchor" href="#welcome-to-acm-for-l2j-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to ACM for L2J server</h3>
+
+<p>Account Manager use PHP and javascript technology to manage your l2j server user registration.
+This script is here since 03 december 2006</p>
+
+<h3>
+<a id="demo-website" class="anchor" href="#demo-website" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo Website</h3>
+
+<p><a href="http://heliosdaedalus.free.fr/act/">http://heliosdaedalus.free.fr/act/</a></p>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>You must activate php_mysql library.</p>
+
+<p>Edit config in config.php</p>
+
+<p>You can create a new language just paste english.php in language folder and change the value in config file.</p>
+
+<p>Parse db.sql (root directory) file on your database.
+If you get this error when you try to create : Database problem: Account was not created. Please report this to the staff.. It seems you don't parse the previous code.</p>
+
+<p>You need activate GD library for image validation.</p>
+
+<p>In your mysql database, you need to grant for :</p>
+
+<p><code>accounts : select, insert, update</code></p>
+
+<p><code>account_data : select, insert, delete</code></p>
+
+<p>For advanced use :</p>
+
+<p><code>CREATE USER 'acc'@'localhost' IDENTIFIED BY 'password';</code></p>
+
+<p><code>GRANT SELECT , INSERT , UPDATE ON</code>l2jdb_t1<code>.</code>accounts<code>TO 'acc'@'localhost';</code></p>
+
+<p><code>GRANT SELECT , INSERT , DELETE ON</code>l2jdb_t1<code>.</code>account_data<code>TO 'acc'@'localhost';</code></p>
+
+<ol>
+<li>Unzip ACM on C:\wamp\www\acm</li>
+<li>Edit C:\wamp\www\acm\config.php</li>
+</ol>
+
+<p><code>CONFIG::g()-&gt;ca('login_server', array(</code></p>
+
+<p><code>'hostname' =&gt; 'localhost',                  // login host database DB</code></p>
+
+<p><code>'user' =&gt; 'root',                           // login user</code></p>
+
+<p><code>'password' =&gt; '',                           // login password</code></p>
+
+<p><code>'database' =&gt; 'l2jdb_login'                     // login database name</code></p>
+
+<p><code>));</code></p>
+
+<ol>
+<li>Go to http://localhost/phpmyadmin/</li>
+<li>Select the lineage database</li>
+<li>Click to SQL link</li>
+<li>Copy Paste db.sql (in main directory)</li>
+<li>Go to http://localhost/acm/</li>
+<li>If you get no error, script is running</li>
+</ol>
+
+<p><code>########################################</code></p>
+
+<p><code>Check if you have set write rights on the cache folder.</code></p>
+
+<p><code>########################################</code></p>
+
+<h3>
+<a id="using-gmail-to-send-email-" class="anchor" href="#using-gmail-to-send-email-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Gmail to send email ?</h3>
+
+<ol>
+<li>Install PHP with extensions for MYSQL, GD2, and OpenSSL</li>
+<li>Enable POP access on the gmail account being used.</li>
+<li>php.ini changes</li>
+</ol>
+
+<p><code>[mail function]</code></p>
+
+<p><code>; For Win32 only.</code></p>
+
+<p><code>SMTP = tls://smtp.gmail.com</code></p>
+
+<p><code>smtp_port = 465</code></p>
+
+<p><code>; For Win32 only.</code></p>
+
+<p><code>sendmail_from = myemail@gmail.com</code></p>
+
+<ol>
+<li>config.php changes;</li>
+</ol>
+
+<p><code>CONFIG::g()-&gt;cb('email_smtp_use', true);                                            // Set to true if you want use an smtp server</code></p>
+
+<p><code>CONFIG::g()-&gt;cs('email_smtp_address', 'tls://smtp.gmail.com');                      // Address of the smtp server</code></p>
+
+<p><code>CONFIG::g()-&gt;ci('email_smtp_port', 465);                                            // Port of the smtp server</code></p>
+
+<p><code>CONFIG::g()-&gt;cs('email_smtp_login', 'myemail@gmail.com');                           // login of the smtp server if you need authentication</code></p>
+
+<p><code>CONFIG::g()-&gt;cs('email_smtp_passwor', 'mypassword');                                // password of the smtp server if you need authentication</code></p>
+
+<p><code>CONFIG::g()-&gt;cs('email_smtp_domain', '');                                           // domain of your host</code></p>
+
+<h3>
+<a id="using-interlude-" class="anchor" href="#using-interlude-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using interlude ?</h3>
+
+<p><code>
+CONFIG::g()-&gt;cb('core_interlude', true);                         // If you are using interlude database set to true
+</code></p>
+
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with ACM ? Check out our forum thread <a href="http://www.l2jserver.com/forum/viewtopic.php?f=94&amp;t=10729">http://www.l2jserver.com/forum/viewtopic.php?f=94&amp;t=10729</a> and we’ll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/lenoxys">lenoxys</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
