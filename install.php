@@ -88,15 +88,14 @@ function check_lib($lib_name) {
 }
 
 function check_folder(){
-	$d = substr(sprintf('%o', fileperms('./cache')), -4);
 	echo '<li>cache folder : <font ';
-	echo ((($d == '0755' or $d == '0777')) ? 'color="#00FF00">OK' : 'color="#FF0000">KO');
+	echo (is_writable('./cache/')) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>';
 }
 
 function check_version() {
 	echo '<li>PHP version : '.phpversion().' <font ';
-	echo ((phpversion() >= 5) ? 'color="#00FF00">OK' : 'color="#FF0000">KO');
+	echo (phpversion() >= 5) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>';
 }
 
