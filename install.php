@@ -18,7 +18,7 @@ if(!file_exists('./config.php'))
 	exit('<center><font color="#FF0000"><strong>config.php is missing. <br />We aren\'t able to check your installation.</strong></font></center>'."\n\r");
 
 include ('./classes/config.class.php');
-include ('./config.php');
+require ('./config.php');
 
 function check_mysql() {
 	$ls = CONFIG::g()->login_server;
