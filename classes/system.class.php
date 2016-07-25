@@ -12,7 +12,7 @@ class SmartyObject extends Smarty {
 	
 	private static $instance;
 
-	private function __construct(){
+	public function __construct(){
 		$this->template_dir = 'templates/'.CONFIG::g()->core_template;
 		$this->compile_dir = 'cache';
 		$this->caching = false;
