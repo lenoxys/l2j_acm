@@ -1,2 +1,5 @@
+# Ignore all .tpl.php files
 *.tpl.php
+
+# Ignore config.php
 config.php
