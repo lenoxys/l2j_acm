@@ -5,6 +5,17 @@ defined( '_ACM_VALID' ) or die( 'Direct Access to this location is not allowed.'
 class email{
 
 	private $email;
+    protected $email_smtp_use;
+    protected $email_smtp_address;
+    protected $email_smtp_port;
+    protected $email_smtp_login;
+    protected $email_smtp_password;
+    protected $email_smtp_domain;
+    protected $email_from;
+    protected $server_name;
+    private $login;
+    private $code;
+    private $url;
 	
 	private static $instance;
 
@@ -59,15 +70,31 @@ class email{
 		// 2 ways for sending email by php mail function and by socket (smtp.class.php)
 
 		if($this->email_smtp_use){
-			$smtp = new SMTP($this->email_smtp_address, $this->email_smtp_login, $this->email_smtp_password, $this->email_smtp_port, $this->email_smtp_domain, 0);
-			$smtp->set_from($this->server_name, $this->email_from);
-			$smtp->Priority = 3;
-			$smtp->ISO = CONFIG::g()->core_iso_type;
-			if($smtp->smtp_mail($this->email, $title, $message)) {
-				if(!empty($smtp->erreur))
-					MSG::add_error($smtp->erreur);
+			try {
+				$mail = new PHPMailer(true);
+				$mail->isSMTP();
+				$mail->SMTPDebug  = DEBUG;
+				$mail->Host       = $this->email_smtp_address;              //Set the SMTP server to send through
+				$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+				$mail->Username   = $this->email_smtp_login;                //SMTP username
+				$mail->Password   = $this->email_smtp_password;             //SMTP password
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+				$mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+			
+				//Recipients
+				$mail->setFrom($this->email_from, $this->server_name);
+				$mail->addAddress($this->email);     //Add a recipient
+
+				$mail->isHTML(true);                                  //Set email format to HTML
+				$mail->Subject = $title;
+				$mail->Body    = $message;				
+
+				$mail->send();
+			} catch (Exception $e) {
+				MSG::add_error('Message could not be sent. Mailer Error: '.$mail->ErrorInfo);
 				return false;
 			}
+
 		}else{
 			$from  = 'From:'.$this->email_from."\n"."MIME-version: 1.0\n"."Content-type: text/html; charset= ".CONFIG::g()->core_iso_type."\n";
 			if(!@mail($this->email, $title, $message, $from))

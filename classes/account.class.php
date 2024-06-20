@@ -29,7 +29,7 @@ class account{
 		return self::$instance;
 	}
 
-	public function load() {
+	public static function load() {
 		if(empty($_SESSION['acm']))			// Check if user is logged
 			return ACCOUNT::singleton();
 		
@@ -233,7 +233,7 @@ class account{
 	private function valid_key($key) {
 		DEBUG::add('Check if there are an activation key on account_data');
 		
-		$sql = sprintf("SELECT COUNT(`account_data`) FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '%s' LIMIT 1;",
+		$sql = sprintf("SELECT COUNT(`account_name`) FROM `account_data` WHERE `var` = 'activation_key' AND `value` = '%s' LIMIT 1;",
 				MYSQL::g()->escape_string($key)
 			);
 		
@@ -690,9 +690,13 @@ class account{
 		return $key;
 	}
 
+	public function utf8_encode($string) {
+		return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+	}
+
 	// ----------------------------------------------------------------
 	// Copyright to the first account manager
-		public function l2j_encrypt ($pass) {return base64_encode(pack("H*", sha1(utf8_encode($pass))));}
+		public function l2j_encrypt ($pass) {return base64_encode(pack("H*", sha1($this->utf8_encode($pass))));}
 	// ----------------------------------------------------------------
 }
 ?>

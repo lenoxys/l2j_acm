@@ -11,6 +11,7 @@ function smarty_block_dynamic($param, $content, &$smarty) {
 class SmartyObject extends Smarty {
 	
 	private static $instance;
+	private $template;
 
 	public function __construct(){
 		$this->template_dir = 'templates/'.CONFIG::g()->core_template;
@@ -36,14 +37,14 @@ class SmartyObject extends Smarty {
 		$this->template = $template;
 	}
 	
-	public function assign($m, $p) {
-		parent::assign($m, $p);
+	public function assign($tpl_var, $value = null, $nocache = false) {
+		parent::assign($tpl_var, $value, $nocache);
 	}
 	
-	public function display() {
+	public function display($template = null, $cache_id = null, $compile_id = null, $parent = null) {
 		DEBUG::publish($this);
 		MSG::display($this);
-		parent::display($this->template);
+		parent::display($this->template, $cache_id, $compile_id, $parent);
 	}
 }
 
@@ -68,27 +69,27 @@ class msg {
 		return self::$instance;
 	}
 
-	public function add_error($txt) {
+	public static function add_error($txt) {
 		$d = MSG::singleton();
 		$d->error_text .= $txt.'<br />'."\n\r";
 	}
 
-	public function get_error() {
+	public static function get_error() {
 		$d = MSG::singleton();
 		return $d->error_text;
 	}
 
-	public function add_valid($txt) {
+	public static function add_valid($txt) {
 		$d = MSG::singleton();
 		$d->valid_text .= $txt.'<br />'."\n\r";
 	}
 
-	public function get_valid() {
+	public static function get_valid() {
 		$d = MSG::singleton();
 		return $d->valid_text;
 	}
 
-	public function display($t) {	
+	public static function display($t) {	
 		$d = MSG::singleton();
 		if(!empty($d->error_text)) {
 			$t->assign('error', $d->error_text);
@@ -122,13 +123,13 @@ class debug {
 		return self::$instance;
 	}
 
-	public function add($txt, $color = null) {
+	public static function add($txt, $color = null) {
 		$d = DEBUG::singleton();
 		$txt = (is_null($color)) ? $txt : '<font style="color:'.$color.';"><b>'.$txt.'</b></font>';
 		$d->debug_text .= $txt.'<br />'."\n\r";
 	}
 
-	public function publish($t) {
+	public static function publish($t) {
 		if(!DEBUG)
 			return false;
 		
@@ -165,7 +166,7 @@ class logdaemon {
 		return self::$instance;
 	}
 
-	public function add($txt) {
+	public static function add($txt) {
 		if(!LOG)
 			return false;
 		
@@ -195,6 +196,7 @@ class logdaemon {
 
 class lang {
 
+	public $newFile;
 	private $defaultLanguage = 'english';
 	private $currentLanguage = 'english';
 	private $path = './language/';
@@ -260,7 +262,7 @@ class lang {
 		}
 	}
 
-	public function i18n($itemName) {
+	public static function i18n($itemName) {
 		$l = LANG::getInstance();
 		return $l->getItemValue($itemName);
 	}

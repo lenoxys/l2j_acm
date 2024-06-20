@@ -12,9 +12,10 @@ if(!file_exists('./config.php')) {
 
 require './config.php';
 require './libs/Smarty.class.php';
+require './libs/PHPMailer.php';
+require './libs/SMTP.php';
 require './classes/system.class.php';
 require './classes/mysql.class.php';
-require './classes/smtp.class.php';
 require './classes/email.class.php';
 require './classes/core.class.php';
 require './classes/account.class.php';

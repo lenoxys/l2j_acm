@@ -15,13 +15,14 @@ class MyException extends Exception {
 
 class CONFIG {
 
-	private $acm_version = '0.9.8';
+	private $acm_version = '0.9.9';
 
 	private $login_server = array('hostname'=>'localhost','user'=>'root','password'=>'','database'=>'l2jdb');
 
 	private $game_servers = array();
 
 	private $core_server_name = 'Private Server';
+	private $core_iso_type = 'utf-8';
 	private $core_act_img = true;
 	private $core_spam_try = 5;
 	private $core_spam_time = 30;
@@ -39,6 +40,7 @@ class CONFIG {
 
 	private $service_allow = false;
 	private $service_allow_with_karma = true;
+	private $service_server_name = './servername.xml';
 	private $service_name = false;
 	private $service_name_regex = '`^[[:alnum:]]{3,16}$`';
 	private $service_sex = false;

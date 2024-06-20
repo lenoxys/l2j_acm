@@ -23,7 +23,7 @@ class world {
 		if(CONFIG::g()->core_interlude)
 			exit('Accounts Services can\'t be used with interlude server');
 		
-		$this->id = mysql_real_escape_string($id);
+		$this->id = mysqli_real_escape_string($id);
 		$this->set_name();
 		$this->load_chars();
 	}
@@ -71,12 +71,12 @@ class world {
 		$rslt = MYSQL::g()->query($sql);
 		
 		$worlds = array();
-		while ($row = @mysql_fetch_object($rslt)) {
+		while ($row = @mysqli_fetch_object($rslt)) {
 			$w = (CONFIG::g()->select_game_server($row->server_id));
 			if(!empty($w))
 				$worlds[] = new world($row->server_id);
 			else
-				DEBUG::add('World n°'.$row->server_id.' had not configuration !');
+				DEBUG::add('World nï¿½'.$row->server_id.' had not configuration !');
 		}
 		
 		return $worlds;
@@ -109,7 +109,7 @@ class world {
 		
 		$rslt = MYSQL::g($this->id)->query($sql);
 		
-		while ($row = @mysql_fetch_object($rslt)) {
+		while ($row = @mysqli_fetch_object($rslt)) {
 			$char = new character ($row->charId, $this->id);
 			$this->char_list[] = $char;
 		}

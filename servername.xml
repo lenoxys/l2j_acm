@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<servers_list>
+<servers_list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="servername.xsd">
 	<server id="1" name="Bartz" />
 	<server id="2" name="Sieghardt" />
 	<server id="3" name="Kain" />
@@ -14,8 +14,8 @@
 	<server id="12" name="Sayha" />
 	<server id="13" name="Aria" />
 	<server id="14" name="Phoenix" />
-	<server id="15" name="Ceriel" />
-	<server id="16" name="Fehyshar" />
+	<server id="15" name="Chronos" />
+	<server id="16" name="Naia (EURO)" />
 	<server id="17" name="Elhwynna" />
 	<server id="18" name="Ellikia" />
 	<server id="19" name="Shikken" />
@@ -32,12 +32,12 @@
 	<server id="30" name="Tarkai" />
 	<server id="31" name="Khadia" />
 	<server id="32" name="Roien" />
-	<server id="33" name="Gallint" />
-	<server id="34" name="Cedric" />
-	<server id="35" name="Nerufa" />
-	<server id="36" name="Asterios" />
-	<server id="37" name="Orfen" />
-	<server id="38" name="Mitrael" />
+	<server id="33" name="Kallint (Non-PvP)" />
+	<server id="34" name="Baium" />
+	<server id="35" name="Kamael" />
+	<server id="36" name="Beleth" />
+	<server id="37" name="Anakim" />
+	<server id="38" name="Lilith" />
 	<server id="39" name="Thifiel" />
 	<server id="40" name="Lithra" />
 	<server id="41" name="Lockirin" />
@@ -62,7 +62,7 @@
 	<server id="60" name="Van Holter" />
 	<server id="61" name="Desperion" />
 	<server id="62" name="Einhovant" />
-	<server id="63" name="Schuneimann" />
+	<server id="63" name="Shunaiman" />
 	<server id="64" name="Faris" />
 	<server id="65" name="Tor" />
 	<server id="66" name="Carneiar" />
@@ -126,5 +126,5 @@
 	<server id="124" name="124" />
 	<server id="125" name="125" />
 	<server id="126" name="126" />
-	<server id="127" name="??" />
+	<server id="127" name="???" />
 </servers_list>

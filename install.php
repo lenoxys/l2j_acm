@@ -3,7 +3,7 @@
 if(!file_exists('./install.php'))
 	exit('<center><font color="#FF0000"><strong>lol trying to check some _install.php. nice try :]</strong></font></center>'."\n\r");
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,31 +22,41 @@ require ('./config.php');
 
 function check_mysql() {
 	$ls = CONFIG::g()->login_server;
+	$connection = @mysqli_connect($ls['hostname'], $ls['user'], $ls['password']);
 	echo '<li> connected ? <font ';
-	echo (@mysql_connect($ls['hostname'], $ls['user'], $ls['password'])) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+	echo ($connection) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>'."\n\r";
+	if ($connection) {
+		mysqli_close($connection);
+	}
 }
 
 function check_db() {
 	$ls = CONFIG::g()->login_server;
+	$connection = @mysqli_connect($ls['hostname'], $ls['user'], $ls['password'], $ls['database']);
 	echo '<li> connected ? <font ';
-	echo (@mysql_select_db($ls['database'])) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+	echo ($connection) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>'."\n\r";
-
+	if ($connection) {
+		mysqli_close($connection);
+	}
 }
 
 function check_tables() {
 	$ls = CONFIG::g()->login_server;
+	$connection = @mysqli_connect($ls['hostname'], $ls['user'], $ls['password'], $ls['database']);
 	
 	$tables_req = array('accounts', 'account_data');
-	
-	$sql = 'SHOW TABLES FROM ' . $ls['database'];
-	$result = @mysql_query($sql);
-	
 	$tables = array();
 	
-	while ($row = @mysql_fetch_row($result))
-		$tables[] = $row[0];
+	if ($connection) {
+		$sql = 'SHOW TABLES';
+		$result = @mysqli_query($connection, $sql);
+		while ($row = @mysqli_fetch_row($result)) {
+			$tables[] = $row[0];
+		}
+		mysqli_close($connection);
+	}
 	
 	foreach ($tables_req as $tab) {
 		echo '<li>' . $tab . ' exist ? <font ';
@@ -56,27 +66,31 @@ function check_tables() {
 }
 
 function check_fields() {
+	$ls = CONFIG::g()->login_server;
+	$connection = @mysqli_connect($ls['hostname'], $ls['user'], $ls['password'], $ls['database']);
 	
 	$table = 'accounts';
 	$fields_req = array('email', 'created_time');
-	
-	$sql = 'SHOW COLUMNS FROM ' . $table;
-	$result = @mysql_query($sql);
-	
 	$fields = array();
 	
-	while ($row = @mysql_fetch_row($result))
-		$fields[] = htmlspecialchars($row[0]);
+	if ($connection) {
+		$sql = 'SHOW COLUMNS FROM ' . $table;
+		$result = @mysqli_query($connection, $sql);
+		while ($row = @mysqli_fetch_row($result)) {
+			$fields[] = htmlspecialchars($row[0]);
+		}
+		mysqli_close($connection);
+	}
 	
 	foreach ($fields_req as $field) {
 		echo '<li>' . $field . ' exist ? <font ';
-		echo (array_search($field, $fields)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+		echo (in_array($field, $fields)) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 		echo '</font></li>'."\n\r";
 	}
 }
 
 function check_libs() {
-	$libs = array('mysql', 'gd', 'openssl');
+	$libs = array('mysqli', 'gd', 'openssl');
 	foreach ($libs as $lib)
 		check_lib($lib);
 }
@@ -95,11 +109,11 @@ function check_folder(){
 
 function check_version() {
 	echo '<li>PHP version : '.phpversion().' <font ';
-	echo (phpversion() >= 5) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
+	echo (phpversion() >= 8) ? 'color="#00FF00">OK' : 'color="#FF0000">KO';
 	echo '</font></li>';
 }
 
-switch(htmlentities(@$_GET['m'])) {
+switch(htmlentities(@$_GET['m'] ?? '')) {
 	case 'check':
 	
 	echo '<br />Checking php version :'."\n\r";
@@ -114,22 +128,22 @@ switch(htmlentities(@$_GET['m'])) {
 	check_libs();
 	echo '</ul>'."\n\r";
 	
-	echo '<br />Checking mysql connexion :'."\n\r";
+	echo '<br />Checking mysql connection :'."\n\r";
 	echo '<ul>'."\n\r";
 	check_mysql();
 	echo '</ul>'."\n\r";
 	
-	echo '<br />Checking db connexion :'."\n\r";
+	echo '<br />Checking db connection :'."\n\r";
 	echo '<ul>'."\n\r";
 	check_db();
 	echo '</ul>'."\n\r";
 	
-	echo '<br />Checking table connexion :'."\n\r";
+	echo '<br />Checking tables :'."\n\r";
 	echo '<ul>'."\n\r";
 	check_tables();
 	echo '</ul>'."\n\r";
 	
-	echo '<br />Checking sql parsing on accounts table :'."\n\r";
+	echo '<br />Checking fields in accounts table :'."\n\r";
 	echo '<ul>'."\n\r";
 	check_fields();
 	echo '</ul>'."\n\r";

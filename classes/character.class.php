@@ -68,7 +68,7 @@ class character {
 		$rslt = MYSQL::g($this->worldId)->query($sql);
 		$sql = 'SELECT `char_name`, `base_class`, `sex`, `accesslevel`, `x`, `y`, `online`, `clanid`, `level`, `karma` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = MYSQL::g($this->worldId)->query($sql);
-		$row = @mysql_fetch_object($rslt);
+		$row = @mysqli_fetch_object($rslt);
 		
 		$this->char_name	= $row->char_name;
 		$this->base_class	= (int)$row->base_class;
@@ -87,7 +87,7 @@ class character {
 	function reload($chp) {
 		$sql = 'SELECT `'.$chp.'` FROM `characters` WHERE `charId` = "'.$this->charId.'" LIMIT 1;';
 		$rslt = MYSQL::g($this->worldId)->query($sql);
-		$row = @mysql_fetch_object($rslt);
+		$row = @mysqli_fetch_object($rslt);
 		
 		$this->$chp	= $row->$chp;
 		
@@ -388,7 +388,7 @@ class character {
 		
 		$rslt = MYSQL::g($this->worldId)->query($sql);
 		
-		while ($row = @mysql_fetch_row($rslt)) {
+		while ($row = @mysqli_fetch_row($rslt)) {
 			$region = $row[0];
 			for ($j = 0; $j < 16; $j++)
 				$this->regions[$j][$region] = $row[($j + 2)];
